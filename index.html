@@ -63,8 +63,8 @@
   <div class="nav-account">
     <div class="account-avatar"></div>
     <div class="account-info">
-      <div class="account-name">Account name</div>
-      <div class="account-username">username</div>
+      <div class="account-name">Loading...</div>
+      <div class="account-username">@loading</div>
     </div>
   </div>
   
@@ -381,7 +381,13 @@
 </div>
 <!-- End of Main Content -->
 
+<!-- IMPORTANT: Load Telegram Web App SDK FIRST -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<!-- Then load other libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+
+<!-- Finally load your script -->
 <script src="script.js"></script>
 
 </body>
