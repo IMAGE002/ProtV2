@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Portfolio</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="no-scroll">
+
+<!-- Loading Screen -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-container">
+    <div id="lottie-loading-container"></div>
+    <div class="loading-bar-wrapper">
+      <div class="loading-bar-bg">
+        <div class="loading-bar-fill"></div>
+      </div>
+    </div>
+    <div class="loading-text">
+      This is how loading screen would look like,<br>
+      If you are seeing this at production please restart the website
+    </div>
+    <a href="https://github.com/IMAGE002/Build1/blob/main/LICENSE" class="copyright-text" target="_blank" rel="noopener noreferrer">
+      © 2025 Copyright All Rights Reserved
+    </a>
+  </div>
+</div>
+
+<!-- Main Website Content -->
+<div class="main-content" id="mainContent" style="display: none;">
+
+<div class="bg" id="bgContainer">
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%">
+    <defs>
+      <pattern id="tgPattern" patternUnits="userSpaceOnUse" width="562.5" height="1218" viewBox="0 0 1125 2436">
+        <!-- Pattern content here -->
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#tgPattern)" />
+  </svg>
+</div>
+
+<!-- Currency Bar -->
+<div class="currency-bar">
+  <div class="currency-icon">
+    <img src="assets/Coin.svg" alt="Currency">
+  </div>
+  <div class="currency-amount" id="currencyAmount">0</div>
+</div>
+
+<!-- Hamburger Menu Button -->
+<div class="hamburger" id="hamburger">
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
+<!-- Navigation Menu -->
+<nav class="nav-menu" id="navMenu">
+  <button class="nav-close" id="navClose">×</button>
+  
+  <div class="nav-account">
+    <div class="account-avatar"></div>
+    <div class="account-info">
+      <div class="account-name">Account name</div>
+      <div class="account-username">username</div>
+    </div>
+  </div>
+  
+  <ul>
+    <li>
+      <a href="#home" class="nav-link active" data-page="home">
+        <div class="nav-icon">
+          <img src="assets/HomeIcon.svg" alt="Home">
+        </div>
+        Home
+      </a>
+    </li>
+    <li>
+      <a href="#leaderboard" class="nav-link" data-page="leaderboard">
+        <div class="nav-icon">
+          <img src="assets/LBIcon.svg" alt="Leaderboard">
+        </div>
+        Leaderboard
+      </a>
+    </li>
+    <li>
+      <a href="#deposit" class="nav-link" data-page="deposit">
+        <div class="nav-icon">
+          <img src="assets/WalletIcon.svg" alt="Deposit">
+        </div>
+        Deposit
+      </a>
+    </li>
+    <li>
+      <a href="#settings" class="nav-link" data-page="settings">
+        <div class="nav-icon">
+          <img src="assets/GearIcon.svg" alt="Settings">
+        </div>
+        Settings
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<!-- Debug Panel -->
+<div class="debug-panel" id="debugPanel">
+  <h2>Debug Panel</h2>
+  <button class="debug-btn" id="imitateWinBtn">Imitate Win</button>
+  <button class="debug-btn" id="clearAllBtn">Clear All Notifications</button>
+  <div class="debug-info">
+    <p><strong>Active Notifications:</strong> <span id="notificationCount">0</span></p>
+    <p><strong>Max Capacity:</strong> 15</p>
+    <p><strong>Current Page:</strong> <span id="currentPageDebug">home</span></p>
+  </div>
+</div>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay"></div>
+
+<!-- Main Container with Page Content -->
+<div class="container">
+  <!-- HOME PAGE -->
+  <div class="page-content active" id="page-home">
+    <div class="grid-layout">
+      <!-- Top Box - Notifications Only -->
+      <div class="content-box-top" id="notificationContainer">
+        <!-- Notification cubes will be added here -->
+      </div>
+
+      <!-- Left Column - First Box - Daily Bag of Loot -->
+      <div class="content-box-left-1">
+        <div class="daily-gift-content">
+          <div class="daily-gift-icon" id="lottieAnimation"></div>
+          <div class="daily-gift-text">
+            <div class="daily-gift-title">
+              <span class="star">★</span>
+              <span>Daily </span>
+              <span class="loot-text">Bag of Loot!</span>
+            </div>
+            <div class="daily-gift-subtitle">Daily gift from us!</div>
+          </div>
+        </div>
+        <div class="gift-bag-decoration">
+          <img src="assets/DailyGift.svg" alt="Gift Bag">
+        </div>
+      </div>
+
+      <!-- Right Column - Tall Box (spans 2 rows) - REDESIGNED INVENTORY -->
+      <div class="content-box-right">
+        <div class="inventory-header">
+          <div class="inventory-icon" id="inventoryLottieAnimation"></div>
+          <h1 class="inventory-title">Inventory</h1>
+        </div>
+        <p class="inventory-subtitle">Your collected items</p>
+        
+        <!-- Item Grid -->
+        <div class="inventory-grid">
+          <!-- Items will be populated dynamically by JavaScript -->
+        </div>
+
+        <button class="view-all-btn">View All Items</button>
+
+        <!-- Floating Stars -->
+        <div class="floating-star"><img src="assets/Star.png" alt="star"></div>
+        <div class="floating-star"><img src="assets/Star.png" alt="star"></div>
+        <div class="floating-star"><img src="assets/Star.png" alt="star"></div>
+        <div class="floating-star"><img src="assets/Star.png" alt="star"></div>
+        <div class="floating-star"><img src="assets/Star.png" alt="star"></div>
+      </div>
+
+      <!-- Left Column - Second Box - UPDATED WITH SKILLS CHANNEL -->
+      <div class="content-box-left-2">
+        <svg viewBox="0 0 1200 400" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <path class="animated-path" opacity="0.35" 
+            d="M682.95 15.5C722.95 55.5 722.95 135.5 642.95 155.5C572.95 175.5 542.95 115.5 582.95 85.5C632.95 45.5 682.95 85.5 632.95 135.5C592.95 175.5 522.95 195.5 507.95 260.5C492.95 325.5 477.95 390.5 462.95 455.5" 
+            stroke="#2A8FA0" stroke-width="5" stroke-linecap="round" stroke-dasharray="10 18">
+            <animate
+              attributeName="stroke-dashoffset"
+              from="-140"
+              to="0"
+              dur="4s"
+              repeatCount="indefinite" />
+            <animate
+              attributeName="opacity"
+              values="0.35;0.65;0.35"
+              dur="3s"
+              repeatCount="indefinite" />
+          </path>
+        </svg>
+
+        <div class="channel-content">
+          <h1 class="channel-title">Channel with <span class="free-text">FREE</span> Stuff!!</h1>
+          <p class="channel-subtitle">Join our channel to not miss anything!</p>
+          <a href="https://t.me/VoidGiftsOfficial" class="join-button">
+            <img src="assets/SmallPLPIcon.svg" alt="Icon">
+            Join Channel
+          </a>
+        </div>
+
+        <img src="assets/BigPLPIcon.svg" alt="Big Icon" class="big-icon">
+      </div>
+
+      <!-- Bottom Row - First Box -->
+      <div class="content-box-bottom-1">
+        <h1>Projects</h1>
+        <div class="decorative-line"></div>
+        <p>Bottom row first box content.</p>
+      </div>
+
+      <!-- Bottom Row - Second Box -->
+      <div class="content-box-bottom-2">
+        <h1>Contact</h1>
+        <div class="decorative-line"></div>
+        <p>Bottom row second box content.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEADERBOARD PAGE -->
+  <div class="page-content" id="page-leaderboard">
+    <div class="simple-page">
+      <h1>🏆 Leaderboard</h1>
+      <p>This is the leaderboard page. You can see top players and rankings here.</p>
+    </div>
+  </div>
+
+  <!-- DEPOSIT PAGE -->
+  <div class="page-content" id="page-deposit">
+    <div class="simple-page">
+      <h1>💰 Deposit</h1>
+      <p>This is the deposit page. Connect your wallet and manage your deposits here.</p>
+    </div>
+  </div>
+
+  <!-- SETTINGS PAGE -->
+  <div class="page-content" id="page-settings">
+    <div class="simple-page">
+      <h1>⚙️ Settings</h1>
+      <p>This is the settings page. Customize your experience and manage your account settings.</p>
+    </div>
+  </div>
+
+  <!-- DAILY SPIN PAGE -->
+  <div class="page-content" id="page-dailyspin">
+    <div class="daily-spin-container">
+      <div class="spin-section">
+        <div class="wheel-container">
+          <div class="wheel-pointer"></div>
+          <div class="wheel" id="wheel">
+            <div class="cube"></div>
+            <div class="cube"></div>
+            <div class="cube"></div>
+            <div class="cube"></div>
+            <div class="cube"></div>
+            <div class="cube"></div>
+            <div class="cube"></div>
+            <div class="cube"></div>
+            <div class="cube"></div>
+            <div class="cube"></div>
+            <div class="cube"></div>
+            <div class="cube"></div>
+            <div class="cube"></div>
+            <div class="cube"></div>
+            <div class="cube"></div>
+            <div class="cube"></div>
+            <div class="cube"></div>
+            <div class="cube"></div>
+            <div class="cube"></div>
+            <div class="cube"></div>
+          </div>
+        </div>
+        <button class="spin-button" id="spinButton">SPIN!</button>
+      </div>
+
+      <div class="rewards-section">
+        <div class="rewards-header">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+          <h2 class="rewards-title">What can I <span class="get-text">get?</span></h2>
+        </div>
+
+        <div class="reward-grid">
+          <div class="reward-item">
+            <div class="reward-amount">1</div>
+            <div class="reward-icon" id="coin1"></div>
+          </div>
+          <div class="reward-item">
+            <div class="reward-amount">5</div>
+            <div class="reward-icon" id="coin5"></div>
+          </div>
+          <div class="reward-item">
+            <div class="reward-amount">10</div>
+            <div class="reward-icon" id="coin10"></div>
+          </div>
+          <div class="reward-item">
+            <div class="reward-amount">25</div>
+            <div class="reward-icon" id="coin25"></div>
+          </div>
+          <div class="reward-item">
+            <div class="reward-amount">50</div>
+            <div class="reward-icon" id="coin50"></div>
+          </div>
+          <div class="reward-item">
+            <div class="reward-amount">100</div>
+            <div class="reward-icon" id="coin100"></div>
+          </div>
+          <div class="reward-item">
+            <div class="reward-amount">250</div>
+            <div class="reward-icon" id="coin250"></div>
+          </div>
+          <div class="reward-item">
+            <div class="reward-amount">500</div>
+            <div class="reward-icon" id="coin500"></div>
+          </div>
+        </div>
+
+        <div class="gift-grid">
+          <div class="gift-item">
+            <div class="gift-icon" id="giftHeart"></div>
+            <div class="gift-label">Telegram Gift</div>
+          </div>
+          <div class="gift-item">
+            <div class="gift-icon" id="giftBear"></div>
+            <div class="gift-label">Telegram Gift</div>
+          </div>
+          <div class="gift-item">
+            <div class="gift-icon" id="giftGift"></div>
+            <div class="gift-label">Telegram Gift</div>
+          </div>
+          <div class="gift-item">
+            <div class="gift-icon" id="giftRose"></div>
+            <div class="gift-label">Telegram Gift</div>
+          </div>
+          <div class="gift-item">
+            <div class="gift-icon" id="giftCake"></div>
+            <div class="gift-label">Telegram Gift</div>
+          </div>
+          <div class="gift-item">
+            <div class="gift-icon" id="giftRoseBouquet"></div>
+            <div class="gift-label">Telegram Gift</div>
+          </div>
+          <div class="gift-item">
+            <div class="gift-icon" id="giftRing"></div>
+            <div class="gift-label">Telegram Gift</div>
+          </div>
+          <div class="gift-item">
+            <div class="gift-icon" id="giftTrophy"></div>
+            <div class="gift-label">Telegram Gift</div>
+          </div>
+          <div class="gift-item">
+            <div class="gift-icon" id="giftDiamond"></div>
+            <div class="gift-label">Telegram Gift</div>
+          </div>
+          <div class="gift-item">
+            <div class="gift-icon" id="giftCalendar"></div>
+            <div class="gift-label">Telegram NFT</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Win Modal -->
+<div class="win-modal-overlay" id="winModal">
+  <div class="win-modal">
+    <div class="win-modal-header">You Won...</div>
+    <div class="win-modal-prize">
+      <div class="win-modal-icon" id="modalPrizeIcon"></div>
+    </div>
+    <div class="win-modal-footer">...<span id="modalPrizeName"></span>!!!</div>
+    <button class="claim-button" id="claimButton">CLAIM!!</button>
+  </div>
+</div>
+
+</div>
+<!-- End of Main Content -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
