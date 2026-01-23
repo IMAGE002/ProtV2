@@ -1,6 +1,116 @@
 // ============================================
 // LOADING SCREEN LOGIC
 // ============================================
+
+let tg = window.Telegram.WebApp;
+let userData = null;
+
+// Initialize Telegram Web App
+function initTelegramWebApp() {
+  try {
+    // Expand the Web App to full height
+    tg.expand();
+    
+    // Enable closing confirmation
+    tg.enableClosingConfirmation();
+    
+    // Get user data
+    userData = tg.initDataUnsafe?.user;
+    
+    if (userData) {
+      console.log('✅ Telegram User Data Loaded:', userData);
+      
+      // Update the navigation menu with user info
+      updateUserProfile(userData);
+      
+      // Apply Telegram theme colors (optional)
+      document.documentElement.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color || '#0f172a');
+      document.documentElement.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color || '#ffffff');
+      
+      console.log('User ID:', userData.id);
+      console.log('First Name:', userData.first_name);
+      console.log('Username:', userData.username);
+      console.log('Photo URL:', userData.photo_url);
+    } else {
+      console.warn('⚠️ No Telegram user data - running in browser test mode');
+      // Fallback for testing in regular browser
+      updateUserProfile({
+        first_name: 'Test User',
+        username: 'testuser',
+        photo_url: null
+      });
+    }
+    
+    // Tell Telegram the app is ready
+    tg.ready();
+    
+  } catch (error) {
+    console.error('❌ Error initializing Telegram Web App:', error);
+    // Fallback for browser testing
+    updateUserProfile({
+      first_name: 'Guest',
+      username: 'guest',
+      photo_url: null
+    });
+  }
+}
+
+// Update user profile in the navigation menu
+function updateUserProfile(user) {
+  const accountName = document.querySelector('.account-name');
+  const accountUsername = document.querySelector('.account-username');
+  const accountAvatar = document.querySelector('.account-avatar');
+  
+  if (accountName) {
+    const fullName = user.last_name 
+      ? `${user.first_name} ${user.last_name}` 
+      : user.first_name;
+    accountName.textContent = fullName || 'User';
+  }
+  
+  if (accountUsername) {
+    accountUsername.textContent = user.username ? `@${user.username}` : 'No username';
+  }
+  
+  if (accountAvatar) {
+    if (user.photo_url) {
+      // Set user profile photo as background
+      accountAvatar.style.backgroundImage = `url(${user.photo_url})`;
+      accountAvatar.style.backgroundSize = 'cover';
+      accountAvatar.style.backgroundPosition = 'center';
+    } else {
+      // Use initials if no photo
+      const initials = (user.first_name?.[0] || 'U') + (user.last_name?.[0] || '');
+      accountAvatar.textContent = initials;
+      accountAvatar.style.display = 'flex';
+      accountAvatar.style.alignItems = 'center';
+      accountAvatar.style.justifyContent = 'center';
+      accountAvatar.style.fontSize = '1.5rem';
+      accountAvatar.style.fontWeight = 'bold';
+      accountAvatar.style.color = '#60a5fa';
+    }
+  }
+}
+
+// Send data back to Telegram bot (optional - use when claiming prizes)
+function sendDataToBot(data) {
+  if (tg && tg.sendData) {
+    try {
+      tg.sendData(JSON.stringify(data));
+      console.log('📤 Data sent to bot:', data);
+    } catch (error) {
+      console.error('❌ Error sending data to bot:', error);
+    }
+  }
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initTelegramWebApp);
+} else {
+  initTelegramWebApp();
+}
+
 (function() {
   'use strict';
   
