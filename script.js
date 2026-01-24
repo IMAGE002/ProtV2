@@ -271,6 +271,11 @@ function navigateToPage(pageName) {
   
   // Update URL hash without scrolling
   history.pushState(null, null, `#${pageName}`);
+  
+  // If navigating to leaderboard, initialize it
+  if (pageName === 'leaderboard') {
+    initializeLeaderboard();
+  }
 }
 
 // Handle navigation link clicks
@@ -322,6 +327,9 @@ function animateCurrencyChange(oldValue, newValue, duration = 1000) {
     } else {
       virtualCurrency = newValue;
       currencyAmount.textContent = newValue.toLocaleString();
+      
+      // Update leaderboard when currency changes
+      updateLeaderboardData();
     }
   }
   
@@ -589,6 +597,9 @@ function updateInventoryDisplay() {
     emptyDiv.className = 'inventory-item empty';
     inventoryGrid.appendChild(emptyDiv);
   }
+  
+  // Update gift leaderboard count
+  updateLeaderboardData();
 }
 
 imitateWinBtn.addEventListener('click', () => {
@@ -616,6 +627,238 @@ document.querySelector('.content-box-bottom-1').addEventListener('click', () => 
 document.querySelector('.content-box-bottom-2').addEventListener('click', () => {
   alert('Contact clicked!');
 });
+
+// ============================================
+// LEADERBOARD FUNCTIONALITY
+// ============================================
+
+// Mock leaderboard data (in production, fetch from backend)
+let leaderboardData = {
+  coins: [
+    { id: 1, name: 'CryptoKing', username: 'cryptoking', coins: 15420, avatar: null },
+    { id: 2, name: 'MoonWalker', username: 'moonwalker', coins: 12850, avatar: null },
+    { id: 3, name: 'DiamondHands', username: 'diamondhands', coins: 10370, avatar: null },
+    { id: 4, name: 'TokenMaster', username: 'tokenmaster', coins: 8920, avatar: null },
+    { id: 5, name: 'BlockChainer', username: 'blockchainer', coins: 7540, avatar: null },
+    { id: 6, name: 'NFT Hunter', username: 'nfthunter', coins: 6230, avatar: null },
+    { id: 7, name: 'Satoshi Fan', username: 'satoshifan', coins: 5180, avatar: null },
+    { id: 8, name: 'Whale Watcher', username: 'whalewatcher', coins: 4560, avatar: null },
+  ],
+  gifts: [
+    { id: 1, name: 'GiftCollector', username: 'giftcollector', gifts: 87, avatar: null },
+    { id: 2, name: 'Present Pro', username: 'presentpro', gifts: 65, avatar: null },
+    { id: 3, name: 'Lucky Winner', username: 'luckywinner', gifts: 52, avatar: null },
+    { id: 4, name: 'Spin Master', username: 'spinmaster', gifts: 43, avatar: null },
+    { id: 5, name: 'Fortune Finder', username: 'fortunefinder', gifts: 38, avatar: null },
+    { id: 6, name: 'Reward Hunter', username: 'rewardhunter', gifts: 31, avatar: null },
+    { id: 7, name: 'Loot Lord', username: 'lootlord', gifts: 27, avatar: null },
+    { id: 8, name: 'Prize Collector', username: 'prizecollector', gifts: 19, avatar: null },
+  ]
+};
+
+let currentLeaderboardTab = 'coins';
+
+// Initialize leaderboard
+function initializeLeaderboard() {
+  // Initialize trophy icon with Lottie animation
+  const trophyIcon = document.getElementById('leaderboardTrophyIcon');
+  if (trophyIcon && trophyIcon.children.length === 0) {
+    lottie.loadAnimation({
+      container: trophyIcon,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: 'assets/giftTrophy.json'
+    });
+  }
+  
+  // Initialize gift tab icon
+  const giftTabIcon = document.getElementById('giftTabIcon');
+  if (giftTabIcon && giftTabIcon.children.length === 0) {
+    lottie.loadAnimation({
+      container: giftTabIcon,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: 'assets/giftHeart.json'
+    });
+  }
+  
+  // Setup tab switching
+  const tabs = document.querySelectorAll('.leaderboard-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Update active tab
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      
+      // Switch leaderboard content
+      const tabType = tab.dataset.tab;
+      currentLeaderboardTab = tabType;
+      
+      document.querySelectorAll('.leaderboard-list').forEach(list => {
+        list.classList.remove('active');
+      });
+      document.getElementById(`leaderboard-${tabType}`).classList.add('active');
+      
+      renderLeaderboard(tabType);
+    });
+  });
+  
+  // Initial render
+  renderLeaderboard('coins');
+}
+
+// Render leaderboard
+function renderLeaderboard(type) {
+  const data = type === 'coins' ? leaderboardData.coins : leaderboardData.gifts;
+  const container = document.getElementById(`leaderboard-${type}`);
+  
+  if (!container) return;
+  
+  const podiumContainer = container.querySelector('.podium-container');
+  const ranksList = container.querySelector('.ranks-list');
+  
+  // Clear existing content
+  podiumContainer.innerHTML = '';
+  ranksList.innerHTML = '';
+  
+  // Render top 3 (podium)
+  data.slice(0, 3).forEach((player, index) => {
+    const rank = index + 1;
+    const card = createPodiumCard(player, rank, type);
+    podiumContainer.appendChild(card);
+  });
+  
+  // Render ranks 4+
+  data.slice(3).forEach((player, index) => {
+    const rank = index + 4;
+    const card = createRankCard(player, rank, type);
+    ranksList.appendChild(card);
+  });
+  
+  // Update "Your Rank" card
+  updateYourRank(type);
+}
+
+// Create podium card (top 3)
+function createPodiumCard(player, rank, type) {
+  const card = document.createElement('div');
+  card.className = 'podium-card';
+  card.setAttribute('data-rank', rank);
+  
+  const rankBadge = document.createElement('div');
+  rankBadge.className = 'podium-rank';
+  rankBadge.textContent = rank;
+  
+  const avatar = document.createElement('div');
+  avatar.className = 'podium-avatar';
+  if (player.avatar) {
+    avatar.style.backgroundImage = `url(${player.avatar})`;
+    avatar.style.backgroundSize = 'cover';
+  } else {
+    const initials = player.name.split(' ').map(n => n[0]).join('').substring(0, 2);
+    avatar.textContent = initials;
+  }
+  
+  const name = document.createElement('div');
+  name.className = 'podium-name';
+  name.textContent = player.name;
+  
+  const score = document.createElement('div');
+  score.className = 'podium-score';
+  score.textContent = type === 'coins' ? player.coins.toLocaleString() : `${player.gifts} gifts`;
+  
+  card.appendChild(rankBadge);
+  card.appendChild(avatar);
+  card.appendChild(name);
+  card.appendChild(score);
+  
+  return card;
+}
+
+// Create rank card (4+)
+function createRankCard(player, rank, type) {
+  const card = document.createElement('div');
+  card.className = 'rank-card';
+  
+  const position = document.createElement('div');
+  position.className = 'rank-position';
+  position.textContent = `#${rank}`;
+  
+  const avatar = document.createElement('div');
+  avatar.className = 'rank-avatar';
+  if (player.avatar) {
+    avatar.style.backgroundImage = `url(${player.avatar})`;
+    avatar.style.backgroundSize = 'cover';
+  } else {
+    const initials = player.name.split(' ').map(n => n[0]).join('').substring(0, 2);
+    avatar.textContent = initials;
+  }
+  
+  const info = document.createElement('div');
+  info.className = 'rank-info';
+  
+  const name = document.createElement('div');
+  name.className = 'rank-name';
+  name.textContent = player.name;
+  
+  const score = document.createElement('div');
+  score.className = 'rank-score';
+  score.textContent = type === 'coins' ? `${player.coins.toLocaleString()} coins` : `${player.gifts} gifts`;
+  
+  info.appendChild(name);
+  info.appendChild(score);
+  
+  card.appendChild(position);
+  card.appendChild(avatar);
+  card.appendChild(info);
+  
+  return card;
+}
+
+// Update "Your Rank" card
+function updateYourRank(type) {
+  const yourRankElem = document.getElementById('yourRank');
+  const yourRankNameElem = document.getElementById('yourRankName');
+  const yourRankScoreElem = document.getElementById('yourRankScore');
+  
+  if (!yourRankElem || !yourRankNameElem || !yourRankScoreElem) return;
+  
+  // Get current user data
+  const currentUser = userData || { first_name: 'You', username: 'you' };
+  const userName = currentUser.last_name 
+    ? `${currentUser.first_name} ${currentUser.last_name}` 
+    : currentUser.first_name;
+  
+  yourRankNameElem.textContent = userName;
+  
+  if (type === 'coins') {
+    // Calculate rank based on current coins
+    const data = leaderboardData.coins;
+    let rank = data.filter(p => p.coins > virtualCurrency).length + 1;
+    
+    yourRankElem.textContent = rank;
+    yourRankScoreElem.textContent = `${virtualCurrency.toLocaleString()} coins`;
+  } else {
+    // Calculate rank based on gift count
+    const giftCount = inventoryItems.length;
+    const data = leaderboardData.gifts;
+    let rank = data.filter(p => p.gifts > giftCount).length + 1;
+    
+    yourRankElem.textContent = rank;
+    yourRankScoreElem.textContent = `${giftCount} gifts`;
+  }
+}
+
+// Update leaderboard data when user stats change
+function updateLeaderboardData() {
+  // In production, send data to backend
+  // For now, just update the "Your Rank" display if on leaderboard page
+  if (currentPage === 'leaderboard') {
+    updateYourRank(currentLeaderboardTab);
+  }
+}
 
 // ============================================
 // DAILY SPIN PAGE FUNCTIONALITY
