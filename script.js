@@ -1191,7 +1191,8 @@ if (spinButton) {
     const winningPrize = selectPrize();
     console.log('Selected prize:', winningPrize);
 
-    const minSpinDistance = 3000 + Math.random() * 1000;
+    // INCREASED SPIN INTENSITY: More distance and longer duration
+    const minSpinDistance = 8000 + Math.random() * 3000; // Was 3000-4000, now 8000-11000
     
     const cubes = Array.from(document.querySelectorAll('.cube'));
     const totalCubes = cubes.length;
@@ -1205,8 +1206,8 @@ if (spinButton) {
     console.log('Winning cube index:', winningCubeIndex, 'Prize:', winningPrize);
 
     const startTime = Date.now();
-    const duration = 5000;
-    const maxSpeed = 25;
+    const duration = 6000; // Increased from 5000ms to 6000ms for longer spin
+    const maxSpeed = 40; // Increased from 25 to 40 for faster initial speed
     
     targetStopPosition = scrollPosition + minSpinDistance;
     
@@ -1216,7 +1217,8 @@ if (spinButton) {
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
       
-      const easeProgress = 1 - Math.pow(1 - progress, 4);
+      // Using power of 3 instead of 4 for slightly less aggressive deceleration
+      const easeProgress = 1 - Math.pow(1 - progress, 3);
       const targetSpeed = maxSpeed * (1 - easeProgress);
       scrollSpeed = Math.max(targetSpeed, 0.1);
       
