@@ -220,9 +220,56 @@
 
   <!-- LEADERBOARD PAGE -->
   <div class="page-content" id="page-leaderboard">
-    <div class="simple-page">
-      <h1>🏆 Leaderboard</h1>
-      <p>This is the leaderboard page. You can see top players and rankings here.</p>
+    <div class="leaderboard-page">
+      <div class="leaderboard-header">
+        <div class="trophy-icon" id="leaderboardTrophyIcon"></div>
+        <h1 class="leaderboard-title">Leaderboard</h1>
+        <p class="leaderboard-subtitle">Updates every 24 hours!</p>
+      </div>
+
+      <div class="leaderboard-tabs">
+        <button class="leaderboard-tab active" data-tab="coins">
+          <img src="assets/Coin.svg" alt="Coin">
+          Coin Leaders
+        </button>
+        <button class="leaderboard-tab" data-tab="gifts">
+          <div class="gift-tab-icon" id="giftTabIcon"></div>
+          Gift Leaders
+        </button>
+      </div>
+
+      <div class="leaderboard-content">
+        <!-- Coin Leaderboard -->
+        <div class="leaderboard-list active" id="leaderboard-coins">
+          <div class="podium-container">
+            <!-- Top 3 will be rendered here -->
+          </div>
+          <div class="ranks-list">
+            <!-- Ranks 4+ will be rendered here -->
+          </div>
+        </div>
+
+        <!-- Gift Leaderboard -->
+        <div class="leaderboard-list" id="leaderboard-gifts">
+          <div class="podium-container">
+            <!-- Top 3 will be rendered here -->
+          </div>
+          <div class="ranks-list">
+            <!-- Ranks 4+ will be rendered here -->
+          </div>
+        </div>
+      </div>
+
+      <div class="your-rank-card">
+        <div class="your-rank-label">Your Rank</div>
+        <div class="your-rank-content">
+          <div class="your-rank-position">#<span id="yourRank">--</span></div>
+          <div class="your-rank-info">
+            <div class="your-rank-name" id="yourRankName">Loading...</div>
+            <div class="your-rank-score" id="yourRankScore">0</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
