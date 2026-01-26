@@ -861,7 +861,7 @@ function updateLeaderboardData() {
 }
 
 // ============================================
-// DAILY SPIN PAGE FUNCTIONALITY
+// DAILY SPIN PAGE FUNCTIONALITY - FIXED VERSION
 // ============================================
 
 const spinButton = document.getElementById('spinButton');
@@ -875,12 +875,14 @@ const claimButton = document.getElementById('claimButton');
 let isSpinning = false;
 let currentWinningPrize = null;
 let scrollPosition = 0;
-let scrollSpeed = 1;
+let scrollSpeed = 0;
 let targetStopPosition = null;
 let winningCubeIndex = null;
 const cubeWidth = 120;
 const gapWidth = 48;
 const totalCubeWidth = cubeWidth + gapWidth;
+let lastFrameTime = 0;
+let idleAnimationId = null;
 
 const prizes = [
   { id: 'coin1', type: 'coin', value: 1, chance: 32.14, icon: 'coin' },
@@ -903,51 +905,7 @@ const prizes = [
   { id: 'giftCalendar', type: 'gift', value: 'Calendar', chance: 0.06, lottie: 'assets/giftCalendar.json' }
 ];
 
-// Visual-only prize selection (for scrolling cubes)
-function selectVisualPrize() {
-  const roll = Math.random() * 100;
-  
-  if (roll < 70) {
-    const commonCoins = [
-      prizes.find(p => p.id === 'coin1'),
-      prizes.find(p => p.id === 'coin5'),
-      prizes.find(p => p.id === 'coin10'),
-      prizes.find(p => p.id === 'coin25'),
-      prizes.find(p => p.id === 'coin50')
-    ];
-    return commonCoins[Math.floor(Math.random() * commonCoins.length)];
-  }
-  
-  if (roll < 90) {
-    const mediumPrizes = [
-      prizes.find(p => p.id === 'coin100'),
-      prizes.find(p => p.id === 'coin250'),
-      prizes.find(p => p.id === 'giftHeart'),
-      prizes.find(p => p.id === 'giftBear'),
-      prizes.find(p => p.id === 'giftGift')
-    ];
-    return mediumPrizes[Math.floor(Math.random() * mediumPrizes.length)];
-  }
-  
-  if (roll < 98) {
-    const rarePrizes = [
-      prizes.find(p => p.id === 'coin500'),
-      prizes.find(p => p.id === 'giftRose'),
-      prizes.find(p => p.id === 'giftCake'),
-      prizes.find(p => p.id === 'giftRoseBouquet')
-    ];
-    return rarePrizes[Math.floor(Math.random() * rarePrizes.length)];
-  }
-  
-  const ultraRarePrizes = [
-    prizes.find(p => p.id === 'giftRing'),
-    prizes.find(p => p.id === 'giftTrophy'),
-    prizes.find(p => p.id === 'giftDiamond')
-  ];
-  return ultraRarePrizes[Math.floor(Math.random() * ultraRarePrizes.length)];
-}
-
-// Single prize selection function (REAL WINS)
+// Single prize selection function using proper weighted random
 function selectPrize() {
   const random = Math.random() * 100;
   let cumulative = 0;
@@ -1076,42 +1034,73 @@ claimButton.addEventListener('click', () => {
   currentWinningPrize = null;
   targetStopPosition = null;
   winningCubeIndex = null;
-  scrollSpeed = 1;
+  scrollSpeed = 0;
   isSpinning = false;
   spinButton.disabled = false;
+  
+  // Restart idle animation
+  startIdleAnimation();
 });
 
+// Populate cubes with random prizes
 function populateCubes() {
   const cubes = document.querySelectorAll('.cube');
   cubes.forEach(cube => {
-    const prize = selectVisualPrize();
+    const prize = selectPrize();
     renderPrizeToCube(cube, prize);
   });
 }
 
-function updateCubesAndScroll() {
-  if (!wheel) return;
+// FPS-independent idle animation
+function startIdleAnimation() {
+  if (idleAnimationId) return;
   
-  const cubes = Array.from(document.querySelectorAll('.cube'));
-  if (cubes.length === 0) return;
+  lastFrameTime = performance.now();
   
-  if (!wheelContainer) return;
-  const containerCenter = wheelContainer.offsetWidth / 2;
-  
-  scrollPosition += scrollSpeed;
-  
-  if (scrollPosition >= totalCubeWidth) {
-    const firstCube = cubes[0];
-    wheel.appendChild(firstCube);
-    scrollPosition -= totalCubeWidth;
+  function idleLoop(currentTime) {
+    if (isSpinning) {
+      idleAnimationId = null;
+      return;
+    }
     
-    if (!isSpinning) {
-      const prize = selectVisualPrize();
+    const deltaTime = currentTime - lastFrameTime;
+    lastFrameTime = currentTime;
+    
+    // Move at constant speed: 30 pixels per second
+    const pixelsPerSecond = 30;
+    const deltaMove = (pixelsPerSecond * deltaTime) / 1000;
+    
+    scrollPosition += deltaMove;
+    
+    const cubes = Array.from(document.querySelectorAll('.cube'));
+    
+    // Recycle cubes when they move off screen
+    if (scrollPosition >= totalCubeWidth) {
+      const firstCube = cubes[0];
+      wheel.appendChild(firstCube);
+      scrollPosition -= totalCubeWidth;
+      
+      // Randomize the recycled cube
+      const prize = selectPrize();
       renderPrizeToCube(firstCube, prize);
     }
+    
+    wheel.style.transform = `translateX(-${scrollPosition}px)`;
+    
+    // Update cube scales
+    updateCubeScales(cubes);
+    
+    idleAnimationId = requestAnimationFrame(idleLoop);
   }
   
-  wheel.style.transform = `translateX(-${scrollPosition}px)`;
+  idleAnimationId = requestAnimationFrame(idleLoop);
+}
+
+// Update cube scales based on distance from center
+function updateCubeScales(cubes) {
+  if (!wheelContainer) return;
+  
+  const containerCenter = wheelContainer.offsetWidth / 2;
   
   cubes.forEach(cube => {
     const cubeRect = cube.getBoundingClientRect();
@@ -1132,14 +1121,12 @@ function updateCubesAndScroll() {
       cube.style.boxShadow = 'none';
     }
   });
-  
-  requestAnimationFrame(updateCubesAndScroll);
 }
 
 // Initialize Daily Spin when page loads
 window.addEventListener('load', () => {
   populateCubes();
-  updateCubesAndScroll();
+  startIdleAnimation();
   
   // Initialize static reward icons
   const coinIds = ['coin1', 'coin5', 'coin10', 'coin25', 'coin50', 'coin100', 'coin250', 'coin500'];
@@ -1180,53 +1167,91 @@ window.addEventListener('load', () => {
   });
 });
 
+// FPS-independent spin animation
 if (spinButton) {
   spinButton.addEventListener('click', () => {
     if (isSpinning) return;
     
     isSpinning = true;
     spinButton.disabled = true;
+    
+    // Cancel idle animation
+    if (idleAnimationId) {
+      cancelAnimationFrame(idleAnimationId);
+      idleAnimationId = null;
+    }
 
     // Select the winning prize ONCE
     const winningPrize = selectPrize();
-    console.log('Selected prize:', winningPrize);
+    console.log('🎯 Selected winning prize:', winningPrize);
 
-    // INCREASED SPIN INTENSITY: More distance and longer duration
-    const minSpinDistance = 8000 + Math.random() * 3000; // Was 3000-4000, now 8000-11000
-    
+    // REPOPULATE ALL CUBES with fresh random prizes for this spin
     const cubes = Array.from(document.querySelectorAll('.cube'));
-    const totalCubes = cubes.length;
+    cubes.forEach(cube => {
+      const randomPrize = selectPrize();
+      renderPrizeToCube(cube, randomPrize);
+    });
     
+    // Increased spin distance for more dramatic effect
+    const minSpinDistance = 8000 + Math.random() * 3000; // 8000-11000 pixels
+    const totalCubes = cubes.length;
     const cubePositionsToScroll = Math.floor(minSpinDistance / totalCubeWidth);
     
+    // Select random cube to be the winner
     winningCubeIndex = cubePositionsToScroll % totalCubes;
     
+    // Set the winning prize in the winning cube
     renderPrizeToCube(cubes[winningCubeIndex], winningPrize);
     
-    console.log('Winning cube index:', winningCubeIndex, 'Prize:', winningPrize);
+    console.log('🎲 Winning cube index:', winningCubeIndex, 'Total cubes:', totalCubes);
 
-    const startTime = Date.now();
-    const duration = 6000; // Increased from 5000ms to 6000ms for longer spin
-    const maxSpeed = 40; // Increased from 25 to 40 for faster initial speed
+    const spinStartTime = performance.now();
+    const duration = 6000; // 6 seconds
+    const maxSpeed = 800; // pixels per second at peak
     
     targetStopPosition = scrollPosition + minSpinDistance;
+    lastFrameTime = spinStartTime;
     
-    function animateSpin() {
+    function animateSpin(currentTime) {
       if (!isSpinning) return;
       
-      const elapsed = Date.now() - startTime;
+      const deltaTime = currentTime - lastFrameTime;
+      lastFrameTime = currentTime;
+      
+      const elapsed = currentTime - spinStartTime;
       const progress = Math.min(elapsed / duration, 1);
       
-      // Using power of 3 instead of 4 for slightly less aggressive deceleration
+      // Ease out cubic for smooth deceleration
       const easeProgress = 1 - Math.pow(1 - progress, 3);
-      const targetSpeed = maxSpeed * (1 - easeProgress);
-      scrollSpeed = Math.max(targetSpeed, 0.1);
+      const currentSpeed = maxSpeed * (1 - easeProgress);
+      scrollSpeed = Math.max(currentSpeed, 0);
+      
+      // Move based on delta time (FPS-independent)
+      const deltaMove = (scrollSpeed * deltaTime) / 1000;
+      scrollPosition += deltaMove;
+      
+      const cubes = Array.from(document.querySelectorAll('.cube'));
+      
+      // Recycle cubes during spin
+      if (scrollPosition >= totalCubeWidth) {
+        const firstCube = cubes[0];
+        wheel.appendChild(firstCube);
+        scrollPosition -= totalCubeWidth;
+        
+        // Keep randomizing cubes during spin for variety
+        const randomPrize = selectPrize();
+        renderPrizeToCube(firstCube, randomPrize);
+      }
+      
+      wheel.style.transform = `translateX(-${scrollPosition}px)`;
+      updateCubeScales(cubes);
       
       if (progress < 1) {
         requestAnimationFrame(animateSpin);
       } else {
         scrollSpeed = 0;
         
+        // Snap to center cube
         setTimeout(() => {
           const cubes = Array.from(document.querySelectorAll('.cube'));
           const containerCenter = wheelContainer.offsetWidth / 2;
@@ -1247,16 +1272,21 @@ if (spinButton) {
             }
           });
           
-          const snapStartTime = Date.now();
+          const snapStartTime = performance.now();
           const snapDuration = 400;
           const startScrollPos = scrollPosition;
+          let snapLastFrameTime = snapStartTime;
           
-          function snapToCenter() {
-            const snapElapsed = Date.now() - snapStartTime;
+          function snapToCenter(currentTime) {
+            const deltaTime = currentTime - snapLastFrameTime;
+            snapLastFrameTime = currentTime;
+            
+            const snapElapsed = currentTime - snapStartTime;
             const snapProgress = Math.min(snapElapsed / snapDuration, 1);
             const snapEase = 1 - Math.pow(1 - snapProgress, 3);
             
             scrollPosition = startScrollPos + (distanceToSnap * snapEase);
+            wheel.style.transform = `translateX(-${scrollPosition}px)`;
             
             if (snapProgress < 1) {
               requestAnimationFrame(snapToCenter);
@@ -1270,8 +1300,10 @@ if (spinButton) {
                   centerCube.style.transition = 'transform 0.05s ease, border-color 0.05s ease, box-shadow 0.05s ease';
                 }, 300);
                 
-                // Get the prize from the center cube's data
+                // Get the prize from the center cube
                 const finalPrize = prizes.find(p => p.id === centerCube.dataset.prizeId);
+                
+                console.log('✅ Final winning prize:', finalPrize);
                 
                 setTimeout(() => {
                   if (finalPrize) {
@@ -1282,11 +1314,11 @@ if (spinButton) {
             }
           }
           
-          snapToCenter();
+          requestAnimationFrame(snapToCenter);
         }, 100);
       }
     }
     
-    animateSpin();
+    requestAnimationFrame(animateSpin);
   });
 }
