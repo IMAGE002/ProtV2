@@ -241,22 +241,14 @@
       <div class="leaderboard-content">
         <!-- Coin Leaderboard -->
         <div class="leaderboard-list active" id="leaderboard-coins">
-          <div class="podium-container">
-            <!-- Top 3 will be rendered here -->
-          </div>
-          <div class="ranks-list">
-            <!-- Ranks 4+ will be rendered here -->
-          </div>
+          <div class="podium-container"></div>
+          <div class="ranks-list"></div>
         </div>
 
         <!-- Gift Leaderboard -->
         <div class="leaderboard-list" id="leaderboard-gifts">
-          <div class="podium-container">
-            <!-- Top 3 will be rendered here -->
-          </div>
-          <div class="ranks-list">
-            <!-- Ranks 4+ will be rendered here -->
-          </div>
+          <div class="podium-container"></div>
+          <div class="ranks-list"></div>
         </div>
       </div>
 
@@ -413,7 +405,7 @@
   </div>
 </div>
 
-<!-- Win Modal -->
+<!-- Win Modal (Daily Spin) -->
 <div class="win-modal-overlay" id="winModal">
   <div class="win-modal">
     <div class="win-modal-header">You Won...</div>
@@ -422,6 +414,35 @@
     </div>
     <div class="win-modal-footer">...<span id="modalPrizeName"></span>!!!</div>
     <button class="claim-button" id="claimButton">CLAIM!!</button>
+  </div>
+</div>
+
+<!-- Prize Modal (Inventory) -->
+<div class="prize-modal-overlay" id="prizeModal">
+  <div class="prize-modal">
+    <button class="prize-modal-close" id="prizeModalClose">×</button>
+    <div class="prize-modal-header">Your Prize</div>
+    <div class="prize-modal-content">
+      <div class="prize-modal-icon" id="prizeModalIcon"></div>
+      <div class="prize-modal-name" id="prizeModalName">Prize Name</div>
+      <div class="prize-modal-id" id="prizeModalId">ID: 0000-00-XXX</div>
+      <div class="prize-modal-coin-value" id="prizeModalCoinValue">
+        <img src="assets/Coin.svg" alt="Coin">
+        <span>100 Coins</span>
+      </div>
+    </div>
+    <div class="prize-modal-buttons">
+      <button class="prize-modal-btn convert-btn" id="convertBtn">
+        <img src="assets/Coin.svg" alt="Coin">
+        Convert To Coins
+      </button>
+      <button class="prize-modal-btn claim-prize-btn" id="claimPrizeBtn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+        Claim Prize!
+      </button>
+    </div>
   </div>
 </div>
 
