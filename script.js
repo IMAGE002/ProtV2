@@ -363,20 +363,20 @@ claimPrizeBtn.addEventListener('click', () => {
   
   const claimData = {
     action: 'claim_prize',
-    message: `DEBUG:Prize CLAIMED! ID:${prizeId}`,
     prizeId: prizeId,
     prizeName: prizeName,
     timestamp: Date.now()
   };
   
-  if (typeof sendDataToBot === 'function') {
-    sendDataToBot(claimData);
-  }
+  // Send data to bot (automatically includes userId and username)
+  sendDataToBot(claimData);
   
-  console.log('📤 Claim request sent to bot:', claimData);
+  console.log('🎁 Prize claim sent to bot:', claimData);
   
+  // Remove from inventory and close modal
   removePrizeFromInventory(prizeId);
   closePrizeModal();
+});
   
   if (typeof tg !== 'undefined' && tg.openTelegramLink) {
     const botUsername = 'YourBotUsername'; // CHANGE THIS TO YOUR BOT USERNAME
