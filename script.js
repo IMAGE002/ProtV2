@@ -1169,14 +1169,25 @@ window.addEventListener('load', () => {
 
 // FPS-independent spin animation with optimized performance
 if (spinButton) {
+  console.log('✅ Spin button found, attaching event listener');
   spinButton.addEventListener('click', () => {
-    if (isSpinning) return;
+    console.log('🎯 SPIN BUTTON CLICKED!');
+    console.log('isSpinning:', isSpinning);
+    console.log('wheel:', wheel);
+    console.log('wheelContainer:', wheelContainer);
+    
+    if (isSpinning) {
+      console.log('Already spinning, returning');
+      return;
+    }
     
     isSpinning = true;
     spinButton.disabled = true;
+    console.log('Spin started');
     
     // Cancel idle animation
     if (idleAnimationId) {
+      console.log('Canceling idle animation');
       cancelAnimationFrame(idleAnimationId);
       idleAnimationId = null;
     }
@@ -1187,6 +1198,15 @@ if (spinButton) {
 
     // REPOPULATE ALL CUBES with fresh random prizes for this spin
     const cubes = Array.from(document.querySelectorAll('.cube'));
+    console.log('Number of cubes found:', cubes.length);
+    
+    if (cubes.length === 0) {
+      console.error('❌ NO CUBES FOUND! Cannot spin.');
+      isSpinning = false;
+      spinButton.disabled = false;
+      return;
+    }
+    
     cubes.forEach(cube => {
       const randomPrize = selectPrize();
       renderPrizeToCube(cube, randomPrize);
@@ -1212,8 +1232,15 @@ if (spinButton) {
     targetStopPosition = scrollPosition + minSpinDistance;
     lastFrameTime = spinStartTime;
     
+    console.log('Starting animation loop...');
+    console.log('Initial scrollPosition:', scrollPosition);
+    console.log('Target stop position:', targetStopPosition);
+    
     function animateSpin(currentTime) {
-      if (!isSpinning) return;
+      if (!isSpinning) {
+        console.log('Animation stopped - isSpinning is false');
+        return;
+      }
       
       const deltaTime = currentTime - lastFrameTime;
       lastFrameTime = currentTime;
