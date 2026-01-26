@@ -963,7 +963,7 @@ function updateLeaderboardData() {
 }
 
 // ============================================
-// DAILY SPIN PAGE FUNCTIONALITY
+// DAILY SPIN PAGE FUNCTIONALITY - OPTIMIZED
 // ============================================
 
 const spinButton = document.getElementById('spinButton');
@@ -979,6 +979,9 @@ let currentWinningPrize = null;
 let scrollPosition = 0;
 let scrollSpeed = 1;
 let animationFrameId = null;
+
+// Store Lottie instances for cleanup
+let lottieInstances = new Map();
 
 const cubeWidth = 120;
 const gapWidth = 48;
@@ -1019,10 +1022,29 @@ function selectPrize() {
   return prizes[0];
 }
 
+// Cleanup Lottie instance for a cube
+function cleanupCubeLottie(cube) {
+  const cubeId = cube.dataset.cubeId;
+  if (cubeId && lottieInstances.has(cubeId)) {
+    const instance = lottieInstances.get(cubeId);
+    instance.destroy();
+    lottieInstances.delete(cubeId);
+  }
+}
+
+// Optimized render function with cleanup
 function renderPrizeToCube(cube, prize) {
+  // Clean up existing Lottie animation
+  cleanupCubeLottie(cube);
+  
   cube.dataset.prizeId = prize.id;
   cube.dataset.prizeType = prize.type;
   cube.dataset.prizeValue = prize.value;
+  
+  // Generate unique ID for this cube if it doesn't have one
+  if (!cube.dataset.cubeId) {
+    cube.dataset.cubeId = 'cube_' + Math.random().toString(36).substr(2, 9);
+  }
   
   cube.innerHTML = '';
   
@@ -1055,13 +1077,22 @@ function renderPrizeToCube(cube, prize) {
     container.style.margin = 'auto';
     cube.appendChild(container);
     
-    lottie.loadAnimation({
+    // Store Lottie instance for cleanup
+    const lottieInstance = lottie.loadAnimation({
       container: container,
       renderer: 'svg',
       loop: true,
       autoplay: true,
-      path: prize.lottie
+      path: prize.lottie,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice',
+        clearCanvas: true,
+        progressiveLoad: true,
+        hideOnTransparent: true
+      }
     });
+    
+    lottieInstances.set(cube.dataset.cubeId, lottieInstance);
   }
   
   cube.style.position = 'relative';
@@ -1078,8 +1109,18 @@ function populateCubes() {
   });
 }
 
+// Optimized scale update - only when needed
+let lastScaleUpdate = 0;
+const SCALE_UPDATE_INTERVAL = 16; // ~60fps
+
 function updateCubeScales(cubes) {
   if (!wheelContainer) return;
+  
+  const now = Date.now();
+  if (now - lastScaleUpdate < SCALE_UPDATE_INTERVAL && isSpinning) {
+    return; // Skip update if too frequent during spin
+  }
+  lastScaleUpdate = now;
   
   const containerCenter = wheelContainer.offsetWidth / 2;
   
@@ -1195,6 +1236,11 @@ if (claimButton) {
     hideWinModal();
     currentWinningPrize = null;
     
+    // Clean up all Lottie instances before repopulating
+    const cubes = document.querySelectorAll('.cube');
+    cubes.forEach(cube => cleanupCubeLottie(cube));
+    
+    // Repopulate with fresh prizes
     populateCubes();
     
     scrollSpeed = 1;
@@ -1270,6 +1316,10 @@ if (spinButton) {
       return;
     }
     
+    // Clean up all existing Lottie instances before spin
+    cubes.forEach(cube => cleanupCubeLottie(cube));
+    
+    // Repopulate cubes with new random prizes
     cubes.forEach(cube => {
       const randomPrize = selectPrize();
       renderPrizeToCube(cube, randomPrize);
@@ -1280,6 +1330,7 @@ if (spinButton) {
     
     const winningCubeIndex = cubePositionsToScroll % cubes.length;
     
+    // Set winning prize
     renderPrizeToCube(cubes[winningCubeIndex], winningPrize);
     
     console.log('🎲 Winning cube index:', winningCubeIndex, '| Distance:', minSpinDistance.toFixed(0), 'px');
@@ -1369,3 +1420,9 @@ if (spinButton) {
     animateSpin();
   });
 }
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+  lottieInstances.forEach(instance => instance.destroy());
+  lottieInstances.clear();
+});
