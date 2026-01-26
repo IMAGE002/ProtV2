@@ -1167,7 +1167,7 @@ window.addEventListener('load', () => {
   });
 });
 
-// FPS-independent spin animation
+// FPS-independent spin animation with optimized performance
 if (spinButton) {
   spinButton.addEventListener('click', () => {
     if (isSpinning) return;
@@ -1192,8 +1192,8 @@ if (spinButton) {
       renderPrizeToCube(cube, randomPrize);
     });
     
-    // Increased spin distance for more dramatic effect
-    const minSpinDistance = 8000 + Math.random() * 3000; // 8000-11000 pixels
+    // MUCH LONGER spin distance for dramatic effect
+    const minSpinDistance = 15000 + Math.random() * 5000; // 15000-20000 pixels (10-13 full rotations)
     const totalCubes = cubes.length;
     const cubePositionsToScroll = Math.floor(minSpinDistance / totalCubeWidth);
     
@@ -1203,14 +1203,18 @@ if (spinButton) {
     // Set the winning prize in the winning cube
     renderPrizeToCube(cubes[winningCubeIndex], winningPrize);
     
-    console.log('🎲 Winning cube index:', winningCubeIndex, 'Total cubes:', totalCubes);
+    console.log('🎲 Winning cube index:', winningCubeIndex, 'Distance:', minSpinDistance.toFixed(0), 'px');
 
     const spinStartTime = performance.now();
-    const duration = 6000; // 6 seconds
-    const maxSpeed = 800; // pixels per second at peak
+    const duration = 5000; // 5 seconds - faster for smoother feel
+    const maxSpeed = 2500; // Much higher peak speed: 2500 pixels/second
     
     targetStopPosition = scrollPosition + minSpinDistance;
     lastFrameTime = spinStartTime;
+    
+    // Track cube recycling to reduce re-renders
+    let lastRecycleTime = 0;
+    const recycleInterval = 16; // Only recycle every 16ms minimum
     
     function animateSpin(currentTime) {
       if (!isSpinning) return;
@@ -1221,8 +1225,17 @@ if (spinButton) {
       const elapsed = currentTime - spinStartTime;
       const progress = Math.min(elapsed / duration, 1);
       
-      // Ease out cubic for smooth deceleration
-      const easeProgress = 1 - Math.pow(1 - progress, 3);
+      // Better easing: fast start, slow end with exponential decay
+      let easeProgress;
+      if (progress < 0.7) {
+        // First 70%: accelerate and maintain high speed
+        easeProgress = Math.pow(progress / 0.7, 0.5) * 0.7;
+      } else {
+        // Last 30%: exponential deceleration
+        const endProgress = (progress - 0.7) / 0.3;
+        easeProgress = 0.7 + (1 - Math.pow(1 - endProgress, 4)) * 0.3;
+      }
+      
       const currentSpeed = maxSpeed * (1 - easeProgress);
       scrollSpeed = Math.max(currentSpeed, 0);
       
@@ -1232,24 +1245,33 @@ if (spinButton) {
       
       const cubes = Array.from(document.querySelectorAll('.cube'));
       
-      // Recycle cubes during spin
-      if (scrollPosition >= totalCubeWidth) {
+      // Optimized cube recycling - only when necessary and throttled
+      if (scrollPosition >= totalCubeWidth && (currentTime - lastRecycleTime) > recycleInterval) {
         const firstCube = cubes[0];
         wheel.appendChild(firstCube);
         scrollPosition -= totalCubeWidth;
+        lastRecycleTime = currentTime;
         
         // Keep randomizing cubes during spin for variety
         const randomPrize = selectPrize();
         renderPrizeToCube(firstCube, randomPrize);
       }
       
+      // Use transform for better performance
       wheel.style.transform = `translateX(-${scrollPosition}px)`;
-      updateCubeScales(cubes);
+      
+      // Only update scales every other frame for performance
+      if (Math.floor(elapsed / 16) % 2 === 0) {
+        updateCubeScales(cubes);
+      }
       
       if (progress < 1) {
         requestAnimationFrame(animateSpin);
       } else {
         scrollSpeed = 0;
+        
+        // Final scale update
+        updateCubeScales(cubes);
         
         // Snap to center cube
         setTimeout(() => {
@@ -1273,17 +1295,18 @@ if (spinButton) {
           });
           
           const snapStartTime = performance.now();
-          const snapDuration = 400;
+          const snapDuration = 300; // Faster snap
           const startScrollPos = scrollPosition;
           let snapLastFrameTime = snapStartTime;
           
           function snapToCenter(currentTime) {
-            const deltaTime = currentTime - snapLastFrameTime;
-            snapLastFrameTime = currentTime;
-            
             const snapElapsed = currentTime - snapStartTime;
             const snapProgress = Math.min(snapElapsed / snapDuration, 1);
-            const snapEase = 1 - Math.pow(1 - snapProgress, 3);
+            
+            // Smoother snap easing
+            const snapEase = snapProgress < 0.5
+              ? 4 * snapProgress * snapProgress * snapProgress
+              : 1 - Math.pow(-2 * snapProgress + 2, 3) / 2;
             
             scrollPosition = startScrollPos + (distanceToSnap * snapEase);
             wheel.style.transform = `translateX(-${scrollPosition}px)`;
@@ -1315,7 +1338,7 @@ if (spinButton) {
           }
           
           requestAnimationFrame(snapToCenter);
-        }, 100);
+        }, 50);
       }
     }
     
