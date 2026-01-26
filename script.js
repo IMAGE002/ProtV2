@@ -1194,7 +1194,7 @@ if (spinButton) {
     });
     
     // 3. Calculate where to stop (must land on a specific cube) - REDUCED DISTANCE
-    const minSpinDistance = 3000 + Math.random() * 600; // 1200-1800 pixels (shorter spin)
+    const minSpinDistance = 5000 + Math.random() * 600; // 1200-1800 pixels (shorter spin)
     const cubePositionsToScroll = Math.floor(minSpinDistance / totalCubeWidth);
     
     // Pick which cube will be in center when we stop
@@ -1207,8 +1207,8 @@ if (spinButton) {
 
     // 5. Animate the spin - REDUCED DURATION AND SPEED
     const startTime = Date.now();
-    const duration = 3500; // 3.5 seconds (shorter duration)
-    const maxSpeed = 20; // Slightly reduced peak speed
+    const duration = 4500; // 3.5 seconds (shorter duration)
+    const maxSpeed = 25; // Slightly reduced peak speed
     
     function animateSpin() {
       if (!isSpinning) return;
