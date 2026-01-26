@@ -2599,7 +2599,7 @@ prize-modal-icon {
   }
 }
 
-  /* ============================================
+/* ============================================
    SETTINGS PAGE STYLES - TELEGRAM STYLED
    ============================================ */
 
@@ -2717,7 +2717,7 @@ prize-modal-icon {
 .setting-item {
   display: flex;
   align-items: center;
-  justify-content: between;
+  justify-content: space-between;
   gap: 1rem;
   padding: 1rem 0;
   transition: all 0.3s ease;
