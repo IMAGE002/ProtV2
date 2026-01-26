@@ -1212,10 +1212,6 @@ if (spinButton) {
     targetStopPosition = scrollPosition + minSpinDistance;
     lastFrameTime = spinStartTime;
     
-    // Track cube recycling to reduce re-renders
-    let lastRecycleTime = 0;
-    const recycleInterval = 16; // Only recycle every 16ms minimum
-    
     function animateSpin(currentTime) {
       if (!isSpinning) return;
       
@@ -1243,35 +1239,28 @@ if (spinButton) {
       const deltaMove = (scrollSpeed * deltaTime) / 1000;
       scrollPosition += deltaMove;
       
-      const cubes = Array.from(document.querySelectorAll('.cube'));
-      
-      // Optimized cube recycling - only when necessary and throttled
-      if (scrollPosition >= totalCubeWidth && (currentTime - lastRecycleTime) > recycleInterval) {
+      // Recycle cubes when needed
+      while (scrollPosition >= totalCubeWidth) {
+        const cubes = Array.from(document.querySelectorAll('.cube'));
         const firstCube = cubes[0];
         wheel.appendChild(firstCube);
         scrollPosition -= totalCubeWidth;
-        lastRecycleTime = currentTime;
         
         // Keep randomizing cubes during spin for variety
         const randomPrize = selectPrize();
         renderPrizeToCube(firstCube, randomPrize);
       }
       
-      // Use transform for better performance
+      // Update visual position and scales
       wheel.style.transform = `translateX(-${scrollPosition}px)`;
       
-      // Only update scales every other frame for performance
-      if (Math.floor(elapsed / 16) % 2 === 0) {
-        updateCubeScales(cubes);
-      }
+      const cubes = Array.from(document.querySelectorAll('.cube'));
+      updateCubeScales(cubes);
       
       if (progress < 1) {
         requestAnimationFrame(animateSpin);
       } else {
         scrollSpeed = 0;
-        
-        // Final scale update
-        updateCubeScales(cubes);
         
         // Snap to center cube
         setTimeout(() => {
