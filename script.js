@@ -356,10 +356,17 @@ convertBtn.addEventListener('click', () => {
 });
 
 claimPrizeBtn.addEventListener('click', () => {
-  if (!currentModalPrize) return;
+  if (!currentModalPrize) {
+    console.error('❌ No prize selected!');
+    return;
+  }
   
   const prizeId = currentModalPrize.prizeId;
   const prizeName = currentModalPrize.value;
+  
+  console.log('🎁 CLAIM BUTTON CLICKED');
+  console.log('   Prize ID:', prizeId);
+  console.log('   Prize Name:', prizeName);
   
   const claimData = {
     action: 'claim_prize',
@@ -368,27 +375,55 @@ claimPrizeBtn.addEventListener('click', () => {
     timestamp: Date.now()
   };
   
-  // Send data to bot
-  sendDataToBot(claimData);
+  console.log('📦 Claim data prepared:', claimData);
   
-  console.log('🎁 Prize claim sent to bot:', claimData);
+  // ============================================
+  // FIX 1: Check if Telegram WebApp is available
+  // ============================================
+  if (typeof window.Telegram === 'undefined' || !window.Telegram.WebApp) {
+    console.error('❌ Telegram WebApp not available!');
+    console.log('🔍 Running in browser mode - showing alert instead');
+    alert(`Prize Claimed!\n\nPrize: ${prizeName}\nID: ${prizeId}\n\n(In Telegram, this would send data to bot)`);
+    
+    removePrizeFromInventory(prizeId);
+    closePrizeModal();
+    return;
+  }
+  
+  // ============================================
+  // FIX 2: Use the correct method to send data
+  // ============================================
+  try {
+    const tg = window.Telegram.WebApp;
+    const dataString = JSON.stringify(claimData);
+    
+    console.log('📤 Attempting to send data to bot...');
+    console.log('   Data string:', dataString);
+    console.log('   Data length:', dataString.length, 'bytes');
+    
+    // Send data to bot
+    tg.sendData(dataString);
+    
+    console.log('✅ Data sent successfully!');
+    console.log('🔔 Check your bot console for the message');
+    
+    // Show success feedback
+    alert(`Prize claim sent to bot!\n\nPrize: ${prizeName}\nID: ${prizeId}\n\nCheck your Telegram for confirmation!`);
+    
+  } catch (error) {
+    console.error('❌ Error sending data to bot:', error);
+    console.error('   Error message:', error.message);
+    console.error('   Error stack:', error.stack);
+    
+    alert(`Error sending to bot: ${error.message}\n\nPlease try again or contact support.`);
+    return;
+  }
   
   // Remove from inventory and close modal
   removePrizeFromInventory(prizeId);
   closePrizeModal();
   
-  // Open bot in Telegram
-  if (typeof tg !== 'undefined' && tg.openTelegramLink) {
-    const botUsername = 'VoidGiftsTransBot'; // CHANGE THIS TO YOUR BOT USERNAME
-    const botUrl = `https://t.me/${botUsername}`;
-    
-    try {
-      tg.openTelegramLink(botUrl);
-      console.log('✅ Opened Telegram bot:', botUrl);
-    } catch (error) {
-      console.error('❌ Error opening bot:', error);
-    }
-  }
+  console.log('✅ Prize removed from inventory, modal closed');
 });
 
 if (prizeModalClose) {
