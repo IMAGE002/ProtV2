@@ -379,7 +379,7 @@ claimPrizeBtn.addEventListener('click', () => {
 });
   
   if (typeof tg !== 'undefined' && tg.openTelegramLink) {
-    const botUsername = 'YourBotUsername'; // CHANGE THIS TO YOUR BOT USERNAME
+    const botUsername = 'VoidGiftsTransBot'; // CHANGE THIS TO YOUR BOT USERNAME
     const botUrl = `https://t.me/${botUsername}`;
     
     try {
