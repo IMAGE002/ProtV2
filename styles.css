@@ -25,7 +25,6 @@ body {
    LOADING SCREEN STYLES
    ============================================ */
 
-/* Loading Screen */
 .loading-screen {
   position: fixed;
   inset: 0;
@@ -42,7 +41,6 @@ body {
   visibility: hidden;
 }
 
-/* Prevent scrolling during loading */
 body.no-scroll {
   position: fixed;
   overflow: hidden;
@@ -50,7 +48,6 @@ body.no-scroll {
   height: 100%;
 }
 
-/* Loading Container */
 .loading-container {
   position: fixed;
   inset: 0;
@@ -63,22 +60,6 @@ body.no-scroll {
   padding-top: 50vh;
 }
 
-/* Mobile responsive adjustments */
-@media (max-width: 768px) {
-  .loading-container {
-    padding-top: 40vh;
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .loading-container {
-    padding-top: 35vh;
-  }
-}
-
-/* Lottie Animation Container */
 #lottie-loading-container {
   width: 200px;
   height: 200px;
@@ -86,35 +67,11 @@ body.no-scroll {
   flex-shrink: 0;
 }
 
-@media (max-width: 768px) {
-  #lottie-loading-container {
-    width: 160px;
-    height: 160px;
-    margin-bottom: 24px;
-  }
-}
-
-@media (max-width: 480px) {
-  #lottie-loading-container {
-    width: 140px;
-    height: 140px;
-    margin-bottom: 20px;
-  }
-}
-
-/* Loading Bar */
 .loading-bar-wrapper {
   width: 280px;
   max-width: 90vw;
   margin-bottom: 24px;
   flex-shrink: 0;
-}
-
-@media (max-width: 480px) {
-  .loading-bar-wrapper {
-    width: 240px;
-    margin-bottom: 20px;
-  }
 }
 
 .loading-bar-bg {
@@ -134,18 +91,11 @@ body.no-scroll {
 }
 
 @keyframes loadingProgress {
-  0% {
-    transform: scaleX(0);
-  }
-  50% {
-    transform: scaleX(0.6);
-  }
-  100% {
-    transform: scaleX(0.95);
-  }
+  0% { transform: scaleX(0); }
+  50% { transform: scaleX(0.6); }
+  100% { transform: scaleX(0.95); }
 }
 
-/* Loading Text */
 .loading-text {
   color: rgba(255, 255, 255, 0.6);
   font-size: 14px;
@@ -158,25 +108,6 @@ body.no-scroll {
   flex-shrink: 0;
 }
 
-@media (max-width: 768px) {
-  .loading-text {
-    font-size: 13px;
-    max-width: 320px;
-    padding: 0 16px;
-    margin-bottom: 12px;
-  }
-}
-
-@media (max-width: 480px) {
-  .loading-text {
-    font-size: 12px;
-    max-width: 280px;
-    line-height: 1.6;
-    margin-bottom: 8px;
-  }
-}
-
-/* Copyright Text */
 .copyright-text {
   color: rgba(0, 255, 255, 0.6);
   font-size: 14px;
@@ -191,63 +122,11 @@ body.no-scroll {
   transition: color 0.3s ease;
 }
 
-@media (max-width: 768px) {
-  .copyright-text {
-    font-size: 12px;
-    padding: 10px 16px;
-    max-width: 320px;
-    margin-top: 6px;
-  }
-}
-
-@media (max-width: 480px) {
-  .copyright-text {
-    font-size: 11px;
-    padding: 8px 12px;
-    max-width: 260px;
-    margin-top: 4px;
-  }
-}
-
 .copyright-text:hover {
   color: rgba(0, 255, 255, 0.9);
   text-decoration: underline;
 }
 
-/* Portrait specific optimizations */
-@media (orientation: portrait) and (max-width: 768px) {
-  .loading-container {
-    padding-top: 35vh;
-  }
-}
-
-/* Landscape phone optimization */
-@media (orientation: landscape) and (max-height: 500px) {
-  .loading-container {
-    padding-top: 20vh;
-  }
-  
-  #lottie-loading-container {
-    width: 120px;
-    height: 120px;
-    margin-bottom: 16px;
-  }
-  
-  .loading-bar-wrapper {
-    margin-bottom: 16px;
-  }
-  
-  .loading-text {
-    font-size: 11px;
-  }
-  
-  .copyright-text {
-    font-size: 10px;
-    padding: 8px;
-  }
-}
-
-/* Main Content Initially Hidden */
 .main-content {
   opacity: 0;
   transition: opacity 0.5s ease;
@@ -261,7 +140,6 @@ body.no-scroll {
    MAIN PORTFOLIO STYLES
    ============================================ */
 
-/* Moving SVG Background - Fixed */
 .bg {
   position: fixed;
   inset: 0;
@@ -279,25 +157,10 @@ body.no-scroll {
 }
 
 @keyframes moveDiagonal {
-  0% {
-    transform: translate(0, 0);
-  }
-  100% {
-    transform: translate(562.5px, 1218px);
-  }
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(562.5px, 1218px); }
 }
 
-/* Mobile optimization */
-@media (max-width: 768px) {
-  .bg svg {
-    width: 400%;
-    height: 400%;
-    top: -150%;
-    left: -150%;
-  }
-}
-
-/* Currency Bar */
 .currency-bar {
   position: fixed;
   top: 1.5rem;
@@ -310,7 +173,7 @@ body.no-scroll {
   backdrop-filter: blur(15px);
   border: none;
   border-radius: 50px;
-  padding: 0.65rem 1.5rem 0.65rem 1.5rem;
+  padding: 0.65rem 1.5rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
@@ -345,7 +208,6 @@ body.no-scroll {
   filter: drop-shadow(0 2px 4px rgba(139, 92, 246, 0.3));
 }
 
-/* Hamburger Menu */
 .hamburger {
   position: fixed;
   top: 1.5rem;
@@ -392,7 +254,6 @@ body.no-scroll {
   transform: translateY(-8.5px) rotate(-45deg);
 }
 
-/* Navigation Menu - Telegram Style */
 .nav-menu {
   position: fixed;
   top: 0;
@@ -413,7 +274,6 @@ body.no-scroll {
   left: 0;
 }
 
-/* Close Button */
 .nav-close {
   position: absolute;
   top: 1.5rem;
@@ -446,7 +306,6 @@ body.no-scroll {
   border-radius: 50%;
 }
 
-/* Account Section */
 .nav-account {
   padding: 1.5rem 2rem 2rem;
   display: flex;
@@ -491,7 +350,6 @@ body.no-scroll {
   font-weight: 400;
 }
 
-/* Navigation List */
 .nav-menu ul {
   list-style: none;
   padding: 0.5rem 0;
@@ -536,7 +394,6 @@ body.no-scroll {
   background: rgba(255, 255, 255, 0.08);
 }
 
-/* Active Navigation Link */
 .nav-menu a.active {
   background: rgba(139, 92, 246, 0.15);
   color: #a78bfa;
@@ -581,7 +438,6 @@ body.no-scroll {
   opacity: 1;
 }
 
-/* Overlay */
 .overlay {
   position: fixed;
   inset: 0;
@@ -598,7 +454,6 @@ body.no-scroll {
   visibility: visible;
 }
 
-/* Debug Panel */
 .debug-panel {
   position: fixed;
   top: 100px;
@@ -660,7 +515,6 @@ body.no-scroll {
   margin-bottom: 0.5rem;
 }
 
-/* Main Container */
 .container {
   position: relative;
   z-index: 1;
@@ -673,7 +527,6 @@ body.no-scroll {
   padding-top: 6rem;
 }
 
-/* Page Content Areas */
 .page-content {
   display: none;
   width: 100%;
@@ -697,7 +550,6 @@ body.no-scroll {
   }
 }
 
-/* Grid Layout */
 .grid-layout {
   display: grid;
   grid-template-columns: 1fr 1.3fr;
@@ -707,7 +559,6 @@ body.no-scroll {
   width: 100%;
 }
 
-/* Top Box - Notifications Only */
 .content-box-top {
   grid-column: 1 / -1;
   background: rgba(26, 35, 50, 0.4);
@@ -741,7 +592,6 @@ body.no-scroll {
   border-radius: 3px;
 }
 
-/* Notification Cube */
 .notification-cube {
   min-width: 75px;
   width: 75px;
@@ -804,7 +654,6 @@ body.no-scroll {
   opacity: 1;
 }
 
-/* Time bar */
 .time-bar {
   position: absolute;
   bottom: 0;
@@ -825,15 +674,10 @@ body.no-scroll {
 }
 
 @keyframes timeProgress {
-  from {
-    transform: scaleX(1);
-  }
-  to {
-    transform: scaleX(0);
-  }
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
 }
 
-/* Left Column Boxes */
 .content-box-left-1 {
   background: linear-gradient(135deg, rgba(157, 78, 221, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
   backdrop-filter: blur(10px);
@@ -869,7 +713,6 @@ body.no-scroll {
   border-radius: 16px;
 }
 
-/* Daily Gift Content */
 .daily-gift-content {
   display: flex;
   align-items: center;
@@ -890,7 +733,6 @@ body.no-scroll {
   object-fit: contain;
 }
 
-/* Gift Bag SVG - positioned at the right */
 .gift-bag-decoration {
   position: absolute;
   right: -20px;
@@ -943,7 +785,6 @@ body.no-scroll {
   letter-spacing: -0.01em;
 }
 
-/* Skills Box Styling */
 .content-box-left-2 {
   background: linear-gradient(135deg, rgba(59, 182, 255, 0.15) 0%, rgba(42, 143, 160, 0.15) 100%);
   backdrop-filter: blur(10px);
@@ -984,7 +825,6 @@ body.no-scroll {
   pointer-events: none;
 }
 
-/* Channel content styling */
 .channel-content {
   position: relative;
   z-index: 2;
@@ -1044,7 +884,6 @@ body.no-scroll {
   object-fit: contain;
 }
 
-/* Big icon positioned below the path */
 .big-icon {
   position: absolute;
   width: 300px;
@@ -1066,7 +905,6 @@ body.no-scroll {
   }
 }
 
-/* Animated path */
 .animated-path {
   animation: pulse 3s ease-in-out infinite;
 }
@@ -1082,7 +920,6 @@ body.no-scroll {
   }
 }
 
-/* Right Column Box - Spans 2 rows - REDESIGNED */
 .content-box-right {
   grid-row: 2 / 4;
   background: linear-gradient(180deg, rgba(245, 194, 107, 0.15) 0%, rgba(232, 168, 77, 0.08) 100%);
@@ -1113,7 +950,6 @@ body.no-scroll {
   transform: translateY(-2px);
 }
 
-/* Inventory Header */
 .inventory-header {
   display: flex;
   align-items: center;
@@ -1147,7 +983,6 @@ body.no-scroll {
   z-index: 2;
 }
 
-/* Item Grid - FIXED WITH OUTLINED CUBES */
 .inventory-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1168,9 +1003,10 @@ body.no-scroll {
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+  cursor: pointer;
 }
 
-.inventory-item:hover {
+.inventory-item:not(.empty):hover {
   background: rgba(245, 194, 107, 0.15);
   border-color: rgba(245, 194, 107, 0.5);
   transform: scale(1.05);
@@ -1179,6 +1015,7 @@ body.no-scroll {
 .inventory-item.empty {
   background: rgba(255, 255, 255, 0.02);
   border: 2px dashed rgba(255, 255, 255, 0.1);
+  cursor: default;
 }
 
 .inventory-item.empty:hover {
@@ -1187,7 +1024,6 @@ body.no-scroll {
   transform: scale(1);
 }
 
-/* Item icon container for Lottie animations */
 .item-icon-container {
   width: 100%;
   height: 100%;
@@ -1198,20 +1034,9 @@ body.no-scroll {
 }
 
 .item-count {
-  position: absolute;
-  bottom: 4px;
-  right: 6px;
-  background: rgba(245, 194, 107, 0.9);
-  color: #0f1a24;
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 8px;
-  min-width: 20px;
-  text-align: center;
+  display: none;
 }
 
-/* View All Button */
 .view-all-btn {
   background: linear-gradient(135deg, rgba(245, 194, 107, 0.2) 0%, rgba(232, 168, 77, 0.2) 100%);
   border: 2px solid rgba(245, 194, 107, 0.5);
@@ -1233,7 +1058,6 @@ body.no-scroll {
   transform: translateY(-2px);
 }
 
-/* Floating Stars */
 .floating-star {
   position: absolute;
   width: 16px;
@@ -1297,8 +1121,7 @@ body.no-scroll {
   animation-delay: 2.2s;
 }
 
-/* Bottom Row Boxes */
-.content-box-bottom-1 {
+.content-box-bottom-1, .content-box-bottom-2 {
   background: rgba(26, 35, 50, 0.4);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -1307,44 +1130,27 @@ body.no-scroll {
   text-align: center;
   opacity: 0;
   transform: translateY(30px);
-  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  animation-delay: 0.8s;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.content-box-bottom-1:hover {
-  transform: translateY(-4px);
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.1);
-}
-
-.content-box-bottom-1:active {
-  transform: translateY(-2px);
+.content-box-bottom-1 {
+  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: 0.8s;
 }
 
 .content-box-bottom-2 {
-  background: rgba(26, 35, 50, 0.4);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 2.5rem 3rem;
-  text-align: center;
-  opacity: 0;
-  transform: translateY(30px);
   animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: 1s;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.content-box-bottom-2:hover {
+.content-box-bottom-1:hover, .content-box-bottom-2:hover {
   transform: translateY(-4px);
   border-color: rgba(255, 255, 255, 0.15);
   box-shadow: 0 8px 30px rgba(255, 255, 255, 0.1);
 }
 
-.content-box-bottom-2:active {
+.content-box-bottom-1:active, .content-box-bottom-2:active {
   transform: translateY(-2px);
 }
 
@@ -1373,7 +1179,6 @@ body.no-scroll {
   margin: 0 auto;
 }
 
-/* Decorative Elements */
 .decorative-line {
   width: 60px;
   height: 3px;
@@ -1382,7 +1187,6 @@ body.no-scroll {
   border-radius: 2px;
 }
 
-/* Simple Page Styles for Other Pages */
 .simple-page {
   max-width: 800px;
   margin: 0 auto;
@@ -1402,7 +1206,225 @@ body.no-scroll {
 }
 
 /* ============================================
-   LEADERBOARD PAGE STYLES - TELEGRAM THEMED
+   PRIZE MODAL STYLES (FOR INVENTORY)
+   ============================================ */
+
+.prize-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 2001;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.prize-modal-overlay.show {
+  display: flex;
+  animation: fadeInModal 0.3s ease forwards;
+}
+
+.prize-modal {
+  background: linear-gradient(135deg, rgba(26, 35, 50, 0.95) 0%, rgba(20, 28, 40, 0.95) 100%);
+  border: 2px solid rgba(245, 194, 107, 0.5);
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+  max-width: 450px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  transform: scale(0.9);
+  animation: modalScale 0.3s ease forwards 0.1s;
+  position: relative;
+}
+
+.prize-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.prize-modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  transform: rotate(90deg);
+}
+
+.prize-modal-header {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #F5C26B;
+  text-align: center;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.prize-modal-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  background: rgba(245, 194, 107, 0.05);
+  border: 2px solid rgba(245, 194, 107, 0.3);
+  border-radius: 16px;
+  position: relative;
+}
+
+.prize-modal-content::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 16px;
+  padding: 2px;
+  background: linear-gradient(135deg, rgba(245, 194, 107, 0.5), rgba(232, 168, 77, 0.5));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: borderGlow 2s ease-in-out infinite;
+}
+
+.prize-modal-icon {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.prize-modal-icon img,
+.prize-modal-icon > div {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  animation: prizeFloat 2s ease-in-out infinite;
+}
+
+.prize-modal-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  text-shadow: 0 2px 10px rgba(245, 194, 107, 0.5);
+  position: relative;
+  z-index: 1;
+}
+
+.prize-modal-id {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: 'Courier New', monospace;
+  text-align: center;
+  letter-spacing: 0.1em;
+  position: relative;
+  z-index: 1;
+}
+
+.prize-modal-coin-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #60a5fa;
+  text-align: center;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.prize-modal-coin-value img {
+  width: 28px;
+  height: 28px;
+  filter: drop-shadow(0 2px 4px rgba(96, 165, 250, 0.3));
+}
+
+.prize-modal-buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.prize-modal-btn {
+  width: 100%;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.convert-btn {
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(96, 165, 250, 0.4);
+}
+
+.convert-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(96, 165, 250, 0.6);
+  background: linear-gradient(135deg, #70b5ff 0%, #4b92ff 100%);
+}
+
+.claim-prize-btn {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: #0f1a24;
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.4);
+}
+
+.claim-prize-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(251, 191, 36, 0.6);
+  background: linear-gradient(135deg, #fcd34d 0%, #fbbf24 100%);
+}
+
+.prize-modal-btn:active {
+  transform: translateY(0);
+}
+
+.prize-modal-btn img,
+.prize-modal-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ============================================
+   LEADERBOARD PAGE STYLES
    ============================================ */
 
 .leaderboard-page {
@@ -1437,12 +1459,8 @@ body.no-scroll {
 }
 
 @keyframes rotateGlow {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .trophy-icon {
@@ -1489,7 +1507,6 @@ body.no-scroll {
   z-index: 1;
 }
 
-/* Leaderboard Tabs */
 .leaderboard-tabs {
   display: flex;
   gap: 1rem;
@@ -1540,7 +1557,6 @@ body.no-scroll {
   box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
 }
 
-/* Leaderboard Content */
 .leaderboard-content {
   position: relative;
 }
@@ -1556,7 +1572,6 @@ body.no-scroll {
   animation: fadeIn 0.3s ease;
 }
 
-/* Podium Container - Top 3 */
 .podium-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1674,7 +1689,6 @@ body.no-scroll {
   background-clip: text;
 }
 
-/* Ranks List - 4+ */
 .ranks-list {
   display: flex;
   flex-direction: column;
@@ -1760,7 +1774,6 @@ body.no-scroll {
   font-weight: 500;
 }
 
-/* Your Rank Card */
 .your-rank-card {
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(96, 165, 250, 0.2) 100%);
   backdrop-filter: blur(10px);
@@ -1812,7 +1825,10 @@ body.no-scroll {
   color: rgba(167, 139, 250, 0.8);
 }
 
-/* Daily Spin Page Styles */
+/* ============================================
+   DAILY SPIN PAGE STYLES
+   ============================================ */
+
 .daily-spin-container {
   width: 100%;
   display: flex;
@@ -1868,18 +1884,6 @@ body.no-scroll {
   background: rgba(26, 35, 50, 0.3);
   backdrop-filter: blur(10px);
   transition: transform 0.05s ease, border-color 0.05s ease, box-shadow 0.05s ease;
-}
-
-.wheel-container::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 180px;
-  height: 180px;
-  pointer-events: none;
-  z-index: 5;
 }
 
 .spin-button {
@@ -1986,12 +1990,6 @@ body.no-scroll {
   object-fit: contain;
 }
 
-.reward-label {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
-  text-align: center;
-}
-
 .gift-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -2031,7 +2029,10 @@ body.no-scroll {
   text-align: center;
 }
 
-/* Win Modal Styles */
+/* ============================================
+   WIN MODAL STYLES
+   ============================================ */
+
 .win-modal-overlay {
   position: fixed;
   inset: 0;
@@ -2052,9 +2053,7 @@ body.no-scroll {
 }
 
 @keyframes fadeInModal {
-  to {
-    opacity: 1;
-  }
+  to { opacity: 1; }
 }
 
 .win-modal {
@@ -2074,9 +2073,7 @@ body.no-scroll {
 }
 
 @keyframes modalScale {
-  to {
-    transform: scale(1);
-  }
+  to { transform: scale(1); }
 }
 
 .win-modal-header {
@@ -2116,12 +2113,8 @@ body.no-scroll {
 }
 
 @keyframes borderGlow {
-  0%, 100% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 1;
-  }
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
 }
 
 .win-modal-icon {
@@ -2142,12 +2135,8 @@ body.no-scroll {
 }
 
 @keyframes prizeFloat {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 .win-modal-value {
@@ -2199,8 +2188,49 @@ body.no-scroll {
   transform: translateY(0);
 }
 
-/* Responsive */
+/* ============================================
+   RESPONSIVE STYLES
+   ============================================ */
+
 @media (max-width: 768px) {
+  .loading-container {
+    padding-top: 40vh;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  #lottie-loading-container {
+    width: 160px;
+    height: 160px;
+    margin-bottom: 24px;
+  }
+
+  .loading-bar-wrapper {
+    width: 240px;
+    margin-bottom: 20px;
+  }
+
+  .loading-text {
+    font-size: 13px;
+    max-width: 320px;
+    padding: 0 16px;
+    margin-bottom: 12px;
+  }
+
+  .copyright-text {
+    font-size: 12px;
+    padding: 10px 16px;
+    max-width: 320px;
+    margin-top: 6px;
+  }
+
+  .bg svg {
+    width: 400%;
+    height: 400%;
+    top: -150%;
+    left: -150%;
+  }
+
   .currency-bar {
     top: 1.25rem;
     right: 1.25rem;
@@ -2276,10 +2306,6 @@ body.no-scroll {
   }
 
   .daily-gift-content {
-    width: 100%;
-  }
-
-  .notification-container {
     width: 100%;
   }
 
@@ -2374,9 +2400,56 @@ body.no-scroll {
   .podium-card[data-rank="3"] {
     grid-column: 1;
   }
+
+  .prize-modal {
+    padding: 2rem 1.5rem;
+    max-width: 90%;
+  }
+
+  .prize-modal-header {
+    font-size: 1.5rem;
+  }
+
+  .prize-modal-name {
+    font-size: 1.25rem;
+  }
+
+  .prize-modal-icon {
+    width: 100px;
+    height: 100px;
+  }
 }
 
 @media (max-width: 480px) {
+  .loading-container {
+    padding-top: 35vh;
+  }
+
+  #lottie-loading-container {
+    width: 140px;
+    height: 140px;
+    margin-bottom: 20px;
+  }
+
+  .loading-bar-wrapper {
+    width: 240px;
+    margin-bottom: 20px;
+  }
+
+  .loading-text {
+    font-size: 12px;
+    max-width: 280px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+
+  .copyright-text {
+    font-size: 11px;
+    padding: 8px 12px;
+    max-width: 260px;
+    margin-top: 4px;
+  }
+
   .currency-bar {
     padding: 0.45rem 1rem 0.45rem 0.45rem;
     gap: 0.4rem;
@@ -2478,5 +2551,51 @@ body.no-scroll {
 
   .leaderboard-title {
     font-size: 1.75rem;
+  }
+
+  .prize-modal-buttons {
+    gap: 0.75rem;
+  }
+
+  .prize-modal-btn {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .prize-modal-coin-value {
+    font-size: 1.1rem;
+  }
+}
+
+/* Portrait specific optimizations */
+@media (orientation: portrait) and (max-width: 768px) {
+  .loading-container {
+    padding-top: 35vh;
+  }
+}
+
+/* Landscape phone optimization */
+@media (orientation: landscape) and (max-height: 500px) {
+  .loading-container {
+    padding-top: 20vh;
+  }
+  
+  #lottie-loading-container {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 16px;
+  }
+  
+  .loading-bar-wrapper {
+    margin-bottom: 16px;
+  }
+  
+  .loading-text {
+    font-size: 11px;
+  }
+  
+  .copyright-text {
+    font-size: 10px;
+    padding: 8px;
   }
 }
