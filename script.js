@@ -1194,7 +1194,7 @@ if (spinButton) {
     });
     
     // 3. Calculate where to stop (must land on a specific cube) - REDUCED DISTANCE
-    const minSpinDistance = 1200 + Math.random() * 600; // 1200-1800 pixels (shorter spin)
+    const minSpinDistance = 2200 + Math.random() * 600; // 1200-1800 pixels (shorter spin)
     const cubePositionsToScroll = Math.floor(minSpinDistance / totalCubeWidth);
     
     // Pick which cube will be in center when we stop
