@@ -1,39 +1,23 @@
 // ============================================
-// LOADING SCREEN LOGIC
+// TELEGRAM WEB APP INITIALIZATION
 // ============================================
 
 let tg = window.Telegram.WebApp;
 let userData = null;
 
-// Initialize Telegram Web App
 function initTelegramWebApp() {
   try {
-    // Expand the Web App to full height
     tg.expand();
-    
-    // Enable closing confirmation
     tg.enableClosingConfirmation();
-    
-    // Get user data
     userData = tg.initDataUnsafe?.user;
     
     if (userData) {
       console.log('✅ Telegram User Data Loaded:', userData);
-      
-      // Update the navigation menu with user info
       updateUserProfile(userData);
-      
-      // Apply Telegram theme colors (optional)
       document.documentElement.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color || '#0f172a');
       document.documentElement.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color || '#ffffff');
-      
-      console.log('User ID:', userData.id);
-      console.log('First Name:', userData.first_name);
-      console.log('Username:', userData.username);
-      console.log('Photo URL:', userData.photo_url);
     } else {
       console.warn('⚠️ No Telegram user data - running in browser test mode');
-      // Fallback for testing in regular browser
       updateUserProfile({
         first_name: 'Test User',
         username: 'testuser',
@@ -41,12 +25,9 @@ function initTelegramWebApp() {
       });
     }
     
-    // Tell Telegram the app is ready
     tg.ready();
-    
   } catch (error) {
     console.error('❌ Error initializing Telegram Web App:', error);
-    // Fallback for browser testing
     updateUserProfile({
       first_name: 'Guest',
       username: 'guest',
@@ -55,7 +36,6 @@ function initTelegramWebApp() {
   }
 }
 
-// Update user profile in the navigation menu
 function updateUserProfile(user) {
   const accountName = document.querySelector('.account-name');
   const accountUsername = document.querySelector('.account-username');
@@ -74,12 +54,10 @@ function updateUserProfile(user) {
   
   if (accountAvatar) {
     if (user.photo_url) {
-      // Set user profile photo as background
       accountAvatar.style.backgroundImage = `url(${user.photo_url})`;
       accountAvatar.style.backgroundSize = 'cover';
       accountAvatar.style.backgroundPosition = 'center';
     } else {
-      // Use initials if no photo
       const initials = (user.first_name?.[0] || 'U') + (user.last_name?.[0] || '');
       accountAvatar.textContent = initials;
       accountAvatar.style.display = 'flex';
@@ -92,7 +70,6 @@ function updateUserProfile(user) {
   }
 }
 
-// Send data back to Telegram bot (optional - use when claiming prizes)
 function sendDataToBot(data) {
   if (tg && tg.sendData) {
     try {
@@ -104,32 +81,31 @@ function sendDataToBot(data) {
   }
 }
 
-// Initialize when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initTelegramWebApp);
 } else {
   initTelegramWebApp();
 }
 
+// ============================================
+// LOADING SCREEN LOGIC
+// ============================================
+
 (function() {
   'use strict';
   
-  // Prevent pull-to-refresh on mobile
   document.addEventListener('touchmove', function(e) {
     if (e.touches.length > 1) {
       e.preventDefault();
     }
   }, { passive: false });
   
-  // Handle orientation changes
   window.addEventListener('orientationchange', function() {
-    // Force a reflow to apply new styles
     document.body.style.display = 'none';
-    document.body.offsetHeight; // Trigger reflow
+    document.body.offsetHeight;
     document.body.style.display = '';
   });
   
-  // Viewport height fix for mobile browsers
   function setVH() {
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
@@ -139,7 +115,6 @@ if (document.readyState === 'loading') {
   window.addEventListener('resize', setVH);
   window.addEventListener('orientationchange', setVH);
   
-  // Load Lottie animation for loading screen
   let loadingAnimation;
   
   function initLoadingAnimation() {
@@ -155,21 +130,17 @@ if (document.readyState === 'loading') {
     }
   }
   
-  // Hide loading screen and show main content
   function hideLoadingScreen() {
     const loadingScreen = document.getElementById('loadingScreen');
     const mainContent = document.getElementById('mainContent');
     
     if (loadingScreen && mainContent) {
-      // Add hidden class to loading screen
       loadingScreen.classList.add('hidden');
       
-      // Show main content after transition
       setTimeout(() => {
         loadingScreen.style.display = 'none';
         mainContent.style.display = 'block';
         
-        // Add visible class for fade-in
         setTimeout(() => {
           mainContent.classList.add('visible');
           document.body.classList.remove('no-scroll');
@@ -178,9 +149,7 @@ if (document.readyState === 'loading') {
     }
   }
   
-  // Initialize loading screen
   function initLoadingScreen() {
-    // Wait for Lottie library to load
     if (typeof lottie === 'undefined') {
       setTimeout(initLoadingScreen, 100);
       return;
@@ -188,11 +157,9 @@ if (document.readyState === 'loading') {
     
     initLoadingAnimation();
     
-    // Simulate loading time (adjust as needed)
-    const minLoadingTime = 2000; // Minimum 2 seconds
+    const minLoadingTime = 2000;
     const startTime = Date.now();
     
-    // Wait for DOM content to be fully loaded
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', function() {
         checkLoadingComplete(startTime, minLoadingTime);
@@ -202,7 +169,6 @@ if (document.readyState === 'loading') {
     }
   }
   
-  // Check if loading is complete
   function checkLoadingComplete(startTime, minLoadingTime) {
     const elapsed = Date.now() - startTime;
     const remaining = Math.max(0, minLoadingTime - elapsed);
@@ -212,15 +178,260 @@ if (document.readyState === 'loading') {
     }, remaining);
   }
   
-  // Start loading screen initialization
   initLoadingScreen();
 })();
+
+// ============================================
+// PRIZE ID GENERATION & INVENTORY SYSTEM
+// ============================================
+
+function generatePrizeId() {
+  const fourDigits = Math.floor(1000 + Math.random() * 9000);
+  const twoDigits = Math.floor(10 + Math.random() * 90);
+  const threeLetters = Array.from({length: 3}, () => 
+    String.fromCharCode(65 + Math.floor(Math.random() * 26))
+  ).join('');
+  
+  return `${fourDigits}-${twoDigits}-${threeLetters}`;
+}
+
+const PRIZE_COIN_VALUES = {
+  'Heart': 50,
+  'Bear': 75,
+  'Rose': 100,
+  'Gift': 125,
+  'Cake': 150,
+  'Rose Bouquet': 200,
+  'Ring': 300,
+  'Trophy': 500,
+  'Diamond': 750,
+  'Calendar': 1000
+};
+
+let inventoryItems = [];
+const MAX_INVENTORY_DISPLAY = 6;
+
+function addPrizeToInventory(prize) {
+  const prizeWithId = {
+    ...prize,
+    prizeId: generatePrizeId(),
+    claimedAt: Date.now()
+  };
+  
+  inventoryItems.push(prizeWithId);
+  updateInventoryDisplay();
+  
+  console.log('✅ Prize added to inventory:', prizeWithId);
+  return prizeWithId;
+}
+
+function removePrizeFromInventory(prizeId) {
+  const index = inventoryItems.findIndex(item => item.prizeId === prizeId);
+  
+  if (index !== -1) {
+    const removed = inventoryItems.splice(index, 1)[0];
+    updateInventoryDisplay();
+    console.log('🗑️ Prize removed from inventory:', removed);
+    return removed;
+  }
+  
+  return null;
+}
+
+function updateInventoryDisplay() {
+  const inventoryGrid = document.querySelector('.inventory-grid');
+  if (!inventoryGrid) return;
+  
+  inventoryGrid.innerHTML = '';
+  
+  const displayItems = inventoryItems.slice(0, MAX_INVENTORY_DISPLAY);
+  
+  displayItems.forEach(item => {
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'inventory-item';
+    itemDiv.dataset.prizeId = item.prizeId;
+    
+    const iconDiv = document.createElement('div');
+    iconDiv.className = 'item-icon-container';
+    
+    if (item.lottie) {
+      lottie.loadAnimation({
+        container: iconDiv,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: item.lottie
+      });
+    }
+    
+    itemDiv.appendChild(iconDiv);
+    
+    itemDiv.addEventListener('click', () => {
+      openPrizeModal(item);
+    });
+    
+    inventoryGrid.appendChild(itemDiv);
+  });
+  
+  const emptySlots = MAX_INVENTORY_DISPLAY - displayItems.length;
+  for (let i = 0; i < emptySlots; i++) {
+    const emptyDiv = document.createElement('div');
+    emptyDiv.className = 'inventory-item empty';
+    inventoryGrid.appendChild(emptyDiv);
+  }
+  
+  if (typeof updateLeaderboardData === 'function') {
+    updateLeaderboardData();
+  }
+}
+
+// ============================================
+// PRIZE MODAL SYSTEM
+// ============================================
+
+const prizeModal = document.getElementById('prizeModal');
+const prizeModalClose = document.getElementById('prizeModalClose');
+const prizeModalIcon = document.getElementById('prizeModalIcon');
+const prizeModalName = document.getElementById('prizeModalName');
+const prizeModalId = document.getElementById('prizeModalId');
+const prizeModalCoinValue = document.getElementById('prizeModalCoinValue');
+const convertBtn = document.getElementById('convertBtn');
+const claimPrizeBtn = document.getElementById('claimPrizeBtn');
+
+let currentModalPrize = null;
+
+function openPrizeModal(prize) {
+  currentModalPrize = prize;
+  
+  prizeModalIcon.innerHTML = '';
+  
+  if (prize.lottie) {
+    const container = document.createElement('div');
+    container.style.width = '100%';
+    container.style.height = '100%';
+    prizeModalIcon.appendChild(container);
+    
+    lottie.loadAnimation({
+      container: container,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: prize.lottie
+    });
+  }
+  
+  prizeModalName.textContent = prize.value;
+  prizeModalId.textContent = `ID: ${prize.prizeId}`;
+  
+  const coinValue = PRIZE_COIN_VALUES[prize.value] || 50;
+  prizeModalCoinValue.innerHTML = `
+    <img src="assets/Coin.svg" alt="Coin">
+    <span>${coinValue.toLocaleString()} Coins</span>
+  `;
+  
+  prizeModal.classList.add('show');
+}
+
+function closePrizeModal() {
+  prizeModal.classList.remove('show');
+  setTimeout(() => {
+    prizeModalIcon.innerHTML = '';
+    currentModalPrize = null;
+  }, 300);
+}
+
+convertBtn.addEventListener('click', () => {
+  if (!currentModalPrize) return;
+  
+  const coinValue = PRIZE_COIN_VALUES[currentModalPrize.value] || 50;
+  
+  const oldValue = virtualCurrency;
+  const newValue = virtualCurrency + coinValue;
+  animateCurrencyChange(oldValue, newValue);
+  
+  removePrizeFromInventory(currentModalPrize.prizeId);
+  closePrizeModal();
+  
+  console.log(`💰 Converted ${currentModalPrize.value} (ID: ${currentModalPrize.prizeId}) to ${coinValue} coins`);
+});
+
+claimPrizeBtn.addEventListener('click', () => {
+  if (!currentModalPrize) return;
+  
+  const prizeId = currentModalPrize.prizeId;
+  const prizeName = currentModalPrize.value;
+  
+  const claimData = {
+    action: 'claim_prize',
+    message: `DEBUG:Prize CLAIMED! ID:${prizeId}`,
+    prizeId: prizeId,
+    prizeName: prizeName,
+    timestamp: Date.now()
+  };
+  
+  if (typeof sendDataToBot === 'function') {
+    sendDataToBot(claimData);
+  }
+  
+  console.log('📤 Claim request sent to bot:', claimData);
+  
+  removePrizeFromInventory(prizeId);
+  closePrizeModal();
+  
+  if (typeof tg !== 'undefined' && tg.openTelegramLink) {
+    const botUsername = 'YourBotUsername'; // CHANGE THIS
+    const botUrl = `https://t.me/${botUsername}`;
+    
+    try {
+      tg.openTelegramLink(botUrl);
+      console.log('✅ Opened Telegram bot:', botUrl);
+    } catch (error) {
+      console.error('❌ Error opening bot:', error);
+    }
+  }
+});
+
+if (prizeModalClose) {
+  prizeModalClose.addEventListener('click', closePrizeModal);
+}
+
+if (prizeModal) {
+  prizeModal.addEventListener('click', (e) => {
+    if (e.target === prizeModal) {
+      closePrizeModal();
+    }
+  });
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && prizeModal && prizeModal.classList.contains('show')) {
+    closePrizeModal();
+  }
+});
+
+function getInventoryItems() {
+  return inventoryItems.map(item => ({
+    prizeId: item.prizeId,
+    prizeName: item.value,
+    prizeType: item.type,
+    claimedAt: item.claimedAt
+  }));
+}
+
+function verifyPrizeExists(prizeId) {
+  return inventoryItems.some(item => item.prizeId === prizeId);
+}
+
+window.generatePrizeId = generatePrizeId;
+window.addPrizeToInventory = addPrizeToInventory;
+window.removePrizeFromInventory = removePrizeFromInventory;
+window.getInventoryItems = getInventoryItems;
+window.verifyPrizeExists = verifyPrizeExists;
 
 // ============================================
 // MAIN PORTFOLIO FUNCTIONALITY
 // ============================================
 
-// Navigation State Management
 let currentPage = 'home';
 
 const hamburger = document.getElementById('hamburger');
@@ -239,23 +450,17 @@ const currentPageDebug = document.getElementById('currentPageDebug');
 let notifications = [];
 const MAX_NOTIFICATIONS = 15;
 let virtualCurrency = 0;
-let inventoryItems = []; // Track won gifts
-const MAX_INVENTORY_DISPLAY = 6; // Maximum items to show in inventory preview
 
-// Page Navigation Function
 function navigateToPage(pageName) {
-  // Hide all pages
   document.querySelectorAll('.page-content').forEach(page => {
     page.classList.remove('active');
   });
   
-  // Show selected page
   const selectedPage = document.getElementById(`page-${pageName}`);
   if (selectedPage) {
     selectedPage.classList.add('active');
   }
   
-  // Update navigation links
   navLinks.forEach(link => {
     link.classList.remove('active');
     if (link.dataset.page === pageName) {
@@ -263,42 +468,33 @@ function navigateToPage(pageName) {
     }
   });
   
-  // Update debug panel
   currentPageDebug.textContent = pageName;
-  
-  // Update current page variable
   currentPage = pageName;
   
-  // Update URL hash without scrolling
   history.pushState(null, null, `#${pageName}`);
   
-  // If navigating to leaderboard, initialize it
   if (pageName === 'leaderboard') {
     initializeLeaderboard();
   }
 }
 
-// Handle navigation link clicks
 navLinks.forEach(link => {
   link.addEventListener('click', (e) => {
     e.preventDefault();
     const pageName = link.dataset.page;
     navigateToPage(pageName);
     
-    // Close menu if open
     if (navMenu.classList.contains('active')) {
       toggleMenu();
     }
   });
 });
 
-// Handle browser back/forward buttons
 window.addEventListener('hashchange', () => {
   const hash = window.location.hash.slice(1) || 'home';
   navigateToPage(hash);
 });
 
-// Initialize page on load
 window.addEventListener('load', () => {
   const hash = window.location.hash.slice(1) || 'home';
   navigateToPage(hash);
@@ -328,7 +524,6 @@ function animateCurrencyChange(oldValue, newValue, duration = 1000) {
       virtualCurrency = newValue;
       currencyAmount.textContent = newValue.toLocaleString();
       
-      // Update leaderboard when currency changes
       updateLeaderboardData();
     }
   }
@@ -343,11 +538,9 @@ function addCurrency(amount) {
 }
 
 updateCurrencyDisplay();
-updateInventoryDisplay(); // Initialize empty inventory
+updateInventoryDisplay();
 
-// Wait for DOM to be ready before initializing Lottie animations
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize Lottie animations after loading screen
   setTimeout(() => {
     let lottieAnim = lottie.loadAnimation({
       container: document.getElementById('lottieAnimation'),
@@ -384,7 +577,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
       inventoryLottieAnim.play();
     }, 1000);
-  }, 2500); // Wait for loading screen to finish
+  }, 2500);
 });
 
 function toggleMenu() {
@@ -533,75 +726,6 @@ function updateNotificationCount() {
   notificationCount.textContent = notifications.length;
 }
 
-// Update inventory display on home page - FIXED VERSION
-function updateInventoryDisplay() {
-  const inventoryGrid = document.querySelector('.inventory-grid');
-  if (!inventoryGrid) return;
-  
-  // Clear current inventory display
-  inventoryGrid.innerHTML = '';
-  
-  // Group items by type and count them
-  const itemCounts = {};
-  inventoryItems.forEach(item => {
-    if (itemCounts[item.id]) {
-      itemCounts[item.id].count++;
-    } else {
-      itemCounts[item.id] = {
-        ...item,
-        count: 1
-      };
-    }
-  });
-  
-  // Convert to array and show up to MAX_INVENTORY_DISPLAY items
-  const uniqueItems = Object.values(itemCounts).slice(0, MAX_INVENTORY_DISPLAY);
-  
-  // Render each item with full outline
-  uniqueItems.forEach(item => {
-    const itemDiv = document.createElement('div');
-    itemDiv.className = 'inventory-item';
-    
-    // Create icon container
-    const iconDiv = document.createElement('div');
-    iconDiv.className = 'item-icon-container';
-    
-    if (item.lottie) {
-      // Load Lottie animation for gifts
-      lottie.loadAnimation({
-        container: iconDiv,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        path: item.lottie
-      });
-    }
-    
-    itemDiv.appendChild(iconDiv);
-    
-    // Add count badge if count > 1
-    if (item.count > 1) {
-      const countBadge = document.createElement('span');
-      countBadge.className = 'item-count';
-      countBadge.textContent = item.count;
-      itemDiv.appendChild(countBadge);
-    }
-    
-    inventoryGrid.appendChild(itemDiv);
-  });
-  
-  // Fill remaining slots with empty placeholders (outlined cubes)
-  const emptySlots = MAX_INVENTORY_DISPLAY - uniqueItems.length;
-  for (let i = 0; i < emptySlots; i++) {
-    const emptyDiv = document.createElement('div');
-    emptyDiv.className = 'inventory-item empty';
-    inventoryGrid.appendChild(emptyDiv);
-  }
-  
-  // Update gift leaderboard count
-  updateLeaderboardData();
-}
-
 imitateWinBtn.addEventListener('click', () => {
   addNotification();
   const earnedAmount = Math.floor(Math.random() * 151) + 50;
@@ -632,7 +756,6 @@ document.querySelector('.content-box-bottom-2').addEventListener('click', () => 
 // LEADERBOARD FUNCTIONALITY
 // ============================================
 
-// Mock leaderboard data (in production, fetch from backend)
 let leaderboardData = {
   coins: [
     { id: 1, name: 'CryptoKing', username: 'cryptoking', coins: 15420, avatar: null },
@@ -658,9 +781,7 @@ let leaderboardData = {
 
 let currentLeaderboardTab = 'coins';
 
-// Initialize leaderboard
 function initializeLeaderboard() {
-  // Initialize trophy icon with Lottie animation
   const trophyIcon = document.getElementById('leaderboardTrophyIcon');
   if (trophyIcon && trophyIcon.children.length === 0) {
     lottie.loadAnimation({
@@ -672,7 +793,6 @@ function initializeLeaderboard() {
     });
   }
   
-  // Initialize gift tab icon
   const giftTabIcon = document.getElementById('giftTabIcon');
   if (giftTabIcon && giftTabIcon.children.length === 0) {
     lottie.loadAnimation({
@@ -684,15 +804,12 @@ function initializeLeaderboard() {
     });
   }
   
-  // Setup tab switching
   const tabs = document.querySelectorAll('.leaderboard-tab');
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
-      // Update active tab
       tabs.forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
       
-      // Switch leaderboard content
       const tabType = tab.dataset.tab;
       currentLeaderboardTab = tabType;
       
@@ -705,11 +822,9 @@ function initializeLeaderboard() {
     });
   });
   
-  // Initial render
   renderLeaderboard('coins');
 }
 
-// Render leaderboard
 function renderLeaderboard(type) {
   const data = type === 'coins' ? leaderboardData.coins : leaderboardData.gifts;
   const container = document.getElementById(`leaderboard-${type}`);
@@ -719,29 +834,24 @@ function renderLeaderboard(type) {
   const podiumContainer = container.querySelector('.podium-container');
   const ranksList = container.querySelector('.ranks-list');
   
-  // Clear existing content
   podiumContainer.innerHTML = '';
   ranksList.innerHTML = '';
   
-  // Render top 3 (podium)
   data.slice(0, 3).forEach((player, index) => {
     const rank = index + 1;
     const card = createPodiumCard(player, rank, type);
     podiumContainer.appendChild(card);
   });
   
-  // Render ranks 4+
   data.slice(3).forEach((player, index) => {
     const rank = index + 4;
     const card = createRankCard(player, rank, type);
     ranksList.appendChild(card);
   });
   
-  // Update "Your Rank" card
   updateYourRank(type);
 }
 
-// Create podium card (top 3)
 function createPodiumCard(player, rank, type) {
   const card = document.createElement('div');
   card.className = 'podium-card';
@@ -777,7 +887,6 @@ function createPodiumCard(player, rank, type) {
   return card;
 }
 
-// Create rank card (4+)
 function createRankCard(player, rank, type) {
   const card = document.createElement('div');
   card.className = 'rank-card';
@@ -817,7 +926,6 @@ function createRankCard(player, rank, type) {
   return card;
 }
 
-// Update "Your Rank" card
 function updateYourRank(type) {
   const yourRankElem = document.getElementById('yourRank');
   const yourRankNameElem = document.getElementById('yourRankName');
@@ -825,7 +933,6 @@ function updateYourRank(type) {
   
   if (!yourRankElem || !yourRankNameElem || !yourRankScoreElem) return;
   
-  // Get current user data
   const currentUser = userData || { first_name: 'You', username: 'you' };
   const userName = currentUser.last_name 
     ? `${currentUser.first_name} ${currentUser.last_name}` 
@@ -834,14 +941,12 @@ function updateYourRank(type) {
   yourRankNameElem.textContent = userName;
   
   if (type === 'coins') {
-    // Calculate rank based on current coins
     const data = leaderboardData.coins;
     let rank = data.filter(p => p.coins > virtualCurrency).length + 1;
     
     yourRankElem.textContent = rank;
     yourRankScoreElem.textContent = `${virtualCurrency.toLocaleString()} coins`;
   } else {
-    // Calculate rank based on gift count
     const giftCount = inventoryItems.length;
     const data = leaderboardData.gifts;
     let rank = data.filter(p => p.gifts > giftCount).length + 1;
@@ -851,17 +956,14 @@ function updateYourRank(type) {
   }
 }
 
-// Update leaderboard data when user stats change
 function updateLeaderboardData() {
-  // In production, send data to backend
-  // For now, just update the "Your Rank" display if on leaderboard page
   if (currentPage === 'leaderboard') {
     updateYourRank(currentLeaderboardTab);
   }
 }
 
 // ============================================
-// DAILY SPIN PAGE FUNCTIONALITY - FIXED VERSION
+// DAILY SPIN PAGE FUNCTIONALITY
 // ============================================
 
 const spinButton = document.getElementById('spinButton');
@@ -875,7 +977,7 @@ const claimButton = document.getElementById('claimButton');
 let isSpinning = false;
 let currentWinningPrize = null;
 let scrollPosition = 0;
-let scrollSpeed = 1; // Idle speed
+let scrollSpeed = 1;
 let animationFrameId = null;
 
 const cubeWidth = 120;
@@ -903,7 +1005,6 @@ const prizes = [
   { id: 'giftCalendar', type: 'gift', value: 'Calendar', chance: 0.06, lottie: 'assets/giftCalendar.json' }
 ];
 
-// Select prize using weighted random
 function selectPrize() {
   const random = Math.random() * 100;
   let cumulative = 0;
@@ -918,7 +1019,6 @@ function selectPrize() {
   return prizes[0];
 }
 
-// Render a prize into a cube element
 function renderPrizeToCube(cube, prize) {
   cube.dataset.prizeId = prize.id;
   cube.dataset.prizeType = prize.type;
@@ -970,7 +1070,6 @@ function renderPrizeToCube(cube, prize) {
   cube.style.justifyContent = 'center';
 }
 
-// Populate cubes with random prizes
 function populateCubes() {
   const cubes = document.querySelectorAll('.cube');
   cubes.forEach(cube => {
@@ -979,7 +1078,6 @@ function populateCubes() {
   });
 }
 
-// Update cube scales based on distance from center
 function updateCubeScales(cubes) {
   if (!wheelContainer) return;
   
@@ -1006,7 +1104,6 @@ function updateCubeScales(cubes) {
   });
 }
 
-// SINGLE UNIFIED ANIMATION LOOP
 function updateWheelAnimation() {
   if (!wheel || !wheelContainer) {
     animationFrameId = requestAnimationFrame(updateWheelAnimation);
@@ -1019,32 +1116,26 @@ function updateWheelAnimation() {
     return;
   }
   
-  // Move the wheel
   scrollPosition += scrollSpeed;
   
-  // Recycle cubes when they move off screen
   if (scrollPosition >= totalCubeWidth) {
     const firstCube = cubes[0];
     wheel.appendChild(firstCube);
     scrollPosition -= totalCubeWidth;
     
-    // Only randomize if not spinning (during spin, cubes are pre-set)
     if (!isSpinning) {
       const prize = selectPrize();
       renderPrizeToCube(firstCube, prize);
     }
   }
   
-  // Update visual position
   wheel.style.transform = `translateX(-${scrollPosition}px)`;
   
-  // Update cube scales
   updateCubeScales(cubes);
   
   animationFrameId = requestAnimationFrame(updateWheelAnimation);
 }
 
-// Show win modal
 function showWinModal(prize) {
   currentWinningPrize = prize;
   
@@ -1082,7 +1173,6 @@ function showWinModal(prize) {
   winModal.classList.add('show');
 }
 
-// Hide win modal
 function hideWinModal() {
   winModal.classList.remove('show');
   setTimeout(() => {
@@ -1090,41 +1180,37 @@ function hideWinModal() {
   }, 300);
 }
 
-// Claim button handler - FIXED
-claimButton.addEventListener('click', () => {
-  if (currentWinningPrize) {
-    if (currentWinningPrize.type === 'coin') {
-      virtualCurrency += parseInt(currentWinningPrize.value);
-      updateCurrencyDisplay();
-    } else {
-      inventoryItems.push(currentWinningPrize);
-      updateInventoryDisplay();
-      console.log('Gift added to inventory:', currentWinningPrize.value);
+if (claimButton) {
+  claimButton.addEventListener('click', () => {
+    if (currentWinningPrize) {
+      if (currentWinningPrize.type === 'coin') {
+        virtualCurrency += parseInt(currentWinningPrize.value);
+        updateCurrencyDisplay();
+      } else {
+        addPrizeToInventory(currentWinningPrize);
+        console.log('🎁 Prize added to inventory with unique ID');
+      }
     }
-  }
-  
-  hideWinModal();
-  currentWinningPrize = null;
-  
-  // Re-randomize all cubes for next spin
-  populateCubes();
-  
-  // IMPORTANT: Reset spin state completely
-  scrollSpeed = 1; // Reset to idle speed
-  isSpinning = false; // Allow spinning again
-  spinButton.disabled = false; // Re-enable the spin button
-  
-  console.log('✅ Spin state reset - ready for next spin');
-});
+    
+    hideWinModal();
+    currentWinningPrize = null;
+    
+    populateCubes();
+    
+    scrollSpeed = 1;
+    isSpinning = false;
+    if (spinButton) {
+      spinButton.disabled = false;
+    }
+    
+    console.log('✅ Spin state reset - ready for next spin');
+  });
+}
 
-// Initialize on load
 window.addEventListener('load', () => {
   populateCubes();
-  
-  // Start the unified animation loop
   updateWheelAnimation();
   
-  // Initialize static reward icons
   const coinIds = ['coin1', 'coin5', 'coin10', 'coin25', 'coin50', 'coin100', 'coin250', 'coin500'];
   coinIds.forEach(id => {
     const container = document.getElementById(id);
@@ -1163,7 +1249,6 @@ window.addEventListener('load', () => {
   });
 });
 
-// SPIN BUTTON HANDLER - FIXED
 if (spinButton) {
   spinButton.addEventListener('click', () => {
     if (isSpinning) return;
@@ -1173,11 +1258,9 @@ if (spinButton) {
     
     console.log('🎰 SPIN STARTED');
 
-    // 1. Select the winning prize
     const winningPrize = selectPrize();
     console.log('🎯 Selected winning prize:', winningPrize);
 
-    // 2. Repopulate ALL cubes with random prizes
     const cubes = Array.from(document.querySelectorAll('.cube'));
     
     if (cubes.length === 0) {
@@ -1187,28 +1270,23 @@ if (spinButton) {
       return;
     }
     
-    // Fill all cubes with random prizes
     cubes.forEach(cube => {
       const randomPrize = selectPrize();
       renderPrizeToCube(cube, randomPrize);
     });
     
-    // 3. Calculate where to stop (must land on a specific cube) - REDUCED DISTANCE
-    const minSpinDistance = 5000 + Math.random() * 600; // 1200-1800 pixels (shorter spin)
+    const minSpinDistance = 5000 + Math.random() * 600;
     const cubePositionsToScroll = Math.floor(minSpinDistance / totalCubeWidth);
     
-    // Pick which cube will be in center when we stop
     const winningCubeIndex = cubePositionsToScroll % cubes.length;
     
-    // 4. SET THE WINNING PRIZE in that specific cube
     renderPrizeToCube(cubes[winningCubeIndex], winningPrize);
     
     console.log('🎲 Winning cube index:', winningCubeIndex, '| Distance:', minSpinDistance.toFixed(0), 'px');
 
-    // 5. Animate the spin - REDUCED DURATION AND SPEED
     const startTime = Date.now();
-    const duration = 4500; // 3.5 seconds (shorter duration)
-    const maxSpeed = 25; // Slightly reduced peak speed
+    const duration = 4500;
+    const maxSpeed = 25;
     
     function animateSpin() {
       if (!isSpinning) return;
@@ -1216,21 +1294,17 @@ if (spinButton) {
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
       
-      // Smooth easing: fast start, slow end
       const easeProgress = 1 - Math.pow(1 - progress, 4);
       
-      // Update scroll speed (the unified loop will use this)
       scrollSpeed = maxSpeed * (1 - easeProgress);
       
       if (progress < 1) {
         requestAnimationFrame(animateSpin);
       } else {
-        // Spin animation complete
         scrollSpeed = 0;
         
         console.log('🎯 Spin complete, snapping to center...');
         
-        // 6. Snap to center
         setTimeout(() => {
           const cubes = Array.from(document.querySelectorAll('.cube'));
           const containerCenter = wheelContainer.offsetWidth / 2;
@@ -1251,7 +1325,6 @@ if (spinButton) {
             }
           });
           
-          // Smooth snap animation
           const snapStartTime = Date.now();
           const snapDuration = 400;
           const startScrollPos = scrollPosition;
@@ -1266,7 +1339,6 @@ if (spinButton) {
             if (snapProgress < 1) {
               requestAnimationFrame(snapToCenter);
             } else {
-              // Snap complete - highlight winner
               if (centerCube) {
                 centerCube.style.transition = 'all 0.3s ease';
                 centerCube.style.borderColor = '#60a5fa';
@@ -1276,12 +1348,10 @@ if (spinButton) {
                   centerCube.style.transition = '';
                 }, 300);
                 
-                // Get the prize from the center cube
                 const finalPrize = prizes.find(p => p.id === centerCube.dataset.prizeId);
                 
                 console.log('✅ Final winning prize:', finalPrize);
                 
-                // Show win modal
                 setTimeout(() => {
                   if (finalPrize) {
                     showWinModal(finalPrize);
