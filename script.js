@@ -795,6 +795,7 @@ document.querySelector('.content-box-bottom-2').addEventListener('click', () => 
   alert('Contact clicked!');
 });
 
+
 // ============================================
 // LEADERBOARD FUNCTIONALITY
 // ============================================
@@ -1004,6 +1005,470 @@ function updateLeaderboardData() {
     updateYourRank(currentLeaderboardTab);
   }
 }
+
+// ============================================
+// SETTINGS PAGE FUNCTIONALITY
+// ============================================
+
+// Settings state
+const settingsState = {
+  language: 'en',
+  pushNotifications: true,
+  soundEffects: true,
+  prizeAlerts: true,
+  animationsEnabled: true,
+  confettiEffects: true,
+  showInLeaderboard: true,
+  shareStats: true
+};
+
+// Language names
+const languageNames = {
+  'en': 'English',
+  'ru': 'Русский',
+  'es': 'Español',
+  'fr': 'Français',
+  'de': 'Deutsch',
+  'zh': '中文'
+};
+
+// Load settings from localStorage
+function loadSettings() {
+  const saved = localStorage.getItem('appSettings');
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      Object.assign(settingsState, parsed);
+      applySettings();
+    } catch (error) {
+      console.error('Error loading settings:', error);
+    }
+  }
+}
+
+// Save settings to localStorage
+function saveSettings() {
+  try {
+    localStorage.setItem('appSettings', JSON.stringify(settingsState));
+    console.log('✅ Settings saved');
+  } catch (error) {
+    console.error('❌ Error saving settings:', error);
+  }
+}
+
+// Apply settings to UI
+function applySettings() {
+  // Update toggle switches
+  document.getElementById('pushNotifications').checked = settingsState.pushNotifications;
+  document.getElementById('soundEffects').checked = settingsState.soundEffects;
+  document.getElementById('prizeAlerts').checked = settingsState.prizeAlerts;
+  document.getElementById('animationsEnabled').checked = settingsState.animationsEnabled;
+  document.getElementById('confettiEffects').checked = settingsState.confettiEffects;
+  document.getElementById('showInLeaderboard').checked = settingsState.showInLeaderboard;
+  document.getElementById('shareStats').checked = settingsState.shareStats;
+  
+  // Update language display
+  const currentLanguageElem = document.getElementById('currentLanguage');
+  if (currentLanguageElem) {
+    currentLanguageElem.textContent = languageNames[settingsState.language] || 'English';
+  }
+}
+
+// Initialize settings page
+function initializeSettings() {
+  loadSettings();
+  
+  // Setup toggle listeners
+  const toggles = [
+    'pushNotifications',
+    'soundEffects',
+    'prizeAlerts',
+    'animationsEnabled',
+    'confettiEffects',
+    'showInLeaderboard',
+    'shareStats'
+  ];
+  
+  toggles.forEach(id => {
+    const toggle = document.getElementById(id);
+    if (toggle) {
+      toggle.addEventListener('change', (e) => {
+        settingsState[id] = e.target.checked;
+        saveSettings();
+        
+        // Show feedback
+        showSettingChangedFeedback(id);
+        
+        console.log(`${id} changed to:`, e.target.checked);
+      });
+    }
+  });
+  
+  // Language setting click
+  const languageSetting = document.getElementById('languageSetting');
+  if (languageSetting) {
+    languageSetting.addEventListener('click', openLanguageModal);
+  }
+  
+  // Terms & Privacy buttons
+  const termsBtn = document.getElementById('termsBtn');
+  if (termsBtn) {
+    termsBtn.addEventListener('click', () => {
+      alert('Terms of Service\n\nThis would open the Terms of Service page.');
+    });
+  }
+  
+  const privacyBtn = document.getElementById('privacyBtn');
+  if (privacyBtn) {
+    privacyBtn.addEventListener('click', () => {
+      alert('Privacy Policy\n\nThis would open the Privacy Policy page.');
+    });
+  }
+  
+  // Danger zone buttons
+  const resetDataBtn = document.getElementById('resetDataBtn');
+  if (resetDataBtn) {
+    resetDataBtn.addEventListener('click', handleResetData);
+  }
+  
+  const clearCacheBtn = document.getElementById('clearCacheBtn');
+  if (clearCacheBtn) {
+    clearCacheBtn.addEventListener('click', handleClearCache);
+  }
+  
+  // Promocode functionality
+  initializePromocode();
+}
+
+// Show feedback when setting changed
+function showSettingChangedFeedback(settingId) {
+  // Create a temporary toast notification
+  const toast = document.createElement('div');
+  toast.className = 'setting-toast';
+  toast.textContent = '✓ Setting saved';
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(16, 185, 129, 0.9);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  `;
+  
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.style.opacity = '1';
+  }, 10);
+  
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => {
+      toast.remove();
+    }, 300);
+  }, 2000);
+}
+
+// ============================================
+// LANGUAGE MODAL
+// ============================================
+
+const languageModal = document.getElementById('languageModal');
+const languageModalClose = document.getElementById('languageModalClose');
+
+function openLanguageModal() {
+  if (languageModal) {
+    languageModal.classList.add('show');
+    updateLanguageSelection();
+  }
+}
+
+function closeLanguageModal() {
+  if (languageModal) {
+    languageModal.classList.remove('show');
+  }
+}
+
+function updateLanguageSelection() {
+  const options = document.querySelectorAll('.language-option');
+  options.forEach(option => {
+    const lang = option.dataset.lang;
+    if (lang === settingsState.language) {
+      option.classList.add('active');
+    } else {
+      option.classList.remove('active');
+    }
+  });
+}
+
+// Language modal close button
+if (languageModalClose) {
+  languageModalClose.addEventListener('click', closeLanguageModal);
+}
+
+// Close modal when clicking outside
+if (languageModal) {
+  languageModal.addEventListener('click', (e) => {
+    if (e.target === languageModal) {
+      closeLanguageModal();
+    }
+  });
+}
+
+// Language option clicks
+document.querySelectorAll('.language-option').forEach(option => {
+  option.addEventListener('click', () => {
+    const lang = option.dataset.lang;
+    settingsState.language = lang;
+    saveSettings();
+    
+    // Update current language display
+    const currentLanguageElem = document.getElementById('currentLanguage');
+    if (currentLanguageElem) {
+      currentLanguageElem.textContent = languageNames[lang];
+    }
+    
+    updateLanguageSelection();
+    
+    setTimeout(() => {
+      closeLanguageModal();
+      showSettingChangedFeedback('language');
+    }, 300);
+    
+    console.log('Language changed to:', lang);
+  });
+});
+
+// ============================================
+// PROMOCODE FUNCTIONALITY
+// ============================================
+
+const promocodeInput = document.getElementById('promocodeInput');
+const promocodeSubmitBtn = document.getElementById('promocodeSubmitBtn');
+const promocodeStatus = document.getElementById('promocodeStatus');
+
+// Valid promocodes (you can modify this)
+const validPromocodes = {
+  'WELCOME100': { coins: 100, message: 'Welcome bonus claimed!' },
+  'LUCKY777': { coins: 777, message: 'Lucky bonus activated!' },
+  'FREECOINS': { coins: 50, message: 'Free coins added!' },
+  'VOIDGIFT': { coins: 200, message: 'Special gift redeemed!' },
+  'SPIN2WIN': { coins: 150, message: 'Spin bonus unlocked!' }
+};
+
+// Redeemed promocodes (stored in localStorage)
+let redeemedCodes = [];
+
+function loadRedeemedCodes() {
+  const saved = localStorage.getItem('redeemedCodes');
+  if (saved) {
+    try {
+      redeemedCodes = JSON.parse(saved);
+    } catch (error) {
+      console.error('Error loading redeemed codes:', error);
+      redeemedCodes = [];
+    }
+  }
+}
+
+function saveRedeemedCode(code) {
+  if (!redeemedCodes.includes(code)) {
+    redeemedCodes.push(code);
+    localStorage.setItem('redeemedCodes', JSON.stringify(redeemedCodes));
+  }
+}
+
+function initializePromocode() {
+  loadRedeemedCodes();
+  
+  if (promocodeSubmitBtn) {
+    promocodeSubmitBtn.addEventListener('click', submitPromocode);
+  }
+  
+  if (promocodeInput) {
+    promocodeInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        submitPromocode();
+      }
+    });
+    
+    // Auto-uppercase
+    promocodeInput.addEventListener('input', (e) => {
+      e.target.value = e.target.value.toUpperCase();
+    });
+  }
+}
+
+function submitPromocode() {
+  const code = promocodeInput.value.trim().toUpperCase();
+  
+  if (!code) {
+    showPromocodeStatus('Please enter a promocode', 'error');
+    return;
+  }
+  
+  // Check if already redeemed
+  if (redeemedCodes.includes(code)) {
+    showPromocodeStatus('This code has already been redeemed', 'error');
+    return;
+  }
+  
+  // Check if valid
+  if (validPromocodes[code]) {
+    const promo = validPromocodes[code];
+    
+    // Add coins
+    if (typeof addCurrency === 'function') {
+      addCurrency(promo.coins);
+    }
+    
+    // Save as redeemed
+    saveRedeemedCode(code);
+    
+    // Show success
+    showPromocodeStatus(`✓ ${promo.message} +${promo.coins} coins!`, 'success');
+    
+    // Clear input
+    promocodeInput.value = '';
+    
+    // Disable submit button temporarily
+    promocodeSubmitBtn.disabled = true;
+    setTimeout(() => {
+      promocodeSubmitBtn.disabled = false;
+    }, 2000);
+    
+    console.log(`✅ Promocode redeemed: ${code} (+${promo.coins} coins)`);
+  } else {
+    showPromocodeStatus('Invalid promocode', 'error');
+  }
+}
+
+function showPromocodeStatus(message, type) {
+  if (!promocodeStatus) return;
+  
+  promocodeStatus.textContent = message;
+  promocodeStatus.className = 'promocode-status show ' + type;
+  
+  setTimeout(() => {
+    promocodeStatus.classList.remove('show');
+  }, 3000);
+}
+
+// ============================================
+// DANGER ZONE ACTIONS
+// ============================================
+
+function handleResetData() {
+  const confirmed = confirm(
+    '⚠️ WARNING: Reset All Data?\n\n' +
+    'This will delete:\n' +
+    '• All your coins\n' +
+    '• All your prizes\n' +
+    '• All your inventory items\n' +
+    '• All redeemed promocodes\n' +
+    '• All settings\n\n' +
+    'This action CANNOT be undone!\n\n' +
+    'Are you sure you want to continue?'
+  );
+  
+  if (!confirmed) return;
+  
+  const doubleConfirm = confirm(
+    '🚨 FINAL WARNING!\n\n' +
+    'This will permanently delete ALL your data.\n\n' +
+    'Type "RESET" in the next prompt to confirm.'
+  );
+  
+  if (!doubleConfirm) return;
+  
+  const userInput = prompt('Type "RESET" to confirm:');
+  
+  if (userInput === 'RESET') {
+    // Clear all localStorage
+    localStorage.clear();
+    
+    // Reset virtual currency
+    if (typeof virtualCurrency !== 'undefined') {
+      virtualCurrency = 0;
+      if (typeof updateCurrencyDisplay === 'function') {
+        updateCurrencyDisplay();
+      }
+    }
+    
+    // Clear inventory
+    if (typeof inventoryItems !== 'undefined') {
+      inventoryItems = [];
+      if (typeof updateInventoryDisplay === 'function') {
+        updateInventoryDisplay();
+      }
+    }
+    
+    // Reset settings
+    Object.keys(settingsState).forEach(key => {
+      if (typeof settingsState[key] === 'boolean') {
+        settingsState[key] = true;
+      } else if (key === 'language') {
+        settingsState[key] = 'en';
+      }
+    });
+    
+    applySettings();
+    
+    alert('✅ All data has been reset!\n\nThe page will now reload.');
+    
+    // Reload page
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+    
+    console.log('🗑️ All data reset');
+  } else {
+    alert('Reset cancelled. Data NOT deleted.');
+  }
+}
+
+function handleClearCache() {
+  const confirmed = confirm(
+    'Clear Cache?\n\n' +
+    'This will clear temporary cached data.\n' +
+    'Your coins, prizes, and settings will NOT be affected.\n\n' +
+    'Continue?'
+  );
+  
+  if (confirmed) {
+    // Clear browser cache (simulated - actual cache clearing requires service worker)
+    // In a real app, you'd clear actual cache here
+    
+    console.log('🗑️ Cache cleared');
+    
+    alert('✅ Cache cleared successfully!');
+  }
+}
+
+// ============================================
+// EXPORT SETTINGS
+// ============================================
+
+// Make settings state accessible globally
+window.settingsState = settingsState;
+window.loadSettings = loadSettings;
+window.saveSettings = saveSettings;
+
+// Initialize settings when page loads
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeSettings);
+} else {
+  initializeSettings();
+}
+
+console.log('⚙️ Settings module loaded');
 
 // ============================================
 // DAILY SPIN PAGE FUNCTIONALITY - OPTIMIZED
