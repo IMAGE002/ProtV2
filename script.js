@@ -1090,7 +1090,7 @@ function hideWinModal() {
   }, 300);
 }
 
-// Claim button handler
+// Claim button handler - FIXED
 claimButton.addEventListener('click', () => {
   if (currentWinningPrize) {
     if (currentWinningPrize.type === 'coin') {
@@ -1109,10 +1109,12 @@ claimButton.addEventListener('click', () => {
   // Re-randomize all cubes for next spin
   populateCubes();
   
-  // Reset to idle speed
-  scrollSpeed = 1;
-  isSpinning = false;
-  spinButton.disabled = false;
+  // IMPORTANT: Reset spin state completely
+  scrollSpeed = 1; // Reset to idle speed
+  isSpinning = false; // Allow spinning again
+  spinButton.disabled = false; // Re-enable the spin button
+  
+  console.log('✅ Spin state reset - ready for next spin');
 });
 
 // Initialize on load
@@ -1161,7 +1163,7 @@ window.addEventListener('load', () => {
   });
 });
 
-// SPIN BUTTON HANDLER
+// SPIN BUTTON HANDLER - FIXED
 if (spinButton) {
   spinButton.addEventListener('click', () => {
     if (isSpinning) return;
@@ -1191,8 +1193,8 @@ if (spinButton) {
       renderPrizeToCube(cube, randomPrize);
     });
     
-    // 3. Calculate where to stop (must land on a specific cube)
-    const minSpinDistance = 3000 + Math.random() * 1000; // 3000-4000 pixels
+    // 3. Calculate where to stop (must land on a specific cube) - REDUCED DISTANCE
+    const minSpinDistance = 1200 + Math.random() * 600; // 1200-1800 pixels (shorter spin)
     const cubePositionsToScroll = Math.floor(minSpinDistance / totalCubeWidth);
     
     // Pick which cube will be in center when we stop
@@ -1203,10 +1205,10 @@ if (spinButton) {
     
     console.log('🎲 Winning cube index:', winningCubeIndex, '| Distance:', minSpinDistance.toFixed(0), 'px');
 
-    // 5. Animate the spin
+    // 5. Animate the spin - REDUCED DURATION AND SPEED
     const startTime = Date.now();
-    const duration = 5000; // 5 seconds
-    const maxSpeed = 25; // Peak speed
+    const duration = 3500; // 3.5 seconds (shorter duration)
+    const maxSpeed = 20; // Slightly reduced peak speed
     
     function animateSpin() {
       if (!isSpinning) return;
