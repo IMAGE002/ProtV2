@@ -1229,8 +1229,8 @@ body.no-scroll {
 }
 
 .prize-modal {
-  background: linear-gradient(135deg, rgba(26, 35, 50, 0.95) 0%, rgba(20, 28, 40, 0.95) 100%);
-  border: 2px solid rgba(245, 194, 107, 0.5);
+  background: transparent;
+  border: none
   border-radius: 24px;
   padding: 2.5rem 2rem;
   max-width: 450px;
@@ -1239,7 +1239,7 @@ body.no-scroll {
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 50%);
   transform: scale(0.9);
   animation: modalScale 0.3s ease forwards 0.1s;
   position: relative;
@@ -1306,9 +1306,9 @@ body.no-scroll {
   animation: borderGlow 2s ease-in-out infinite;
 }
 
-.prize-modal-icon {
-  width: 120px;
-  height: 120px;
+prize-modal-icon {
+  width: 500px;
+  height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
