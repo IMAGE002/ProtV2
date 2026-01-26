@@ -275,9 +275,255 @@
 
   <!-- SETTINGS PAGE -->
   <div class="page-content" id="page-settings">
-    <div class="simple-page">
-      <h1>⚙️ Settings</h1>
-      <p>This is the settings page. Customize your experience and manage your account settings.</p>
+    <div class="settings-page">
+      <!-- Settings Header -->
+      <div class="settings-header">
+        <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 1v6m0 6v6m9-9h-6m-6 0H3"/>
+          <path d="M19.07 4.93l-3.54 3.54m-7.07 7.07L4.93 19.07m14.14 0l-3.54-3.54m-7.07-7.07L4.93 4.93"/>
+        </svg>
+        <h1 class="settings-title">Settings</h1>
+        <p class="settings-subtitle">Customize your experience</p>
+      </div>
+
+      <!-- Promocode Section -->
+      <div class="settings-section promocode-section">
+        <div class="section-header">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="8" width="18" height="12" rx="2"/>
+            <path d="M7 8V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/>
+            <circle cx="12" cy="14" r="1"/>
+          </svg>
+          <h2>Promocode</h2>
+        </div>
+        
+        <div class="promocode-input-wrapper">
+          <input 
+            type="text" 
+            id="promocodeInput" 
+            class="promocode-input" 
+            placeholder="Enter promocode..."
+            maxlength="20"
+          >
+          <button class="promocode-submit-btn" id="promocodeSubmitBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+            </svg>
+          </button>
+        </div>
+        
+        <div class="promocode-status" id="promocodeStatus"></div>
+        
+        <div class="promocode-info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4M12 8h.01"/>
+          </svg>
+          <span>Enter a valid promocode to receive rewards</span>
+        </div>
+      </div>
+
+      <!-- Language Section -->
+      <div class="settings-section">
+        <div class="section-header">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          <h2>Language</h2>
+        </div>
+        
+        <div class="setting-item" id="languageSetting">
+          <div class="setting-info">
+            <div class="setting-label">App Language</div>
+            <div class="setting-description">Choose your preferred language</div>
+          </div>
+          <div class="setting-value">
+            <span id="currentLanguage">English</span>
+            <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications Section -->
+      <div class="settings-section">
+        <div class="section-header">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <h2>Notifications</h2>
+        </div>
+        
+        <div class="setting-item toggle-item">
+          <div class="setting-info">
+            <div class="setting-label">Push Notifications</div>
+            <div class="setting-description">Receive notifications about wins and updates</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="pushNotifications" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item toggle-item">
+          <div class="setting-info">
+            <div class="setting-label">Sound Effects</div>
+            <div class="setting-description">Play sounds when spinning the wheel</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="soundEffects" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item toggle-item">
+          <div class="setting-info">
+            <div class="setting-label">Prize Alerts</div>
+            <div class="setting-description">Get notified when you win rare prizes</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="prizeAlerts" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Display Section -->
+      <div class="settings-section">
+        <div class="section-header">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <path d="M8 21h8M12 17v4"/>
+          </svg>
+          <h2>Display</h2>
+        </div>
+        
+        <div class="setting-item toggle-item">
+          <div class="setting-info">
+            <div class="setting-label">Animations</div>
+            <div class="setting-description">Enable smooth animations and effects</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="animationsEnabled" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item toggle-item">
+          <div class="setting-info">
+            <div class="setting-label">Confetti Effects</div>
+            <div class="setting-description">Show confetti when winning prizes</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="confettiEffects" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Privacy Section -->
+      <div class="settings-section">
+        <div class="section-header">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <h2>Privacy</h2>
+        </div>
+        
+        <div class="setting-item toggle-item">
+          <div class="setting-info">
+            <div class="setting-label">Show in Leaderboard</div>
+            <div class="setting-description">Display your stats on the public leaderboard</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="showInLeaderboard" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item toggle-item">
+          <div class="setting-info">
+            <div class="setting-label">Share Statistics</div>
+            <div class="setting-description">Allow sharing your game stats with friends</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="shareStats" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- About Section -->
+      <div class="settings-section">
+        <div class="section-header">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4M12 8h.01"/>
+          </svg>
+          <h2>About</h2>
+        </div>
+        
+        <div class="setting-item clickable" id="termsBtn">
+          <div class="setting-info">
+            <div class="setting-label">Terms of Service</div>
+            <div class="setting-description">Read our terms and conditions</div>
+          </div>
+          <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </div>
+
+        <div class="setting-item clickable" id="privacyBtn">
+          <div class="setting-info">
+            <div class="setting-label">Privacy Policy</div>
+            <div class="setting-description">How we handle your data</div>
+          </div>
+          <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">Version</div>
+            <div class="setting-description">App version information</div>
+          </div>
+          <div class="setting-value">
+            <span class="version-number">v1.0.0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Danger Zone -->
+      <div class="settings-section danger-section">
+        <div class="section-header">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <path d="M12 9v4M12 17h.01"/>
+          </svg>
+          <h2>Danger Zone</h2>
+        </div>
+        
+        <button class="danger-btn" id="resetDataBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="1 4 1 10 7 10"/>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+          </svg>
+          Reset All Data
+        </button>
+
+        <button class="danger-btn" id="clearCacheBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+          Clear Cache
+        </button>
+      </div>
     </div>
   </div>
 
@@ -442,6 +688,60 @@
         </svg>
         Claim Prize!
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- Language Modal -->
+<div class="language-modal-overlay" id="languageModal">
+  <div class="language-modal">
+    <div class="language-modal-header">
+      <h2>Select Language</h2>
+      <button class="language-modal-close" id="languageModalClose">×</button>
+    </div>
+    <div class="language-list">
+      <div class="language-option active" data-lang="en">
+        <span class="language-flag">🇺🇸</span>
+        <span class="language-name">English</span>
+        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+      </div>
+      <div class="language-option" data-lang="ru">
+        <span class="language-flag">🇷🇺</span>
+        <span class="language-name">Русский</span>
+        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+      </div>
+      <div class="language-option" data-lang="es">
+        <span class="language-flag">🇪🇸</span>
+        <span class="language-name">Español</span>
+        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+      </div>
+      <div class="language-option" data-lang="fr">
+        <span class="language-flag">🇫🇷</span>
+        <span class="language-name">Français</span>
+        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+      </div>
+      <div class="language-option" data-lang="de">
+        <span class="language-flag">🇩🇪</span>
+        <span class="language-name">Deutsch</span>
+        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+      </div>
+      <div class="language-option" data-lang="zh">
+        <span class="language-flag">🇨🇳</span>
+        <span class="language-name">中文</span>
+        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+      </div>
     </div>
   </div>
 </div>
