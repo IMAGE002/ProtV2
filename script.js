@@ -1034,7 +1034,6 @@ claimButton.addEventListener('click', () => {
   currentWinningPrize = null;
   targetStopPosition = null;
   winningCubeIndex = null;
-  scrollSpeed = 0;
   isSpinning = false;
   spinButton.disabled = false;
   
@@ -1047,8 +1046,8 @@ claimButton.addEventListener('click', () => {
     renderPrizeToCube(cube, prize);
   });
   
-  // Restart idle animation
-  startIdleAnimation();
+  // Reset to idle speed
+  scrollSpeed = 30;
 });
 
 // Populate cubes with random prizes
@@ -1105,6 +1104,57 @@ function startIdleAnimation() {
   idleAnimationId = requestAnimationFrame(idleLoop);
 }
 
+// CONTINUOUS animation loop - runs always (like original)
+let continuousAnimationId = null;
+
+function startContinuousAnimation() {
+  if (continuousAnimationId) return;
+  
+  lastFrameTime = performance.now();
+  
+  function animationLoop(currentTime) {
+    const deltaTime = currentTime - lastFrameTime;
+    lastFrameTime = currentTime;
+    
+    if (!wheel || !wheelContainer) {
+      continuousAnimationId = requestAnimationFrame(animationLoop);
+      return;
+    }
+    
+    // Calculate movement based on current scrollSpeed
+    const deltaMove = (scrollSpeed * deltaTime) / 1000;
+    scrollPosition += deltaMove;
+    
+    const cubes = Array.from(document.querySelectorAll('.cube'));
+    
+    // Recycle cubes when needed
+    while (scrollPosition >= totalCubeWidth) {
+      if (cubes.length === 0) break;
+      const firstCube = cubes[0];
+      wheel.appendChild(firstCube);
+      scrollPosition -= totalCubeWidth;
+      
+      // Randomize recycled cubes
+      const prize = selectPrize();
+      renderPrizeToCube(firstCube, prize);
+      
+      // Re-query cubes after DOM change
+      cubes.splice(0, 1);
+      cubes.push(firstCube);
+    }
+    
+    // Update visual position
+    wheel.style.transform = `translateX(-${scrollPosition}px)`;
+    
+    // Update cube scales
+    updateCubeScales(cubes);
+    
+    continuousAnimationId = requestAnimationFrame(animationLoop);
+  }
+  
+  continuousAnimationId = requestAnimationFrame(animationLoop);
+}
+
 // Update cube scales based on distance from center
 function updateCubeScales(cubes) {
   if (!wheelContainer) return;
@@ -1135,7 +1185,12 @@ function updateCubeScales(cubes) {
 // Initialize Daily Spin when page loads
 window.addEventListener('load', () => {
   populateCubes();
-  startIdleAnimation();
+  
+  // Set initial idle speed
+  scrollSpeed = 30; // 30 pixels per second for idle
+  
+  // Start the continuous animation loop
+  startContinuousAnimation();
   
   // Initialize static reward icons
   const coinIds = ['coin1', 'coin5', 'coin10', 'coin25', 'coin50', 'coin100', 'coin250', 'coin500'];
@@ -1183,12 +1238,6 @@ if (spinButton) {
     
     isSpinning = true;
     spinButton.disabled = true;
-    
-    // Cancel idle animation
-    if (idleAnimationId) {
-      cancelAnimationFrame(idleAnimationId);
-      idleAnimationId = null;
-    }
 
     // Select the winning prize ONCE
     const winningPrize = selectPrize();
@@ -1210,7 +1259,7 @@ if (spinButton) {
     });
     
     // MUCH LONGER spin distance for dramatic effect
-    const minSpinDistance = 15000 + Math.random() * 5000; // 15000-20000 pixels (10-13 full rotations)
+    const minSpinDistance = 15000 + Math.random() * 5000; // 15000-20000 pixels
     const totalCubes = cubes.length;
     const cubePositionsToScroll = Math.floor(minSpinDistance / totalCubeWidth);
     
@@ -1223,67 +1272,42 @@ if (spinButton) {
     console.log('🎲 Winning cube index:', winningCubeIndex, 'Distance:', minSpinDistance.toFixed(0), 'px');
 
     const spinStartTime = performance.now();
-    const duration = 6000; // 6 seconds - longer for smoother deceleration
-    const maxSpeed = 2200; // Peak speed: 2200 pixels/second
+    const spinDuration = 6000; // 6 seconds
+    const maxSpinSpeed = 2200; // Peak speed: 2200 pixels/second
     
     targetStopPosition = scrollPosition + minSpinDistance;
-    lastFrameTime = spinStartTime;
     
-    function animateSpin(currentTime) {
+    // Animation function that only updates scrollSpeed
+    function updateSpinSpeed(currentTime) {
       if (!isSpinning) return;
       
-      const deltaTime = currentTime - lastFrameTime;
-      lastFrameTime = currentTime;
-      
       const elapsed = currentTime - spinStartTime;
-      const progress = Math.min(elapsed / duration, 1);
+      const progress = Math.min(elapsed / spinDuration, 1);
       
-      // Much smoother easing: gradual deceleration throughout
+      // Smooth three-phase easing
       let easeProgress;
       if (progress < 0.5) {
-        // First 50%: quick acceleration to max speed
+        // First 50%: quick acceleration
         easeProgress = Math.pow(progress / 0.5, 0.3) * 0.3;
       } else if (progress < 0.8) {
-        // 50-80%: maintain high speed with gentle slowdown
+        // 50-80%: maintain high speed
         const midProgress = (progress - 0.5) / 0.3;
         easeProgress = 0.3 + (Math.pow(midProgress, 0.7) * 0.3);
       } else {
-        // Last 20%: smooth exponential deceleration (not sudden)
+        // Last 20%: smooth deceleration
         const endProgress = (progress - 0.8) / 0.2;
         easeProgress = 0.6 + (Math.pow(endProgress, 2.5) * 0.4);
       }
       
-      const currentSpeed = maxSpeed * (1 - easeProgress);
-      scrollSpeed = Math.max(currentSpeed, 0);
-      
-      // Move based on delta time (FPS-independent)
-      const deltaMove = (scrollSpeed * deltaTime) / 1000;
-      scrollPosition += deltaMove;
-      
-      // Recycle cubes when needed
-      while (scrollPosition >= totalCubeWidth) {
-        const cubes = Array.from(document.querySelectorAll('.cube'));
-        const firstCube = cubes[0];
-        wheel.appendChild(firstCube);
-        scrollPosition -= totalCubeWidth;
-        
-        // Keep randomizing cubes during spin for variety
-        const randomPrize = selectPrize();
-        renderPrizeToCube(firstCube, randomPrize);
-      }
-      
-      // Update visual position and scales
-      wheel.style.transform = `translateX(-${scrollPosition}px)`;
-      
-      const cubes = Array.from(document.querySelectorAll('.cube'));
-      updateCubeScales(cubes);
+      // Update scrollSpeed (continuous loop handles the actual movement)
+      scrollSpeed = maxSpinSpeed * (1 - easeProgress);
       
       if (progress < 1) {
-        requestAnimationFrame(animateSpin);
+        requestAnimationFrame(updateSpinSpeed);
       } else {
+        // Spin complete - snap to center
         scrollSpeed = 0;
         
-        // Snap to center cube
         setTimeout(() => {
           const cubes = Array.from(document.querySelectorAll('.cube'));
           const containerCenter = wheelContainer.offsetWidth / 2;
@@ -1305,7 +1329,7 @@ if (spinButton) {
           });
           
           const snapStartTime = performance.now();
-          const snapDuration = 300; // Faster snap
+          const snapDuration = 400;
           const startScrollPos = scrollPosition;
           let snapLastFrameTime = snapStartTime;
           
@@ -1313,13 +1337,12 @@ if (spinButton) {
             const snapElapsed = currentTime - snapStartTime;
             const snapProgress = Math.min(snapElapsed / snapDuration, 1);
             
-            // Smoother snap easing
+            // Smooth snap easing
             const snapEase = snapProgress < 0.5
               ? 4 * snapProgress * snapProgress * snapProgress
               : 1 - Math.pow(-2 * snapProgress + 2, 3) / 2;
             
             scrollPosition = startScrollPos + (distanceToSnap * snapEase);
-            wheel.style.transform = `translateX(-${scrollPosition}px)`;
             
             if (snapProgress < 1) {
               requestAnimationFrame(snapToCenter);
@@ -1352,6 +1375,6 @@ if (spinButton) {
       }
     }
     
-    requestAnimationFrame(animateSpin);
+    requestAnimationFrame(updateSpinSpeed);
   });
 }
