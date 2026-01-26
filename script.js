@@ -1038,6 +1038,15 @@ claimButton.addEventListener('click', () => {
   isSpinning = false;
   spinButton.disabled = false;
   
+  console.log('🔄 Resetting for next spin');
+  
+  // Repopulate cubes with fresh random prizes for next spin
+  const cubes = document.querySelectorAll('.cube');
+  cubes.forEach(cube => {
+    const prize = selectPrize();
+    renderPrizeToCube(cube, prize);
+  });
+  
   // Restart idle animation
   startIdleAnimation();
 });
@@ -1169,25 +1178,14 @@ window.addEventListener('load', () => {
 
 // FPS-independent spin animation with optimized performance
 if (spinButton) {
-  console.log('✅ Spin button found, attaching event listener');
   spinButton.addEventListener('click', () => {
-    console.log('🎯 SPIN BUTTON CLICKED!');
-    console.log('isSpinning:', isSpinning);
-    console.log('wheel:', wheel);
-    console.log('wheelContainer:', wheelContainer);
-    
-    if (isSpinning) {
-      console.log('Already spinning, returning');
-      return;
-    }
+    if (isSpinning) return;
     
     isSpinning = true;
     spinButton.disabled = true;
-    console.log('Spin started');
     
     // Cancel idle animation
     if (idleAnimationId) {
-      console.log('Canceling idle animation');
       cancelAnimationFrame(idleAnimationId);
       idleAnimationId = null;
     }
@@ -1198,7 +1196,6 @@ if (spinButton) {
 
     // REPOPULATE ALL CUBES with fresh random prizes for this spin
     const cubes = Array.from(document.querySelectorAll('.cube'));
-    console.log('Number of cubes found:', cubes.length);
     
     if (cubes.length === 0) {
       console.error('❌ NO CUBES FOUND! Cannot spin.');
@@ -1226,21 +1223,14 @@ if (spinButton) {
     console.log('🎲 Winning cube index:', winningCubeIndex, 'Distance:', minSpinDistance.toFixed(0), 'px');
 
     const spinStartTime = performance.now();
-    const duration = 5000; // 5 seconds - faster for smoother feel
-    const maxSpeed = 2500; // Much higher peak speed: 2500 pixels/second
+    const duration = 6000; // 6 seconds - longer for smoother deceleration
+    const maxSpeed = 2200; // Peak speed: 2200 pixels/second
     
     targetStopPosition = scrollPosition + minSpinDistance;
     lastFrameTime = spinStartTime;
     
-    console.log('Starting animation loop...');
-    console.log('Initial scrollPosition:', scrollPosition);
-    console.log('Target stop position:', targetStopPosition);
-    
     function animateSpin(currentTime) {
-      if (!isSpinning) {
-        console.log('Animation stopped - isSpinning is false');
-        return;
-      }
+      if (!isSpinning) return;
       
       const deltaTime = currentTime - lastFrameTime;
       lastFrameTime = currentTime;
@@ -1248,15 +1238,19 @@ if (spinButton) {
       const elapsed = currentTime - spinStartTime;
       const progress = Math.min(elapsed / duration, 1);
       
-      // Better easing: fast start, slow end with exponential decay
+      // Much smoother easing: gradual deceleration throughout
       let easeProgress;
-      if (progress < 0.7) {
-        // First 70%: accelerate and maintain high speed
-        easeProgress = Math.pow(progress / 0.7, 0.5) * 0.7;
+      if (progress < 0.5) {
+        // First 50%: quick acceleration to max speed
+        easeProgress = Math.pow(progress / 0.5, 0.3) * 0.3;
+      } else if (progress < 0.8) {
+        // 50-80%: maintain high speed with gentle slowdown
+        const midProgress = (progress - 0.5) / 0.3;
+        easeProgress = 0.3 + (Math.pow(midProgress, 0.7) * 0.3);
       } else {
-        // Last 30%: exponential deceleration
-        const endProgress = (progress - 0.7) / 0.3;
-        easeProgress = 0.7 + (1 - Math.pow(1 - endProgress, 4)) * 0.3;
+        // Last 20%: smooth exponential deceleration (not sudden)
+        const endProgress = (progress - 0.8) / 0.2;
+        easeProgress = 0.6 + (Math.pow(endProgress, 2.5) * 0.4);
       }
       
       const currentSpeed = maxSpeed * (1 - easeProgress);
