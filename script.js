@@ -379,7 +379,7 @@ claimPrizeBtn.addEventListener('click', () => {
   closePrizeModal();
   
   if (typeof tg !== 'undefined' && tg.openTelegramLink) {
-    const botUsername = 'YourBotUsername'; // CHANGE THIS
+    const botUsername = 'YourBotUsername'; // CHANGE THIS TO YOUR BOT USERNAME
     const botUrl = `https://t.me/${botUsername}`;
     
     try {
@@ -736,18 +736,26 @@ clearAllBtn.addEventListener('click', () => {
   clearAllNotifications();
 });
 
+// ============================================
+// CONTENT BOX CLICK HANDLERS
+// ============================================
+
+// Daily Bag of Loot (purple box) - Navigate to spin wheel
 document.querySelector('.content-box-left-1').addEventListener('click', () => {
   navigateToPage('dailyspin');
 });
 
+// Inventory (golden box) - Currently shows alert
 document.querySelector('.content-box-right').addEventListener('click', () => {
   alert('Inventory clicked!');
 });
 
+// Projects (bottom left) - Placeholder
 document.querySelector('.content-box-bottom-1').addEventListener('click', () => {
   alert('Projects clicked!');
 });
 
+// Contact (bottom right) - Placeholder
 document.querySelector('.content-box-bottom-2').addEventListener('click', () => {
   alert('Contact clicked!');
 });
