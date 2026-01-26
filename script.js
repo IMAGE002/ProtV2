@@ -368,7 +368,7 @@ claimPrizeBtn.addEventListener('click', () => {
     timestamp: Date.now()
   };
   
-  // Send data to bot (automatically includes userId and username)
+  // Send data to bot
   sendDataToBot(claimData);
   
   console.log('🎁 Prize claim sent to bot:', claimData);
@@ -376,8 +376,8 @@ claimPrizeBtn.addEventListener('click', () => {
   // Remove from inventory and close modal
   removePrizeFromInventory(prizeId);
   closePrizeModal();
-});
   
+  // Open bot in Telegram
   if (typeof tg !== 'undefined' && tg.openTelegramLink) {
     const botUsername = 'VoidGiftsTransBot'; // CHANGE THIS TO YOUR BOT USERNAME
     const botUrl = `https://t.me/${botUsername}`;
