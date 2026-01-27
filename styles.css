@@ -2598,6 +2598,42 @@ body.no-scroll {
   }
 }
 
+/* Desktop optimizations - ADD THIS BEFORE @media queries */
+@media (min-width: 1200px) {
+  .container {
+    padding: 2rem 4rem;
+    padding-top: 6rem;
+  }
+  
+  .grid-layout {
+    max-width: 1600px;
+    gap: 2rem;
+  }
+  
+  .content-box-left-1,
+  .content-box-left-2,
+  .content-box-right,
+  .content-box-bottom-1,
+  .content-box-bottom-2 {
+    padding: 3rem;
+  }
+  
+  .inventory-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 1600px) {
+  .container {
+    padding: 2rem 6rem;
+  }
+  
+  .grid-layout {
+    max-width: 1800px;
+  }
+}
+
 /* ============================================
    SETTINGS PAGE STYLES - TELEGRAM STYLED
    ============================================ */
