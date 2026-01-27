@@ -2417,7 +2417,7 @@ body.no-scroll {
     width: 100px;
     height: 100px;
   }
-
+}
 @media (max-width: 480px) {
   .loading-container {
     padding-top: 35vh;
@@ -2467,7 +2467,7 @@ body.no-scroll {
     width: 42px;
     height: 42px;
   }
-}
+
   .nav-menu {
     max-width: 90%;
   }
