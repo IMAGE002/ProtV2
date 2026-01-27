@@ -1007,7 +1007,7 @@ function updateLeaderboardData() {
 }
 
 // ============================================
-// SETTINGS PAGE FUNCTIONALITY
+// SETTINGS PAGE FUNCTIONALITY - FIXED VERSION
 // ============================================
 
 // Settings state
@@ -1022,6 +1022,220 @@ const settingsState = {
   shareStats: true
 };
 
+// Translation system
+const translations = {
+  en: {
+    settings: 'Settings',
+    customizeExperience: 'Customize your experience',
+    promocode: 'Promocode',
+    enterPromocode: 'Enter promocode...',
+    language: 'Language',
+    appLanguage: 'App Language',
+    chooseLanguage: 'Choose your preferred language',
+    notifications: 'Notifications',
+    pushNotifications: 'Push Notifications',
+    pushNotificationsDesc: 'Receive notifications about wins and updates',
+    soundEffects: 'Sound Effects',
+    soundEffectsDesc: 'Play sounds when spinning the wheel',
+    prizeAlerts: 'Prize Alerts',
+    prizeAlertsDesc: 'Get notified when you win rare prizes',
+    display: 'Display',
+    animations: 'Animations',
+    animationsDesc: 'Enable smooth animations and effects',
+    confettiEffects: 'Confetti Effects',
+    confettiEffectsDesc: 'Show confetti when winning prizes',
+    privacy: 'Privacy',
+    showInLeaderboard: 'Show in Leaderboard',
+    showInLeaderboardDesc: 'Display your stats on the public leaderboard',
+    shareStats: 'Share Statistics',
+    shareStatsDesc: 'Allow sharing your game stats with friends',
+    home: 'Home',
+    leaderboard: 'Leaderboard',
+    deposit: 'Deposit',
+    dailyGift: 'Daily',
+    bagOfLoot: 'Bag of Loot!',
+    dailyGiftSubtitle: 'Daily gift from us!',
+    inventory: 'Inventory',
+    yourCollectedItems: 'Your collected items',
+    viewAllItems: 'View All Items'
+  },
+  ru: {
+    settings: 'Настройки',
+    customizeExperience: 'Настройте свой опыт',
+    promocode: 'Промокод',
+    enterPromocode: 'Введите промокод...',
+    language: 'Язык',
+    appLanguage: 'Язык приложения',
+    chooseLanguage: 'Выберите предпочитаемый язык',
+    notifications: 'Уведомления',
+    pushNotifications: 'Push-уведомления',
+    pushNotificationsDesc: 'Получайте уведомления о выигрышах и обновлениях',
+    soundEffects: 'Звуковые эффекты',
+    soundEffectsDesc: 'Воспроизводить звуки при вращении колеса',
+    prizeAlerts: 'Оповещения о призах',
+    prizeAlertsDesc: 'Получать уведомления о редких призах',
+    display: 'Отображение',
+    animations: 'Анимации',
+    animationsDesc: 'Включить плавные анимации и эффекты',
+    confettiEffects: 'Эффекты конфетти',
+    confettiEffectsDesc: 'Показывать конфетти при выигрыше призов',
+    privacy: 'Конфиденциальность',
+    showInLeaderboard: 'Показать в таблице лидеров',
+    showInLeaderboardDesc: 'Отображать вашу статистику в публичной таблице',
+    shareStats: 'Делиться статистикой',
+    shareStatsDesc: 'Разрешить делиться игровой статистикой с друзьями',
+    home: 'Главная',
+    leaderboard: 'Таблица лидеров',
+    deposit: 'Депозит',
+    dailyGift: 'Ежедневный',
+    bagOfLoot: 'Мешок добычи!',
+    dailyGiftSubtitle: 'Ежедневный подарок от нас!',
+    inventory: 'Инвентарь',
+    yourCollectedItems: 'Ваши собранные предметы',
+    viewAllItems: 'Просмотреть все предметы'
+  },
+  es: {
+    settings: 'Configuración',
+    customizeExperience: 'Personaliza tu experiencia',
+    promocode: 'Código promocional',
+    enterPromocode: 'Ingresa código promocional...',
+    language: 'Idioma',
+    appLanguage: 'Idioma de la aplicación',
+    chooseLanguage: 'Elige tu idioma preferido',
+    notifications: 'Notificaciones',
+    pushNotifications: 'Notificaciones Push',
+    pushNotificationsDesc: 'Recibir notificaciones sobre ganancias y actualizaciones',
+    soundEffects: 'Efectos de sonido',
+    soundEffectsDesc: 'Reproducir sonidos al girar la rueda',
+    prizeAlerts: 'Alertas de premios',
+    prizeAlertsDesc: 'Recibir notificaciones cuando ganes premios raros',
+    display: 'Pantalla',
+    animations: 'Animaciones',
+    animationsDesc: 'Habilitar animaciones y efectos suaves',
+    confettiEffects: 'Efectos de confeti',
+    confettiEffectsDesc: 'Mostrar confeti al ganar premios',
+    privacy: 'Privacidad',
+    showInLeaderboard: 'Mostrar en tabla de clasificación',
+    showInLeaderboardDesc: 'Mostrar tus estadísticas en la tabla pública',
+    shareStats: 'Compartir estadísticas',
+    shareStatsDesc: 'Permitir compartir tus estadísticas del juego con amigos',
+    home: 'Inicio',
+    leaderboard: 'Tabla de clasificación',
+    deposit: 'Depósito',
+    dailyGift: 'Diario',
+    bagOfLoot: '¡Bolsa de botín!',
+    dailyGiftSubtitle: '¡Regalo diario de nosotros!',
+    inventory: 'Inventario',
+    yourCollectedItems: 'Tus artículos recolectados',
+    viewAllItems: 'Ver todos los artículos'
+  },
+  fr: {
+    settings: 'Paramètres',
+    customizeExperience: 'Personnalisez votre expérience',
+    promocode: 'Code promo',
+    enterPromocode: 'Entrez le code promo...',
+    language: 'Langue',
+    appLanguage: 'Langue de l\'application',
+    chooseLanguage: 'Choisissez votre langue préférée',
+    notifications: 'Notifications',
+    pushNotifications: 'Notifications Push',
+    pushNotificationsDesc: 'Recevoir des notifications sur les gains et mises à jour',
+    soundEffects: 'Effets sonores',
+    soundEffectsDesc: 'Jouer des sons lors de la rotation de la roue',
+    prizeAlerts: 'Alertes de prix',
+    prizeAlertsDesc: 'Être notifié lorsque vous gagnez des prix rares',
+    display: 'Affichage',
+    animations: 'Animations',
+    animationsDesc: 'Activer les animations et effets fluides',
+    confettiEffects: 'Effets de confettis',
+    confettiEffectsDesc: 'Afficher des confettis lors de la victoire',
+    privacy: 'Confidentialité',
+    showInLeaderboard: 'Afficher dans le classement',
+    showInLeaderboardDesc: 'Afficher vos statistiques dans le classement public',
+    shareStats: 'Partager les statistiques',
+    shareStatsDesc: 'Autoriser le partage de vos statistiques de jeu avec des amis',
+    home: 'Accueil',
+    leaderboard: 'Classement',
+    deposit: 'Dépôt',
+    dailyGift: 'Quotidien',
+    bagOfLoot: 'Sac de butin!',
+    dailyGiftSubtitle: 'Cadeau quotidien de notre part!',
+    inventory: 'Inventaire',
+    yourCollectedItems: 'Vos objets collectés',
+    viewAllItems: 'Voir tous les objets'
+  },
+  de: {
+    settings: 'Einstellungen',
+    customizeExperience: 'Passen Sie Ihre Erfahrung an',
+    promocode: 'Aktionscode',
+    enterPromocode: 'Aktionscode eingeben...',
+    language: 'Sprache',
+    appLanguage: 'App-Sprache',
+    chooseLanguage: 'Wählen Sie Ihre bevorzugte Sprache',
+    notifications: 'Benachrichtigungen',
+    pushNotifications: 'Push-Benachrichtigungen',
+    pushNotificationsDesc: 'Benachrichtigungen über Gewinne und Updates erhalten',
+    soundEffects: 'Soundeffekte',
+    soundEffectsDesc: 'Sounds beim Drehen des Rads abspielen',
+    prizeAlerts: 'Preis-Benachrichtigungen',
+    prizeAlertsDesc: 'Benachrichtigt werden, wenn Sie seltene Preise gewinnen',
+    display: 'Anzeige',
+    animations: 'Animationen',
+    animationsDesc: 'Flüssige Animationen und Effekte aktivieren',
+    confettiEffects: 'Konfetti-Effekte',
+    confettiEffectsDesc: 'Konfetti beim Gewinnen von Preisen anzeigen',
+    privacy: 'Datenschutz',
+    showInLeaderboard: 'In Bestenliste anzeigen',
+    showInLeaderboardDesc: 'Ihre Statistiken in der öffentlichen Bestenliste anzeigen',
+    shareStats: 'Statistiken teilen',
+    shareStatsDesc: 'Teilen Ihrer Spielstatistiken mit Freunden erlauben',
+    home: 'Startseite',
+    leaderboard: 'Bestenliste',
+    deposit: 'Einzahlung',
+    dailyGift: 'Täglich',
+    bagOfLoot: 'Beutesack!',
+    dailyGiftSubtitle: 'Tägliches Geschenk von uns!',
+    inventory: 'Inventar',
+    yourCollectedItems: 'Ihre gesammelten Gegenstände',
+    viewAllItems: 'Alle Gegenstände anzeigen'
+  },
+  zh: {
+    settings: '设置',
+    customizeExperience: '自定义您的体验',
+    promocode: '促销代码',
+    enterPromocode: '输入促销代码...',
+    language: '语言',
+    appLanguage: '应用语言',
+    chooseLanguage: '选择您的首选语言',
+    notifications: '通知',
+    pushNotifications: '推送通知',
+    pushNotificationsDesc: '接收有关获奖和更新的通知',
+    soundEffects: '音效',
+    soundEffectsDesc: '转动轮盘时播放声音',
+    prizeAlerts: '奖品提醒',
+    prizeAlertsDesc: '获得稀有奖品时收到通知',
+    display: '显示',
+    animations: '动画',
+    animationsDesc: '启用流畅的动画和效果',
+    confettiEffects: '彩纸效果',
+    confettiEffectsDesc: '获胜时显示彩纸',
+    privacy: '隐私',
+    showInLeaderboard: '显示在排行榜',
+    showInLeaderboardDesc: '在公共排行榜上显示您的统计数据',
+    shareStats: '分享统计',
+    shareStatsDesc: '允许与朋友分享您的游戏统计',
+    home: '主页',
+    leaderboard: '排行榜',
+    deposit: '存款',
+    dailyGift: '每日',
+    bagOfLoot: '战利品袋！',
+    dailyGiftSubtitle: '我们的每日礼物！',
+    inventory: '库存',
+    yourCollectedItems: '您收集的物品',
+    viewAllItems: '查看所有物品'
+  }
+};
+
 // Language names
 const languageNames = {
   'en': 'English',
@@ -1032,6 +1246,95 @@ const languageNames = {
   'zh': '中文'
 };
 
+// Translation function
+function t(key) {
+  const lang = settingsState.language;
+  return translations[lang]?.[key] || translations['en'][key] || key;
+}
+
+// Apply translations to page
+function applyTranslations() {
+  // Settings page
+  document.querySelector('.settings-title')?.setAttribute('data-i18n', 'settings');
+  document.querySelector('.settings-subtitle')?.setAttribute('data-i18n', 'customizeExperience');
+  
+  // Update all elements with data-i18n attribute
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const translation = t(key);
+    
+    if (el.tagName === 'INPUT' && el.placeholder) {
+      el.placeholder = translation;
+    } else {
+      el.textContent = translation;
+    }
+  });
+  
+  // Navigation
+  const navLinks = {
+    'home': '.nav-link[data-page="home"]',
+    'leaderboard': '.nav-link[data-page="leaderboard"]',
+    'deposit': '.nav-link[data-page="deposit"]',
+    'settings': '.nav-link[data-page="settings"]'
+  };
+  
+  Object.entries(navLinks).forEach(([key, selector]) => {
+    const el = document.querySelector(selector);
+    if (el) {
+      const textNode = Array.from(el.childNodes).find(node => node.nodeType === 3);
+      if (textNode) {
+        textNode.textContent = t(key);
+      }
+    }
+  });
+  
+  // Daily gift
+  const dailyGiftTitle = document.querySelector('.daily-gift-title');
+  if (dailyGiftTitle) {
+    dailyGiftTitle.innerHTML = `
+      <span class="star">★</span>
+      <span>${t('dailyGift')} </span>
+      <span class="loot-text">${t('bagOfLoot')}</span>
+    `;
+  }
+  
+  document.querySelector('.daily-gift-subtitle')?.setAttribute('textContent', t('dailyGiftSubtitle'));
+  
+  // Inventory
+  document.querySelector('.inventory-title')?.setAttribute('textContent', t('inventory'));
+  document.querySelector('.inventory-subtitle')?.setAttribute('textContent', t('yourCollectedItems'));
+  document.querySelector('.view-all-btn')?.setAttribute('textContent', t('viewAllItems'));
+  
+  console.log(`✅ Translations applied for language: ${settingsState.language}`);
+}
+
+// Apply settings effects
+function applySettingsEffects() {
+  const html = document.documentElement;
+  
+  // Animations
+  if (!settingsState.animationsEnabled) {
+    html.style.setProperty('--animation-duration', '0s');
+    html.style.setProperty('--transition-duration', '0s');
+    // Disable all animations
+    document.querySelectorAll('*').forEach(el => {
+      el.style.animation = 'none';
+      el.style.transition = 'none';
+    });
+  } else {
+    html.style.removeProperty('--animation-duration');
+    html.style.removeProperty('--transition-duration');
+  }
+  
+  // Sound effects (you'll need to implement actual sound system)
+  window.soundEnabled = settingsState.soundEffects;
+  
+  // Confetti effects
+  window.confettiEnabled = settingsState.confettiEffects;
+  
+  console.log('⚙️ Settings effects applied:', settingsState);
+}
+
 // Load settings from localStorage
 function loadSettings() {
   const saved = localStorage.getItem('appSettings');
@@ -1040,6 +1343,8 @@ function loadSettings() {
       const parsed = JSON.parse(saved);
       Object.assign(settingsState, parsed);
       applySettings();
+      applySettingsEffects();
+      applyTranslations();
     } catch (error) {
       console.error('Error loading settings:', error);
     }
@@ -1095,6 +1400,7 @@ function initializeSettings() {
       toggle.addEventListener('change', (e) => {
         settingsState[id] = e.target.checked;
         saveSettings();
+        applySettingsEffects(); // ACTUALLY APPLY THE CHANGES
         
         // Show feedback
         showSettingChangedFeedback(id);
@@ -1142,7 +1448,6 @@ function initializeSettings() {
 
 // Show feedback when setting changed
 function showSettingChangedFeedback(settingId) {
-  // Create a temporary toast notification
   const toast = document.createElement('div');
   toast.className = 'setting-toast';
   toast.textContent = '✓ Setting saved';
@@ -1237,6 +1542,9 @@ document.querySelectorAll('.language-option').forEach(option => {
     
     updateLanguageSelection();
     
+    // APPLY TRANSLATIONS
+    applyTranslations();
+    
     setTimeout(() => {
       closeLanguageModal();
       showSettingChangedFeedback('language');
@@ -1254,7 +1562,7 @@ const promocodeInput = document.getElementById('promocodeInput');
 const promocodeSubmitBtn = document.getElementById('promocodeSubmitBtn');
 const promocodeStatus = document.getElementById('promocodeStatus');
 
-// Valid promocodes (you can modify this)
+// Valid promocodes
 const validPromocodes = {
   'WELCOME100': { coins: 100, message: 'Welcome bonus claimed!' },
   'LUCKY777': { coins: 777, message: 'Lucky bonus activated!' },
@@ -1263,7 +1571,7 @@ const validPromocodes = {
   'SPIN2WIN': { coins: 150, message: 'Spin bonus unlocked!' }
 };
 
-// Redeemed promocodes (stored in localStorage)
+// Redeemed promocodes
 let redeemedCodes = [];
 
 function loadRedeemedCodes() {
@@ -1299,7 +1607,6 @@ function initializePromocode() {
       }
     });
     
-    // Auto-uppercase
     promocodeInput.addEventListener('input', (e) => {
       e.target.value = e.target.value.toUpperCase();
     });
@@ -1314,31 +1621,22 @@ function submitPromocode() {
     return;
   }
   
-  // Check if already redeemed
   if (redeemedCodes.includes(code)) {
     showPromocodeStatus('This code has already been redeemed', 'error');
     return;
   }
   
-  // Check if valid
   if (validPromocodes[code]) {
     const promo = validPromocodes[code];
     
-    // Add coins
     if (typeof addCurrency === 'function') {
       addCurrency(promo.coins);
     }
     
-    // Save as redeemed
     saveRedeemedCode(code);
-    
-    // Show success
     showPromocodeStatus(`✓ ${promo.message} +${promo.coins} coins!`, 'success');
-    
-    // Clear input
     promocodeInput.value = '';
     
-    // Disable submit button temporarily
     promocodeSubmitBtn.disabled = true;
     setTimeout(() => {
       promocodeSubmitBtn.disabled = false;
@@ -1391,10 +1689,8 @@ function handleResetData() {
   const userInput = prompt('Type "RESET" to confirm:');
   
   if (userInput === 'RESET') {
-    // Clear all localStorage
     localStorage.clear();
     
-    // Reset virtual currency
     if (typeof virtualCurrency !== 'undefined') {
       virtualCurrency = 0;
       if (typeof updateCurrencyDisplay === 'function') {
@@ -1402,7 +1698,6 @@ function handleResetData() {
       }
     }
     
-    // Clear inventory
     if (typeof inventoryItems !== 'undefined') {
       inventoryItems = [];
       if (typeof updateInventoryDisplay === 'function') {
@@ -1410,7 +1705,6 @@ function handleResetData() {
       }
     }
     
-    // Reset settings
     Object.keys(settingsState).forEach(key => {
       if (typeof settingsState[key] === 'boolean') {
         settingsState[key] = true;
@@ -1423,7 +1717,6 @@ function handleResetData() {
     
     alert('✅ All data has been reset!\n\nThe page will now reload.');
     
-    // Reload page
     setTimeout(() => {
       window.location.reload();
     }, 1000);
@@ -1443,32 +1736,33 @@ function handleClearCache() {
   );
   
   if (confirmed) {
-    // Clear browser cache (simulated - actual cache clearing requires service worker)
-    // In a real app, you'd clear actual cache here
-    
     console.log('🗑️ Cache cleared');
-    
     alert('✅ Cache cleared successfully!');
   }
 }
 
 // ============================================
-// EXPORT SETTINGS
+// EXPORT & INITIALIZE
 // ============================================
 
-// Make settings state accessible globally
 window.settingsState = settingsState;
 window.loadSettings = loadSettings;
 window.saveSettings = saveSettings;
+window.applyTranslations = applyTranslations;
+window.t = t;
 
-// Initialize settings when page loads
+// Initialize on load
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeSettings);
+  document.addEventListener('DOMContentLoaded', () => {
+    initializeSettings();
+    applyTranslations();
+  });
 } else {
   initializeSettings();
+  applyTranslations();
 }
 
-console.log('⚙️ Settings module loaded');
+console.log('⚙️ Settings module loaded with translations');
 
 // ============================================
 // DAILY SPIN PAGE FUNCTIONALITY - OPTIMIZED
