@@ -570,6 +570,13 @@ const Inventory = {
     STATE.inventoryItems.push(prizeWithId);
     this.updateDisplay();
     
+    // Update full inventory modal if it's open
+    const modal = document.getElementById('fullInventoryModal');
+    if (modal && modal.classList.contains('show')) {
+      FullInventoryModal.updateStats();
+      FullInventoryModal.render(STATE.currentFilter);
+    }
+    
     console.log('✅ Prize added:', prizeWithId);
     return prizeWithId;
   },
@@ -580,6 +587,14 @@ const Inventory = {
     if (index !== -1) {
       const removed = STATE.inventoryItems.splice(index, 1)[0];
       this.updateDisplay();
+      
+      // Update full inventory modal if it's open
+      const modal = document.getElementById('fullInventoryModal');
+      if (modal && modal.classList.contains('show')) {
+        FullInventoryModal.updateStats();
+        FullInventoryModal.render(STATE.currentFilter);
+      }
+      
       console.log('🗑️ Prize removed:', removed);
       return removed;
     }
@@ -1681,12 +1696,28 @@ const SpinWheel = {
   },
 
   claimWin() {
-    if (STATE.currentWinningPrize) {
-      if (STATE.currentWinningPrize.type === 'coin') {
-        Currency.add(parseInt(STATE.currentWinningPrize.value));
-      } else {
-        Inventory.add(STATE.currentWinningPrize);
-      }
+    if (!STATE.currentWinningPrize) {
+      console.error('❌ No winning prize to claim');
+      return;
+    }
+    
+    const prize = STATE.currentWinningPrize;
+    
+    if (prize.type === 'coin') {
+      // Add coins
+      const coinValue = parseInt(prize.value);
+      Currency.add(coinValue);
+      console.log(`💰 Claimed ${coinValue} coins`);
+      
+      // Show regular notification for coins
+      Notifications.add();
+    } else {
+      // Add gift to inventory
+      const addedPrize = Inventory.add(prize);
+      console.log(`🎁 Claimed gift: ${prize.value} (ID: ${addedPrize.prizeId})`);
+      
+      // Show live gift notification for gifts
+      LiveGiftNotifications.add(addedPrize);
     }
     
     this.hideWin();
@@ -1703,7 +1734,7 @@ const SpinWheel = {
     const spinButton = document.getElementById('spinButton');
     if (spinButton) spinButton.disabled = false;
     
-    console.log('✅ Ready for next spin');
+    console.log('✅ Prize claimed! Ready for next spin');
   },
 
   loadIcons() {
@@ -2298,25 +2329,8 @@ const EventListeners = {
 // ENHANCED INVENTORY MANAGEMENT
 // ============================================
 
-// Override the original addPrizeToInventory with enhanced version
-const _originalAddPrize = Inventory.add;
-Inventory.add = function(prize) {
-  const result = _originalAddPrize(prize);
-  
-  // Add live gift notification if it's a gift
-  if (prize.type === 'gift') {
-    LiveGiftNotifications.add(prize);
-  }
-  
-  // Update full inventory if modal is open
-  const modal = document.getElementById('fullInventoryModal');
-  if (modal && modal.classList.contains('show')) {
-    FullInventoryModal.updateStats();
-    FullInventoryModal.render(STATE.currentFilter);
-  }
-  
-  return result;
-};
+// Note: Live gift notifications are now handled in SpinWheel.claimWin()
+// to avoid duplicate notifications
 
 // ============================================
 // GLOBAL API
