@@ -629,7 +629,10 @@ const Inventory = {
       }
       
       itemDiv.appendChild(iconDiv);
+      
+      // FIXED: Open prize modal instead of full inventory
       itemDiv.addEventListener('click', () => PrizeModal.open(item));
+      
       inventoryGrid.appendChild(itemDiv);
     });
     
@@ -985,14 +988,8 @@ const LiveGiftNotifications = {
     label.textContent = isNFT ? 'NFT' : prize.value;
     cube.appendChild(label);
 
-    const closeBtn = document.createElement('div');
-    closeBtn.className = 'close-btn';
-    closeBtn.innerHTML = '×';
-    closeBtn.onclick = (e) => {
-      e.stopPropagation();
-      this.remove(id);
-    };
-    cube.appendChild(closeBtn);
+    // REMOVED: Close button - these are announcements only, not user's items
+    // REMOVED: Click handler - prevents users from trying to claim others' prizes
 
     const timeBar = document.createElement('div');
     timeBar.className = 'time-bar';
@@ -1001,11 +998,6 @@ const LiveGiftNotifications = {
     timeBarFill.style.animationDuration = `${CONFIG.NOTIFICATION_DURATION}ms`;
     timeBar.appendChild(timeBarFill);
     cube.appendChild(timeBar);
-
-    cube.onclick = () => {
-      const inventoryPrize = STATE.inventoryItems.find(item => item.value === prize.value);
-      if (inventoryPrize) PrizeModal.open(inventoryPrize);
-    };
 
     const container = document.getElementById('notificationContainer');
     if (container) container.appendChild(cube);
@@ -2157,9 +2149,13 @@ const ContentBoxes = {
       dailyBag.addEventListener('click', () => Navigation.navigateTo('dailyspin'));
     }
 
-    const inventory = document.querySelector('.content-box-right');
-    if (inventory) {
-      inventory.addEventListener('click', () => FullInventoryModal.open());
+    // FIXED: "View All Items" button opens full inventory modal
+    const viewAllBtn = document.querySelector('.view-all-btn');
+    if (viewAllBtn) {
+      viewAllBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent parent click
+        FullInventoryModal.open();
+      });
     }
 
     const projects = document.querySelector('.content-box-bottom-1');
