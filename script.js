@@ -452,9 +452,37 @@ const BackendAPI = {
 // ============================================
 
 const TelegramApp = {
+  init() {
+    console.log('🔧 Initializing Telegram WebApp...');
+    
+    if (STATE.tg) {
+      console.log('✅ Telegram WebApp available');
+      
+      // Get user data
+      if (STATE.tg.initDataUnsafe?.user) {
+        STATE.userData = STATE.tg.initDataUnsafe.user;
+        this.updateUserProfile(STATE.userData);
+        console.log('👤 User:', STATE.userData);
+      }
+      
+      // Setup payment handlers
+      this.setupPaymentHandlers();
+      
+      // Apply theme
+      this.applyTheme();
+      
+      // Make WebApp ready
+      STATE.tg.ready();
+      STATE.tg.expand();
+      
+    } else {
+      console.warn('⚠️ Telegram WebApp not available - running in fallback mode');
+      this.initFallbackMode();
+    }
+  },
+
   setupPaymentHandlers() {
     if (!STATE.tg) return;
-
     STATE.tg.onEvent('invoiceClosed', async (event) => {
       console.log('📱 Invoice closed:', event);
       
@@ -467,7 +495,7 @@ const TelegramApp = {
         
         // Show success animation
         setTimeout(() => {
-          Utils.showToast(`✅ Coins added to your account!`, 'success');
+          Utils.showToast('✅ Coins added to your account!', 'success'); // <- Fixed
         }, 1000);
         
       } else if (event.status === 'cancelled') {
@@ -481,6 +509,7 @@ const TelegramApp = {
       Utils.hideLoading();
     });
   },
+
   initFallbackMode() {
     this.updateUserProfile({
       first_name: 'Test User',
