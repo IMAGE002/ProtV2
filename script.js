@@ -1696,19 +1696,19 @@ const SpinWheel = {
     const prize = STATE.currentWinningPrize;
     
     if (prize.type === 'coin') {
-      // Add coins
+      // Add coins - NO gift notification for coins
       const coinValue = parseInt(prize.value);
       Currency.add(coinValue);
       console.log(`💰 Claimed ${coinValue} coins`);
       
-      // Show regular notification for coins
-      Notifications.add();
+      // Show regular notification for coins (optional - can remove if you don't want any notification)
+      // Notifications.add();
     } else {
       // Add gift to inventory
       const addedPrize = Inventory.add(prize);
       console.log(`🎁 Claimed gift: ${prize.value} (ID: ${addedPrize.prizeId})`);
       
-      // Show live gift notification for gifts
+      // FIXED: Only show live gift notification for actual GIFTS, not coins
       LiveGiftNotifications.add(addedPrize);
     }
     
