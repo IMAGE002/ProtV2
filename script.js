@@ -1022,9 +1022,10 @@ const settingsState = {
   shareStats: true
 };
 
-// Translation system
+// COMPREHENSIVE Translation system - ALL text in the app
 const translations = {
   en: {
+    // Settings page
     settings: 'Settings',
     customizeExperience: 'Customize your experience',
     promocode: 'Promocode',
@@ -1049,17 +1050,57 @@ const translations = {
     showInLeaderboardDesc: 'Display your stats on the public leaderboard',
     shareStats: 'Share Statistics',
     shareStatsDesc: 'Allow sharing your game stats with friends',
+    
+    // Navigation
     home: 'Home',
     leaderboard: 'Leaderboard',
     deposit: 'Deposit',
+    
+    // Home page
     dailyGift: 'Daily',
     bagOfLoot: 'Bag of Loot!',
     dailyGiftSubtitle: 'Daily gift from us!',
     inventory: 'Inventory',
     yourCollectedItems: 'Your collected items',
-    viewAllItems: 'View All Items'
+    viewAllItems: 'View All Items',
+    projects: 'Projects',
+    contact: 'Contact',
+    
+    // Leaderboard
+    topPlayers: 'Top Players',
+    coins: 'Coins',
+    gifts: 'Gifts',
+    yourRank: 'Your Rank',
+    
+    // Daily Spin
+    spinToWin: 'Spin to Win',
+    spinWheel: 'SPIN THE WHEEL',
+    congratulations: 'Congratulations!',
+    youWon: 'You won',
+    claimPrize: 'Claim Prize',
+    
+    // Prize Modal
+    convertToCoins: 'Convert to Coins',
+    claim: 'Claim',
+    
+    // Settings sections
+    termsOfService: 'Terms of Service',
+    privacyPolicy: 'Privacy Policy',
+    dangerZone: 'Danger Zone',
+    resetAllData: 'Reset All Data',
+    resetDataDesc: 'Delete all your coins, prizes, and settings',
+    clearCache: 'Clear Cache',
+    clearCacheDesc: 'Clear temporary cached data',
+    
+    // Common
+    close: 'Close',
+    cancel: 'Cancel',
+    confirm: 'Confirm',
+    save: 'Save'
   },
+  
   ru: {
+    // Settings page
     settings: 'Настройки',
     customizeExperience: 'Настройте свой опыт',
     promocode: 'Промокод',
@@ -1084,17 +1125,57 @@ const translations = {
     showInLeaderboardDesc: 'Отображать вашу статистику в публичной таблице',
     shareStats: 'Делиться статистикой',
     shareStatsDesc: 'Разрешить делиться игровой статистикой с друзьями',
+    
+    // Navigation
     home: 'Главная',
     leaderboard: 'Таблица лидеров',
     deposit: 'Депозит',
+    
+    // Home page
     dailyGift: 'Ежедневный',
     bagOfLoot: 'Мешок добычи!',
     dailyGiftSubtitle: 'Ежедневный подарок от нас!',
     inventory: 'Инвентарь',
     yourCollectedItems: 'Ваши собранные предметы',
-    viewAllItems: 'Просмотреть все предметы'
+    viewAllItems: 'Просмотреть все предметы',
+    projects: 'Проекты',
+    contact: 'Контакт',
+    
+    // Leaderboard
+    topPlayers: 'Лучшие игроки',
+    coins: 'Монеты',
+    gifts: 'Подарки',
+    yourRank: 'Ваш ранг',
+    
+    // Daily Spin
+    spinToWin: 'Крутите, чтобы выиграть',
+    spinWheel: 'КРУТИТЬ КОЛЕСО',
+    congratulations: 'Поздравляем!',
+    youWon: 'Вы выиграли',
+    claimPrize: 'Забрать приз',
+    
+    // Prize Modal
+    convertToCoins: 'Конвертировать в монеты',
+    claim: 'Забрать',
+    
+    // Settings sections
+    termsOfService: 'Условия использования',
+    privacyPolicy: 'Политика конфиденциальности',
+    dangerZone: 'Опасная зона',
+    resetAllData: 'Сбросить все данные',
+    resetDataDesc: 'Удалить все ваши монеты, призы и настройки',
+    clearCache: 'Очистить кэш',
+    clearCacheDesc: 'Очистить временные кэшированные данные',
+    
+    // Common
+    close: 'Закрыть',
+    cancel: 'Отмена',
+    confirm: 'Подтвердить',
+    save: 'Сохранить'
   },
+  
   es: {
+    // Settings page
     settings: 'Configuración',
     customizeExperience: 'Personaliza tu experiencia',
     promocode: 'Código promocional',
@@ -1119,17 +1200,57 @@ const translations = {
     showInLeaderboardDesc: 'Mostrar tus estadísticas en la tabla pública',
     shareStats: 'Compartir estadísticas',
     shareStatsDesc: 'Permitir compartir tus estadísticas del juego con amigos',
+    
+    // Navigation
     home: 'Inicio',
     leaderboard: 'Tabla de clasificación',
     deposit: 'Depósito',
+    
+    // Home page
     dailyGift: 'Diario',
     bagOfLoot: '¡Bolsa de botín!',
     dailyGiftSubtitle: '¡Regalo diario de nosotros!',
     inventory: 'Inventario',
     yourCollectedItems: 'Tus artículos recolectados',
-    viewAllItems: 'Ver todos los artículos'
+    viewAllItems: 'Ver todos los artículos',
+    projects: 'Proyectos',
+    contact: 'Contacto',
+    
+    // Leaderboard
+    topPlayers: 'Mejores jugadores',
+    coins: 'Monedas',
+    gifts: 'Regalos',
+    yourRank: 'Tu rango',
+    
+    // Daily Spin
+    spinToWin: 'Gira para ganar',
+    spinWheel: 'GIRAR LA RUEDA',
+    congratulations: '¡Felicitaciones!',
+    youWon: 'Ganaste',
+    claimPrize: 'Reclamar premio',
+    
+    // Prize Modal
+    convertToCoins: 'Convertir a monedas',
+    claim: 'Reclamar',
+    
+    // Settings sections
+    termsOfService: 'Términos de servicio',
+    privacyPolicy: 'Política de privacidad',
+    dangerZone: 'Zona de peligro',
+    resetAllData: 'Restablecer todos los datos',
+    resetDataDesc: 'Eliminar todas tus monedas, premios y configuraciones',
+    clearCache: 'Limpiar caché',
+    clearCacheDesc: 'Limpiar datos temporales en caché',
+    
+    // Common
+    close: 'Cerrar',
+    cancel: 'Cancelar',
+    confirm: 'Confirmar',
+    save: 'Guardar'
   },
+  
   fr: {
+    // Settings page
     settings: 'Paramètres',
     customizeExperience: 'Personnalisez votre expérience',
     promocode: 'Code promo',
@@ -1154,17 +1275,57 @@ const translations = {
     showInLeaderboardDesc: 'Afficher vos statistiques dans le classement public',
     shareStats: 'Partager les statistiques',
     shareStatsDesc: 'Autoriser le partage de vos statistiques de jeu avec des amis',
+    
+    // Navigation
     home: 'Accueil',
     leaderboard: 'Classement',
     deposit: 'Dépôt',
+    
+    // Home page
     dailyGift: 'Quotidien',
     bagOfLoot: 'Sac de butin!',
     dailyGiftSubtitle: 'Cadeau quotidien de notre part!',
     inventory: 'Inventaire',
     yourCollectedItems: 'Vos objets collectés',
-    viewAllItems: 'Voir tous les objets'
+    viewAllItems: 'Voir tous les objets',
+    projects: 'Projets',
+    contact: 'Contact',
+    
+    // Leaderboard
+    topPlayers: 'Meilleurs joueurs',
+    coins: 'Pièces',
+    gifts: 'Cadeaux',
+    yourRank: 'Votre rang',
+    
+    // Daily Spin
+    spinToWin: 'Tournez pour gagner',
+    spinWheel: 'TOURNER LA ROUE',
+    congratulations: 'Félicitations!',
+    youWon: 'Vous avez gagné',
+    claimPrize: 'Réclamer le prix',
+    
+    // Prize Modal
+    convertToCoins: 'Convertir en pièces',
+    claim: 'Réclamer',
+    
+    // Settings sections
+    termsOfService: 'Conditions d\'utilisation',
+    privacyPolicy: 'Politique de confidentialité',
+    dangerZone: 'Zone dangereuse',
+    resetAllData: 'Réinitialiser toutes les données',
+    resetDataDesc: 'Supprimer toutes vos pièces, prix et paramètres',
+    clearCache: 'Vider le cache',
+    clearCacheDesc: 'Effacer les données temporaires en cache',
+    
+    // Common
+    close: 'Fermer',
+    cancel: 'Annuler',
+    confirm: 'Confirmer',
+    save: 'Enregistrer'
   },
+  
   de: {
+    // Settings page
     settings: 'Einstellungen',
     customizeExperience: 'Passen Sie Ihre Erfahrung an',
     promocode: 'Aktionscode',
@@ -1189,17 +1350,57 @@ const translations = {
     showInLeaderboardDesc: 'Ihre Statistiken in der öffentlichen Bestenliste anzeigen',
     shareStats: 'Statistiken teilen',
     shareStatsDesc: 'Teilen Ihrer Spielstatistiken mit Freunden erlauben',
+    
+    // Navigation
     home: 'Startseite',
     leaderboard: 'Bestenliste',
     deposit: 'Einzahlung',
+    
+    // Home page
     dailyGift: 'Täglich',
     bagOfLoot: 'Beutesack!',
     dailyGiftSubtitle: 'Tägliches Geschenk von uns!',
     inventory: 'Inventar',
     yourCollectedItems: 'Ihre gesammelten Gegenstände',
-    viewAllItems: 'Alle Gegenstände anzeigen'
+    viewAllItems: 'Alle Gegenstände anzeigen',
+    projects: 'Projekte',
+    contact: 'Kontakt',
+    
+    // Leaderboard
+    topPlayers: 'Top-Spieler',
+    coins: 'Münzen',
+    gifts: 'Geschenke',
+    yourRank: 'Ihr Rang',
+    
+    // Daily Spin
+    spinToWin: 'Drehen zum Gewinnen',
+    spinWheel: 'RAD DREHEN',
+    congratulations: 'Herzlichen Glückwunsch!',
+    youWon: 'Sie haben gewonnen',
+    claimPrize: 'Preis beanspruchen',
+    
+    // Prize Modal
+    convertToCoins: 'In Münzen umwandeln',
+    claim: 'Beanspruchen',
+    
+    // Settings sections
+    termsOfService: 'Nutzungsbedingungen',
+    privacyPolicy: 'Datenschutzrichtlinie',
+    dangerZone: 'Gefahrenzone',
+    resetAllData: 'Alle Daten zurücksetzen',
+    resetDataDesc: 'Alle Ihre Münzen, Preise und Einstellungen löschen',
+    clearCache: 'Cache leeren',
+    clearCacheDesc: 'Temporäre zwischengespeicherte Daten löschen',
+    
+    // Common
+    close: 'Schließen',
+    cancel: 'Abbrechen',
+    confirm: 'Bestätigen',
+    save: 'Speichern'
   },
+  
   zh: {
+    // Settings page
     settings: '设置',
     customizeExperience: '自定义您的体验',
     promocode: '促销代码',
@@ -1224,15 +1425,53 @@ const translations = {
     showInLeaderboardDesc: '在公共排行榜上显示您的统计数据',
     shareStats: '分享统计',
     shareStatsDesc: '允许与朋友分享您的游戏统计',
+    
+    // Navigation
     home: '主页',
     leaderboard: '排行榜',
     deposit: '存款',
+    
+    // Home page
     dailyGift: '每日',
     bagOfLoot: '战利品袋！',
     dailyGiftSubtitle: '我们的每日礼物！',
     inventory: '库存',
     yourCollectedItems: '您收集的物品',
-    viewAllItems: '查看所有物品'
+    viewAllItems: '查看所有物品',
+    projects: '项目',
+    contact: '联系',
+    
+    // Leaderboard
+    topPlayers: '顶级玩家',
+    coins: '硬币',
+    gifts: '礼物',
+    yourRank: '您的排名',
+    
+    // Daily Spin
+    spinToWin: '旋转获胜',
+    spinWheel: '转动轮盘',
+    congratulations: '恭喜！',
+    youWon: '您赢得了',
+    claimPrize: '领取奖品',
+    
+    // Prize Modal
+    convertToCoins: '转换为硬币',
+    claim: '领取',
+    
+    // Settings sections
+    termsOfService: '服务条款',
+    privacyPolicy: '隐私政策',
+    dangerZone: '危险区域',
+    resetAllData: '重置所有数据',
+    resetDataDesc: '删除所有您的硬币、奖品和设置',
+    clearCache: '清除缓存',
+    clearCacheDesc: '清除临时缓存数据',
+    
+    // Common
+    close: '关闭',
+    cancel: '取消',
+    confirm: '确认',
+    save: '保存'
   }
 };
 
@@ -1252,43 +1491,59 @@ function t(key) {
   return translations[lang]?.[key] || translations['en'][key] || key;
 }
 
-// Apply translations to page
+// FIXED: Comprehensive translation application
 function applyTranslations() {
-  // Settings page
-  document.querySelector('.settings-title')?.setAttribute('data-i18n', 'settings');
-  document.querySelector('.settings-subtitle')?.setAttribute('data-i18n', 'customizeExperience');
+  console.log('🌐 Applying translations for language:', settingsState.language);
   
-  // Update all elements with data-i18n attribute
+  // 1. Update all elements with data-i18n attribute
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     const translation = t(key);
     
-    if (el.tagName === 'INPUT' && el.placeholder) {
+    if (el.tagName === 'INPUT' && el.placeholder !== undefined) {
       el.placeholder = translation;
+    } else if (el.tagName === 'BUTTON' || el.tagName === 'A') {
+      // For buttons and links, preserve icons but update text
+      const icon = el.querySelector('svg, img, .icon');
+      if (icon) {
+        // Keep icon, replace text
+        const textNodes = Array.from(el.childNodes).filter(node => 
+          node.nodeType === Node.TEXT_NODE && node.textContent.trim()
+        );
+        textNodes.forEach(node => node.textContent = translation);
+      } else {
+        el.textContent = translation;
+      }
     } else {
       el.textContent = translation;
     }
   });
   
-  // Navigation
-  const navLinks = {
-    'home': '.nav-link[data-page="home"]',
-    'leaderboard': '.nav-link[data-page="leaderboard"]',
-    'deposit': '.nav-link[data-page="deposit"]',
-    'settings': '.nav-link[data-page="settings"]'
+  // 2. Navigation links (special handling to preserve icons)
+  const navTranslations = {
+    'home': 'Home',
+    'leaderboard': 'Leaderboard',
+    'deposit': 'Deposit',
+    'settings': 'Settings'
   };
   
-  Object.entries(navLinks).forEach(([key, selector]) => {
-    const el = document.querySelector(selector);
-    if (el) {
-      const textNode = Array.from(el.childNodes).find(node => node.nodeType === 3);
+  document.querySelectorAll('.nav-link').forEach(link => {
+    const page = link.getAttribute('data-page');
+    if (page && navTranslations[page]) {
+      const translationKey = page === 'settings' ? 'settings' : page;
+      const translation = t(translationKey);
+      
+      // Find text node and update it
+      const textNode = Array.from(link.childNodes).find(node => 
+        node.nodeType === Node.TEXT_NODE
+      );
       if (textNode) {
-        textNode.textContent = t(key);
+        textNode.textContent = translation;
       }
     }
   });
   
-  // Daily gift
+  // 3. Daily gift title (complex structure)
   const dailyGiftTitle = document.querySelector('.daily-gift-title');
   if (dailyGiftTitle) {
     dailyGiftTitle.innerHTML = `
@@ -1298,41 +1553,137 @@ function applyTranslations() {
     `;
   }
   
-  document.querySelector('.daily-gift-subtitle')?.setAttribute('textContent', t('dailyGiftSubtitle'));
+  // 4. Settings page specific elements
+  const settingsTitle = document.querySelector('.settings-title');
+  if (settingsTitle) settingsTitle.textContent = t('settings');
   
-  // Inventory
-  document.querySelector('.inventory-title')?.setAttribute('textContent', t('inventory'));
-  document.querySelector('.inventory-subtitle')?.setAttribute('textContent', t('yourCollectedItems'));
-  document.querySelector('.view-all-btn')?.setAttribute('textContent', t('viewAllItems'));
+  const settingsSubtitle = document.querySelector('.settings-subtitle');
+  if (settingsSubtitle) settingsSubtitle.textContent = t('customizeExperience');
+  
+  // 5. Section headers in settings
+  document.querySelectorAll('.settings-section h3').forEach(header => {
+    const key = header.getAttribute('data-i18n');
+    if (key) {
+      header.textContent = t(key);
+    }
+  });
+  
+  // 6. Setting items labels and descriptions
+  document.querySelectorAll('.setting-item').forEach(item => {
+    const label = item.querySelector('.setting-label');
+    const desc = item.querySelector('.setting-description');
+    
+    if (label) {
+      const key = label.getAttribute('data-i18n');
+      if (key) label.textContent = t(key);
+    }
+    
+    if (desc) {
+      const key = desc.getAttribute('data-i18n');
+      if (key) desc.textContent = t(key);
+    }
+  });
+  
+  // 7. Buttons
+  document.querySelectorAll('.setting-button, .danger-button').forEach(btn => {
+    const key = btn.getAttribute('data-i18n');
+    if (key) btn.textContent = t(key);
+  });
+  
+  // 8. Update current language display
+  const currentLanguageElem = document.getElementById('currentLanguage');
+  if (currentLanguageElem) {
+    currentLanguageElem.textContent = languageNames[settingsState.language];
+  }
+  
+  // 9. Leaderboard tab labels
+  const coinTabLabel = document.querySelector('[data-tab="coins"]');
+  if (coinTabLabel) {
+    const textSpan = coinTabLabel.querySelector('.tab-label');
+    if (textSpan) textSpan.textContent = t('coins');
+  }
+  
+  const giftTabLabel = document.querySelector('[data-tab="gifts"]');
+  if (giftTabLabel) {
+    const textSpan = giftTabLabel.querySelector('.tab-label');
+    if (textSpan) textSpan.textContent = t('gifts');
+  }
+  
+  // 10. Your Rank section
+  const yourRankLabel = document.querySelector('.your-rank-label');
+  if (yourRankLabel) yourRankLabel.textContent = t('yourRank');
   
   console.log(`✅ Translations applied for language: ${settingsState.language}`);
 }
 
-// Apply settings effects
+// FIXED: Animation control that preserves critical animations
 function applySettingsEffects() {
   const html = document.documentElement;
   
-  // Animations
+  console.log('⚙️ Applying settings effects...');
+  console.log('   Animations enabled:', settingsState.animationsEnabled);
+  
   if (!settingsState.animationsEnabled) {
-    html.style.setProperty('--animation-duration', '0s');
-    html.style.setProperty('--transition-duration', '0s');
-    // Disable all animations
-    document.querySelectorAll('*').forEach(el => {
-      el.style.animation = 'none';
-      el.style.transition = 'none';
-    });
+    // Add a class to control animations via CSS
+    html.classList.add('animations-disabled');
+    
+    // Disable most animations but preserve critical ones
+    const style = document.createElement('style');
+    style.id = 'animation-override';
+    style.textContent = `
+      /* Disable most animations */
+      .animations-disabled * {
+        animation-duration: 0s !important;
+        transition-duration: 0s !important;
+      }
+      
+      /* PRESERVE critical animations for functionality */
+      .animations-disabled #mainContent,
+      .animations-disabled #loadingScreen,
+      .animations-disabled .page-content,
+      .animations-disabled .modal,
+      .animations-disabled .notification-cube,
+      .animations-disabled .time-bar-fill {
+        animation-duration: 0.3s !important;
+        transition-duration: 0.3s !important;
+      }
+      
+      /* Keep Lottie animations working */
+      .animations-disabled svg,
+      .animations-disabled svg * {
+        animation-duration: revert !important;
+        transition-duration: revert !important;
+      }
+      
+      /* Preserve leaderboard tab transitions */
+      .animations-disabled .leaderboard-tab,
+      .animations-disabled .leaderboard-list {
+        transition-duration: 0.3s !important;
+      }
+    `;
+    
+    // Remove old style if exists
+    const oldStyle = document.getElementById('animation-override');
+    if (oldStyle) oldStyle.remove();
+    
+    document.head.appendChild(style);
+    
   } else {
-    html.style.removeProperty('--animation-duration');
-    html.style.removeProperty('--transition-duration');
+    // Remove the animation-disabled class
+    html.classList.remove('animations-disabled');
+    
+    // Remove the override style
+    const style = document.getElementById('animation-override');
+    if (style) style.remove();
   }
   
-  // Sound effects (you'll need to implement actual sound system)
+  // Sound effects
   window.soundEnabled = settingsState.soundEffects;
   
   // Confetti effects
   window.confettiEnabled = settingsState.confettiEffects;
   
-  console.log('⚙️ Settings effects applied:', settingsState);
+  console.log('✅ Settings effects applied');
 }
 
 // Load settings from localStorage
@@ -1400,9 +1751,8 @@ function initializeSettings() {
       toggle.addEventListener('change', (e) => {
         settingsState[id] = e.target.checked;
         saveSettings();
-        applySettingsEffects(); // ACTUALLY APPLY THE CHANGES
+        applySettingsEffects();
         
-        // Show feedback
         showSettingChangedFeedback(id);
         
         console.log(`${id} changed to:`, e.target.checked);
@@ -1542,7 +1892,7 @@ document.querySelectorAll('.language-option').forEach(option => {
     
     updateLanguageSelection();
     
-    // APPLY TRANSLATIONS
+    // APPLY TRANSLATIONS TO ENTIRE APP
     applyTranslations();
     
     setTimeout(() => {
@@ -1762,8 +2112,7 @@ if (document.readyState === 'loading') {
   applyTranslations();
 }
 
-console.log('⚙️ Settings module loaded with translations');
-
+console.log('⚙️ Settings module loaded with comprehensive translations');
 // ============================================
 // DAILY SPIN PAGE FUNCTIONALITY - OPTIMIZED
 // ============================================
