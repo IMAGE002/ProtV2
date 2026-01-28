@@ -1501,6 +1501,12 @@ const Leaderboard = {
 // ============================================
 
 const Deposit = {
+  init() {
+    // No-op: Do nothing on init to prevent breaking
+    // Packages will render when user navigates to deposit page
+    console.log('✅ Deposit initialized (no-op)');
+  },
+
   renderPackages(type) {
     const grid = document.querySelector(`#deposit-${type} .packages-grid`);
     if (!grid) return;
@@ -1569,10 +1575,9 @@ const Deposit = {
     }
     Utils.showLoading('Creating invoice...');
     
-    // ✅ CORRECT: Only send product_id
     const purchaseData = {
       action: 'create_star_invoice',
-      product_id: pkg.id  // Backend looks up amounts
+      product_id: pkg.id
     };
     
     console.log('📤 Requesting invoice for:', pkg.id);
@@ -1586,83 +1591,93 @@ const Deposit = {
       Utils.hideLoading();
       Utils.showToast('Error creating invoice', 'error');
     }
-  },  // <- Changed }; to },
+  },
   
   initIcons() {
-  setTimeout(() => {
-    // Header star icon
-    const headerIcon = document.getElementById('depositStarIcon');
-    if (headerIcon && headerIcon.children.length === 0) {
-      lottie.loadAnimation({
-        container: headerIcon,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        path: 'assets/TStars.json'
-      });
-    }
-    
-    // Balance star icon
-    const balanceIcon = document.getElementById('balanceStarIcon');
-    if (balanceIcon && balanceIcon.children.length === 0) {
-      lottie.loadAnimation({
-        container: balanceIcon,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        path: 'assets/TStars.json'
-      });
-    }
-    
-    // Converter star icon
-    const converterIcon = document.getElementById('converterStarIcon');
-    if (converterIcon && converterIcon.children.length === 0) {
-      lottie.loadAnimation({
-        container: converterIcon,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        path: 'assets/TStars.json'
-      });
-    }
-    
-    // Stars tab icon
-    const starsTabIcon = document.getElementById('starsTabIcon');
-    if (starsTabIcon && starsTabIcon.children.length === 0) {
-      lottie.loadAnimation({
-        container: starsTabIcon,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        path: 'assets/TStars.json'
-      });
-    }
-    
-    // Package star icons
-    DEPOSIT_PACKAGES.stars.forEach((pkg, index) => {
-      const pkgIcon = document.getElementById(`pkg-star-${index}`);
-      if (pkgIcon && pkgIcon.children.length === 0) {
+    setTimeout(() => {
+      // Header star icon
+      const headerIcon = document.getElementById('depositStarIcon');
+      if (headerIcon && headerIcon.children.length === 0) {
         lottie.loadAnimation({
-          container: pkgIcon,
+          container: headerIcon,
           renderer: 'svg',
           loop: true,
           autoplay: true,
           path: 'assets/TStars.json'
         });
       }
-    });
-  }, 500);
-},
+      
+      // Balance star icon
+      const balanceIcon = document.getElementById('balanceStarIcon');
+      if (balanceIcon && balanceIcon.children.length === 0) {
+        lottie.loadAnimation({
+          container: balanceIcon,
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: 'assets/TStars.json'
+        });
+      }
+      
+      // Converter star icon
+      const converterIcon = document.getElementById('converterStarIcon');
+      if (converterIcon && converterIcon.children.length === 0) {
+        lottie.loadAnimation({
+          container: converterIcon,
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: 'assets/TStars.json'
+        });
+      }
+      
+      // Stars tab icon
+      const starsTabIcon = document.getElementById('starsTabIcon');
+      if (starsTabIcon && starsTabIcon.children.length === 0) {
+        lottie.loadAnimation({
+          container: starsTabIcon,
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: 'assets/TStars.json'
+        });
+      }
+      
+      // Package star icons
+      DEPOSIT_PACKAGES.stars.forEach((pkg, index) => {
+        const pkgIcon = document.getElementById(`pkg-star-${index}`);
+        if (pkgIcon && pkgIcon.children.length === 0) {
+          lottie.loadAnimation({
+            container: pkgIcon,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: 'assets/TStars.json'
+          });
+        }
+      });
+    }, 500);
+  },
 
-// Public method to add stars (called when user purchases)
-addStars(amount) {
-  STATE.userStars += amount;
-  this.saveStarBalance();
-  this.updateStarBalanceDisplay();
-  Utils.showToast(`✓ Received ${amount} stars!`, 'success');
-  console.log(`⭐ Added ${amount} stars. New balance: ${STATE.userStars}`);
+  addStars(amount) {
+    STATE.userStars += amount;
+    this.saveStarBalance();
+    this.updateStarBalanceDisplay();
+    Utils.showToast(`✓ Received ${amount} stars!`, 'success');
+    console.log(`⭐ Added ${amount} stars. New balance: ${STATE.userStars}`);
+  },
+
+  saveStarBalance() {
+    localStorage.setItem('userStars', STATE.userStars);
+  },
+
+  updateStarBalanceDisplay() {
+    const balanceDisplay = document.getElementById('userStarBalance');
+    if (balanceDisplay) {
+      balanceDisplay.textContent = STATE.userStars.toLocaleString();
+    }
   }
-}; 
+};
 // ============================================
 // SPIN WHEEL
 // ============================================
