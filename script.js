@@ -368,39 +368,122 @@ const Utils = {
   }
 };
 
+const BackendAPI = {
+  async getUserBalance() {
+    if (!STATE.tg || !STATE.userData) {
+      console.warn('⚠️ No Telegram user data');
+      return null;
+    }
+    
+    try {
+      // TODO: Replace with your actual backend API
+      // This endpoint should verify Telegram initData
+      const response = await fetch(`${CONFIG.BACKEND_API_URL}/api/user/balance`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          initData: STATE.tg.initData,
+          userId: STATE.userData.id
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      const data = await response.json();
+      return data.coins || 0;
+      
+    } catch (error) {
+      console.error('❌ Error fetching balance:', error);
+      return null;
+    }
+  },
+  
+  async syncBalance() {
+    if (STATE.isSyncing) return;
+    
+    STATE.isSyncing = true;
+    const balance = await this.getUserBalance();
+    
+    if (balance !== null) {
+      const oldBalance = STATE.virtualCurrency;
+      STATE.virtualCurrency = balance;
+      Currency.update();
+      
+      if (balance !== oldBalance) {
+        console.log(`💰 Balance synced: ${oldBalance} → ${balance}`);
+      }
+      
+      STATE.lastBalanceSync = Date.now();
+    }
+    
+    STATE.isSyncing = false;
+  },
+  
+  startPeriodicSync() {
+    // Sync immediately
+    this.syncBalance();
+    
+    // Then sync periodically
+    if (STATE.syncIntervalId) {
+      clearInterval(STATE.syncIntervalId);
+    }
+    
+    STATE.syncIntervalId = setInterval(() => {
+      this.syncBalance();
+    }, CONFIG.BALANCE_SYNC_INTERVAL);
+    
+    console.log('✅ Balance sync started (every 30s)');
+  },
+  
+  stopPeriodicSync() {
+    if (STATE.syncIntervalId) {
+      clearInterval(STATE.syncIntervalId);
+      STATE.syncIntervalId = null;
+    }
+  }
+};
+
 // ============================================
 // TELEGRAM WEB APP INITIALIZATION
 // ============================================
 
 const TelegramApp = {
-  init() {
-    try {
-      if (!STATE.tg) {
-        console.warn('⚠️ Telegram WebApp not available');
-        this.initFallbackMode();
-        return;
+  setupPaymentHandlers() {
+    if (!STATE.tg) return;
+
+    STATE.tg.onEvent('invoiceClosed', async (event) => {
+      console.log('📱 Invoice closed:', event);
+      
+      if (event.status === 'paid') {
+        console.log('✅ Payment successful!');
+        Utils.showToast('Payment successful! Updating balance...', 'success');
+        
+        // CRITICAL: Sync balance from backend
+        await BackendAPI.syncBalance();
+        
+        // Show success animation
+        setTimeout(() => {
+          Utils.showToast(`✅ Coins added to your account!`, 'success');
+        }, 1000);
+        
+      } else if (event.status === 'cancelled') {
+        console.log('❌ Payment cancelled by user');
+        Utils.showToast('Payment cancelled', 'error');
+      } else if (event.status === 'failed') {
+        console.log('❌ Payment failed');
+        Utils.showToast('Payment failed. Please try again.', 'error');
       }
       
-      STATE.tg.expand();
-      STATE.tg.enableClosingConfirmation();
-      STATE.userData = STATE.tg.initDataUnsafe?.user;
-      
-      if (STATE.userData) {
-        console.log('✅ Telegram User Data Loaded:', STATE.userData);
-        this.updateUserProfile(STATE.userData);
-        this.applyTheme();
-      } else {
-        console.warn('⚠️ No user data - test mode');
-        this.initFallbackMode();
-      }
-      
-      STATE.tg.ready();
-    } catch (error) {
-      console.error('❌ Telegram init error:', error);
-      this.initFallbackMode();
-    }
-  },
-  
+      Utils.hideLoading();
+    });
+
+    console.log('✅ Payment handlers initialized');
+  }
+};
   initFallbackMode() {
     this.updateUserProfile({
       first_name: 'Test User',
@@ -1392,124 +1475,6 @@ const Leaderboard = {
 // ============================================
 
 const Deposit = {
-  init() {
-    this.loadStarBalance();
-    this.setupTabs();
-    this.setupConverter();
-    this.renderPackages('stars');
-    this.initIcons();
-    
-    // Update star balance display
-    this.updateStarBalanceDisplay();
-  },
-
-  loadStarBalance() {
-    const saved = localStorage.getItem('userStars');
-    if (saved) {
-      try {
-        STATE.userStars = parseInt(saved);
-      } catch (error) {
-        console.error('Error loading star balance:', error);
-        STATE.userStars = 0;
-      }
-    }
-  },
-
-  saveStarBalance() {
-    try {
-      localStorage.setItem('userStars', STATE.userStars.toString());
-    } catch (error) {
-      console.error('Error saving star balance:', error);
-    }
-  },
-
-  updateStarBalanceDisplay() {
-    const balanceEl = document.getElementById('userStarBalance');
-    const currencyStarsEl = document.getElementById('currencyStars');
-    
-    if (balanceEl) {
-      balanceEl.textContent = STATE.userStars.toLocaleString();
-    }
-    
-    if (currencyStarsEl) {
-      currencyStarsEl.textContent = STATE.userStars.toLocaleString();
-    }
-  },
-
-  setupTabs() {
-    const tabs = document.querySelectorAll('.deposit-tab');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        
-        const tabType = tab.dataset.tab;
-        STATE.currentDepositTab = tabType;
-        
-        document.querySelectorAll('.deposit-list').forEach(list => {
-          list.classList.remove('active');
-        });
-        
-        const list = document.getElementById(`deposit-${tabType}`);
-        if (list) list.classList.add('active');
-        
-        this.renderPackages(tabType);
-      });
-    });
-  },
-
-  setupConverter() {
-    const input = document.getElementById('starConvertInput');
-    const convertBtn = document.getElementById('convertStarsBtn');
-    const resultEl = document.getElementById('convertedCoins');
-
-    if (input) {
-      input.addEventListener('input', (e) => {
-        const stars = parseInt(e.target.value) || 0;
-        const coins = stars * STAR_TO_COIN_RATE;
-        if (resultEl) {
-          resultEl.textContent = coins.toLocaleString();
-        }
-      });
-    }
-
-    if (convertBtn) {
-      convertBtn.addEventListener('click', () => this.convertStars());
-    }
-  },
-
-  convertStars() {
-    const input = document.getElementById('starConvertInput');
-    if (!input) return;
-
-    const stars = parseInt(input.value) || 0;
-
-    if (stars <= 0) {
-      Utils.showToast('Please enter a valid amount', 'error');
-      return;
-    }
-
-    if (stars > STATE.userStars) {
-      Utils.showToast('Insufficient star balance', 'error');
-      return;
-    }
-
-    const coins = stars * STAR_TO_COIN_RATE;
-    
-    STATE.userStars -= stars;
-    this.saveStarBalance();
-    this.updateStarBalanceDisplay();
-    Currency.add(coins);
-
-    input.value = '';
-    const resultEl = document.getElementById('convertedCoins');
-    if (resultEl) resultEl.textContent = '0';
-
-    Utils.showToast(`✓ Converted ${stars} stars to ${coins.toLocaleString()} coins!`, 'success');
-    
-    console.log(`✅ Converted: ${stars} stars → ${coins} coins`);
-  },
-
   renderPackages(type) {
     const grid = document.querySelector(`#deposit-${type} .packages-grid`);
     if (!grid) return;
@@ -1537,27 +1502,17 @@ const Deposit = {
 
     const icon = document.createElement('div');
     icon.className = 'package-icon';
-    
-    if (type === 'stars') {
-      icon.id = `pkg-star-${index}`;
-    } else {
-      const img = document.createElement('img');
-      img.src = 'assets/TON.svg';
-      img.alt = 'TON';
-      icon.appendChild(img);
-    }
+    icon.id = `pkg-star-${index}`;
     card.appendChild(icon);
 
     const amount = document.createElement('div');
     amount.className = 'package-amount';
-    amount.textContent = type === 'ton' && pkg.amount < 1 
-      ? pkg.amount.toFixed(1) 
-      : pkg.amount.toLocaleString();
+    amount.textContent = pkg.amount.toLocaleString();
     card.appendChild(amount);
 
     const currency = document.createElement('div');
     currency.className = 'package-currency';
-    currency.textContent = type === 'stars' ? 'Stars' : 'TON';
+    currency.textContent = 'Stars';
     card.appendChild(currency);
 
     const divider = document.createElement('div');
@@ -1568,79 +1523,69 @@ const Deposit = {
     coins.className = 'package-coins';
     coins.innerHTML = `
       <img src="assets/Coin.svg" alt="Coin">
-      <span>${pkg.coins.toLocaleString()}</span>
+      <span>${pkg.coins.toLocaleString()} Coins</span>
     `;
     card.appendChild(coins);
 
     const buyBtn = document.createElement('button');
     buyBtn.className = 'package-buy-btn';
     buyBtn.textContent = 'Purchase';
-    buyBtn.addEventListener('click', () => this.purchasePackage(pkg, type));
+    buyBtn.addEventListener('click', () => this.purchasePackage(pkg));
     card.appendChild(buyBtn);
 
     return card;
   },
 
-  purchasePackage(pkg, type) {
+  purchasePackage(pkg) {
     if (!STATE.tg) {
-      alert(`Demo Mode:\n\nPurchase ${pkg.amount} ${type.toUpperCase()}\nReceive ${pkg.coins.toLocaleString()} Void Coins`);
-      
-      // Demo: auto-add for testing
-      if (type === 'stars') {
-        STATE.userStars += pkg.amount;
-        this.saveStarBalance();
-        this.updateStarBalanceDisplay();
-      } else {
-        // TON auto-converts to coins
-        Currency.add(pkg.coins);
-      }
-      
-      Utils.showToast(`✓ Demo purchase successful!`, 'success');
+      Utils.showToast('Telegram WebApp not available', 'error');
       return;
     }
 
-    if (type === 'stars') {
-      // Telegram Stars purchase flow
-      const purchaseData = {
-        action: 'purchase_stars',
-        amount: pkg.amount,
-        coins: pkg.coins,
-        timestamp: Date.now()
-      };
-      
-      const success = TelegramApp.sendData(purchaseData);
-      
-      if (success) {
-        Utils.showToast('Purchase request sent to bot!', 'success');
-        console.log(`📤 Stars purchase request: ${pkg.amount} stars`);
-      } else {
-        Utils.showToast('Error processing purchase', 'error');
-      }
+    Utils.showLoading('Creating invoice...');
+    
+    // ✅ CORRECT: Only send product_id
+    const purchaseData = {
+      action: 'create_star_invoice',
+      product_id: pkg.id  // Backend looks up amounts
+    };
+    
+    console.log('📤 Requesting invoice for:', pkg.id);
+    
+    const success = TelegramApp.sendData(purchaseData);
+    
+    if (success) {
+      Utils.hideLoading();
+      Utils.showToast('Opening payment...', 'success');
     } else {
-      // TON purchase flow - auto-converts to coins
-      const purchaseData = {
-        action: 'purchase_ton',
-        amount: pkg.amount,
-        coins: pkg.coins,
-        timestamp: Date.now()
-      };
-      
-      const success = TelegramApp.sendData(purchaseData);
-      
-      if (success) {
-        Utils.showToast('TON purchase request sent!', 'success');
-        console.log(`📤 TON purchase request: ${pkg.amount} TON → ${pkg.coins} coins`);
-        
-        // Auto-add coins (in production, wait for blockchain confirmation)
-        setTimeout(() => {
-          Currency.add(pkg.coins);
-          Utils.showToast(`✓ Received ${pkg.coins.toLocaleString()} coins!`, 'success');
-        }, 1000);
-      } else {
-        Utils.showToast('Error processing purchase', 'error');
-      }
+      Utils.hideLoading();
+      Utils.showToast('Error creating invoice', 'error');
     }
-  },
+  }
+};
+      
+      const purchaseData = {
+  action: 'purchase_ton',
+  amount: pkg.amount, // TON sent
+  // NO coins
+};
+
+TelegramApp.sendData(purchaseData);
+
+// Show loading
+Utils.showLoading('Processing TON payment...');
+
+// Wait for invoiceClosed or backend confirmation
+STATE.tg.onEvent('invoiceClosed', async (event) => {
+  if (event.status === 'paid') {
+    await BackendAPI.syncBalance();
+    Utils.showToast(`✓ Coins added to your account!`, 'success');
+  } else {
+    Utils.showToast('TON payment failed or cancelled', 'error');
+  }
+  
+  Utils.hideLoading();
+});
 
   initIcons() {
     setTimeout(() => {
