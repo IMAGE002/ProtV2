@@ -1502,9 +1502,11 @@ const Leaderboard = {
 
 const Deposit = {
   init() {
-    // No-op: Do nothing on init to prevent breaking
-    // Packages will render when user navigates to deposit page
-    console.log('✅ Deposit initialized (no-op)');
+    console.log('✅ Deposit initialized');
+    // Render packages when page loads
+    this.renderPackages('stars');
+    this.renderPackages('ton');
+    this.initIcons();
   },
 
   renderPackages(type) {
@@ -1573,7 +1575,6 @@ const Deposit = {
       Utils.showToast('Telegram WebApp not available', 'error');
       return;
     }
-    Utils.showLoading('Creating invoice...');
     
     const purchaseData = {
       action: 'create_star_invoice',
@@ -1585,17 +1586,14 @@ const Deposit = {
     const success = TelegramApp.sendData(purchaseData);
     
     if (success) {
-      Utils.hideLoading();
       Utils.showToast('Opening payment...', 'success');
     } else {
-      Utils.hideLoading();
       Utils.showToast('Error creating invoice', 'error');
     }
   },
   
   initIcons() {
     setTimeout(() => {
-      // Header star icon
       const headerIcon = document.getElementById('depositStarIcon');
       if (headerIcon && headerIcon.children.length === 0) {
         lottie.loadAnimation({
@@ -1607,7 +1605,6 @@ const Deposit = {
         });
       }
       
-      // Balance star icon
       const balanceIcon = document.getElementById('balanceStarIcon');
       if (balanceIcon && balanceIcon.children.length === 0) {
         lottie.loadAnimation({
@@ -1619,7 +1616,6 @@ const Deposit = {
         });
       }
       
-      // Converter star icon
       const converterIcon = document.getElementById('converterStarIcon');
       if (converterIcon && converterIcon.children.length === 0) {
         lottie.loadAnimation({
@@ -1631,7 +1627,6 @@ const Deposit = {
         });
       }
       
-      // Stars tab icon
       const starsTabIcon = document.getElementById('starsTabIcon');
       if (starsTabIcon && starsTabIcon.children.length === 0) {
         lottie.loadAnimation({
@@ -1643,7 +1638,6 @@ const Deposit = {
         });
       }
       
-      // Package star icons
       DEPOSIT_PACKAGES.stars.forEach((pkg, index) => {
         const pkgIcon = document.getElementById(`pkg-star-${index}`);
         if (pkgIcon && pkgIcon.children.length === 0) {
