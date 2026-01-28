@@ -1770,14 +1770,14 @@ function initializeSettings() {
   const termsBtn = document.getElementById('termsBtn');
   if (termsBtn) {
     termsBtn.addEventListener('click', () => {
-      alert('Terms of Service\n\nThis would open the Terms of Service page.');
+      window.location.href = 'tos.html';
     });
   }
   
   const privacyBtn = document.getElementById('privacyBtn');
   if (privacyBtn) {
     privacyBtn.addEventListener('click', () => {
-      alert('Privacy Policy\n\nThis would open the Privacy Policy page.');
+      window.location.href = 'privacy.html';
     });
   }
   
