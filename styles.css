@@ -3761,3 +3761,683 @@ font-size: 0.95rem;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   }
 }
+
+/* ============================================
+   DEPOSIT PAGE STYLES
+   ============================================ */
+
+.deposit-page {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.deposit-header {
+  text-align: center;
+  padding: 2rem 2rem 1.5rem;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.08) 100%);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(251, 191, 36, 0.3);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.deposit-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.1) 0%, transparent 70%);
+  animation: rotateGlow 10s linear infinite;
+}
+
+.deposit-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1rem;
+  position: relative;
+  z-index: 1;
+  animation: depositFloat 3s ease-in-out infinite;
+}
+
+@keyframes depositFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.05);
+  }
+}
+
+.deposit-title {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.deposit-subtitle {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Star Balance Display */
+.star-balance-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.25rem 2rem;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: 16px;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.balance-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.balance-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+.balance-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.balance-amount {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fbbf24;
+  line-height: 1;
+}
+
+/* Star Converter */
+.star-converter {
+  padding: 1.5rem;
+  background: rgba(96, 165, 250, 0.08);
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  border-radius: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.converter-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #60a5fa;
+}
+
+.converter-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.converter-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.converter-input-group {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(26, 35, 50, 0.8);
+  border: 2px solid rgba(96, 165, 250, 0.3);
+  border-radius: 12px;
+  padding: 0 1rem;
+}
+
+.input-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  margin-right: 0.75rem;
+}
+
+.converter-input {
+  flex: 1;
+  padding: 1rem 0;
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.converter-input:focus {
+  outline: none;
+}
+
+.converter-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Hide number input arrows */
+.converter-input::-webkit-outer-spin-button,
+.converter-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.converter-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.converter-arrow {
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.4);
+  flex-shrink: 0;
+}
+
+.converter-result {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.25rem;
+  background: rgba(96, 165, 250, 0.15);
+  border: 2px solid rgba(96, 165, 250, 0.4);
+  border-radius: 12px;
+  min-width: 140px;
+  justify-content: center;
+}
+
+.converter-result img {
+  width: 28px;
+  height: 28px;
+}
+
+.converter-result span {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #60a5fa;
+}
+
+.converter-btn {
+  width: 100%;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+  border: none;
+  border-radius: 50px;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+
+.converter-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.converter-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(96, 165, 250, 0.5);
+  background: linear-gradient(135deg, #70b5ff 0%, #4b92ff 100%);
+}
+
+.converter-btn:active {
+  transform: translateY(0);
+}
+
+.converter-rate {
+  text-align: center;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+}
+
+/* Deposit Tabs */
+.deposit-tabs {
+  display: flex;
+  gap: 1rem;
+  background: rgba(26, 35, 50, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 0.5rem;
+}
+
+.deposit-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.tab-icon-img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  transition: all 0.3s;
+}
+
+.deposit-tab:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.deposit-tab.active {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.2) 100%);
+  color: #fbbf24;
+  box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+}
+
+/* Deposit Content */
+.deposit-content {
+  position: relative;
+}
+
+.deposit-list {
+  display: none;
+}
+
+.deposit-list.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Packages Grid */
+.packages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.25rem;
+}
+
+.package-card {
+  background: rgba(26, 35, 50, 0.6);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: scaleIn 0.4s ease backwards;
+}
+
+.package-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(251, 191, 36, 0.5);
+  box-shadow: 0 8px 30px rgba(251, 191, 36, 0.3);
+  background: rgba(26, 35, 50, 0.8);
+}
+
+.popular-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 0.35rem 0.75rem;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.5);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.package-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.package-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(251, 191, 36, 0.4));
+}
+
+.package-amount {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.package-currency {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.package-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  margin: 0.25rem 0;
+}
+
+.package-coins {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(96, 165, 250, 0.1);
+  border-radius: 12px;
+}
+
+.package-coins img {
+  width: 24px;
+  height: 24px;
+  filter: drop-shadow(0 2px 4px rgba(96, 165, 250, 0.3));
+}
+
+.package-coins span {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #60a5fa;
+}
+
+.package-buy-btn {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  border: none;
+  border-radius: 50px;
+  color: #0f1a24;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.5rem;
+}
+
+.package-buy-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(251, 191, 36, 0.5);
+  background: linear-gradient(135deg, #fcd34d 0%, #fbbf24 100%);
+}
+
+.package-buy-btn:active {
+  transform: translateY(0);
+}
+
+/* Info Card */
+.deposit-info-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 16px;
+}
+
+.info-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: #60a5fa;
+  margin-top: 0.25rem;
+}
+
+.info-content h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #60a5fa;
+  margin-bottom: 0.5rem;
+}
+
+.info-content p {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.6;
+}
+
+/* Currency Bar Extended Styles */
+.currency-divider {
+  width: 1px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.currency-icon-small {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.currency-icon-small img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(251, 191, 36, 0.3));
+}
+
+.currency-amount-small {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fbbf24;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .deposit-page {
+    gap: 1.25rem;
+  }
+
+  .deposit-header {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .deposit-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .deposit-title {
+    font-size: 1.75rem;
+  }
+
+  .star-balance-display {
+    padding: 1rem 1.5rem;
+  }
+
+  .balance-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .balance-amount {
+    font-size: 1.75rem;
+  }
+
+  .star-converter {
+    padding: 1.25rem;
+  }
+
+  .converter-input-wrapper {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .converter-arrow {
+    transform: rotate(90deg);
+  }
+
+  .packages-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+  }
+
+  .package-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .package-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .package-amount {
+    font-size: 1.75rem;
+  }
+
+  .deposit-tabs {
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 480px) {
+  .deposit-header {
+    padding: 1.25rem 1rem;
+  }
+
+  .deposit-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .deposit-title {
+    font-size: 1.5rem;
+  }
+
+  .deposit-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .star-balance-display {
+    padding: 0.875rem 1.25rem;
+  }
+
+  .balance-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .balance-amount {
+    font-size: 1.5rem;
+  }
+
+  .star-converter {
+    padding: 1rem;
+  }
+
+  .converter-input {
+    font-size: 1rem;
+  }
+
+  .converter-result span {
+    font-size: 1.1rem;
+  }
+
+  .packages-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.875rem;
+  }
+
+  .package-card {
+    padding: 1rem 0.875rem;
+  }
+
+  .package-icon {
+    width: 45px;
+    height: 45px;
+  }
+
+  .package-amount {
+    font-size: 1.5rem;
+  }
+
+  .package-coins span {
+    font-size: 1rem;
+  }
+
+  .package-buy-btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.85rem;
+  }
+
+  .currency-icon-small {
+    width: 28px;
+    height: 28px;
+  }
+
+  .currency-amount-small {
+    font-size: 0.9rem;
+  }
+}
