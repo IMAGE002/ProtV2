@@ -2417,7 +2417,6 @@ font-size: 1.25rem;
 width: 100px;
 height: 100px;
 }
-
 }
 @media (max-width: 480px) {
 .loading-container {
@@ -2468,7 +2467,7 @@ min-width: 45px;
 width: 42px;
 height: 42px;
 }
-}
+
 
 .nav-menu {
 max-width: 90%;
@@ -2597,42 +2596,6 @@ font-size: 11px;
 .copyright-text {
 font-size: 10px;
 padding: 8px;
-}
-}
-
-/* Desktop optimizations - ADD THIS BEFORE @media queries */
-@media (min-width: 1200px) {
-.container {
-padding: 2rem 4rem;
-padding-top: 6rem;
-}
-
-.grid-layout {
-max-width: 1600px;
-gap: 2rem;
-}
-
-.content-box-left-1,
-.content-box-left-2,
-.content-box-right,
-.content-box-bottom-1,
-.content-box-bottom-2 {
-padding: 3rem;
-}
-
-.inventory-grid {
-grid-template-columns: repeat(3, 1fr);
-gap: 1rem;
-}
-}
-
-@media (min-width: 1600px) {
-.container {
-padding: 2rem 6rem;
-}
-
-.grid-layout {
-max-width: 1800px;
 }
 }
 
