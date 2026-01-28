@@ -1538,7 +1538,6 @@ const Deposit = {
       Utils.showToast('Telegram WebApp not available', 'error');
       return;
     }
-
     Utils.showLoading('Creating invoice...');
     
     // ✅ CORRECT: Only send product_id
@@ -1558,32 +1557,8 @@ const Deposit = {
       Utils.hideLoading();
       Utils.showToast('Error creating invoice', 'error');
     }
-  }
-};
-      
-      const purchaseData = {
-  action: 'purchase_ton',
-  amount: pkg.amount, // TON sent
-  // NO coins
-};
-
-TelegramApp.sendData(purchaseData);
-
-// Show loading
-Utils.showLoading('Processing TON payment...');
-
-// Wait for invoiceClosed or backend confirmation
-STATE.tg.onEvent('invoiceClosed', async (event) => {
-  if (event.status === 'paid') {
-    await BackendAPI.syncBalance();
-    Utils.showToast(`✓ Coins added to your account!`, 'success');
-  } else {
-    Utils.showToast('TON payment failed or cancelled', 'error');
-  }
+  },  // <- Changed }; to },
   
-  Utils.hideLoading();
-});
-
   initIcons() {
     setTimeout(() => {
       // Header star icon
@@ -1597,6 +1572,9 @@ STATE.tg.onEvent('invoiceClosed', async (event) => {
           path: 'assets/TStars.json'
         });
       }
+    });
+  }
+};
 
       // Balance star icon
       const balanceIcon = document.getElementById('balanceStarIcon');
