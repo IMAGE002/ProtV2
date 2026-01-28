@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Portfolio</title>
 <link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="styles_addon.css">
 </head>
 <body class="no-scroll">
 
@@ -25,60 +24,6 @@
     <a href="https://github.com/IMAGE002/Build1/blob/main/LICENSE" class="copyright-text" target="_blank" rel="noopener noreferrer">
       © 2025 Copyright All Rights Reserved
     </a>
-  </div>
-</div>
-  
-  <!-- Full Inventory Modal -->
-<div class="full-inventory-modal-overlay" id="fullInventoryModal">
-  <div class="full-inventory-modal">
-    <div class="full-inventory-header">
-      <div class="full-inventory-title-section">
-        <div class="full-inventory-icon" id="fullInventoryLottieIcon"></div>
-        <h2 class="full-inventory-title">Your Complete Inventory</h2>
-      </div>
-      <button class="full-inventory-close" id="fullInventoryClose">×</button>
-    </div>
-    
-    <div class="inventory-stats">
-      <div class="stat-card">
-        <div class="stat-icon">🎁</div>
-        <div class="stat-content">
-          <div class="stat-value" id="totalGiftsCount">0</div>
-          <div class="stat-label">Total Gifts</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">💰</div>
-        <div class="stat-content">
-          <div class="stat-value" id="totalGiftValue">0</div>
-          <div class="stat-label">Total Value</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">⭐</div>
-        <div class="stat-content">
-          <div class="stat-value" id="rareGiftsCount">0</div>
-          <div class="stat-label">Rare Gifts</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="inventory-filters">
-      <button class="filter-btn active" data-filter="all">All Gifts</button>
-      <button class="filter-btn" data-filter="telegram">Telegram Gifts</button>
-      <button class="filter-btn" data-filter="nft">NFTs</button>
-      <button class="filter-btn" data-filter="rare">Rare Only</button>
-    </div>
-
-    <div class="full-inventory-grid" id="fullInventoryGrid">
-      <!-- Items populated by JavaScript -->
-    </div>
-
-    <div class="empty-inventory" id="emptyInventory" style="display: none;">
-      <div class="empty-icon">📦</div>
-      <h3>No Gifts Yet</h3>
-      <p>Win your first gift by spinning the wheel!</p>
-    </div>
   </div>
 </div>
 
@@ -802,6 +747,58 @@
   </div>
 </div>
 
+<!-- Full Inventory Modal -->
+<div class="full-inventory-modal-overlay" id="fullInventoryModal">
+  <div class="full-inventory-modal">
+    <div class="full-inventory-header">
+      <div class="full-inventory-title-section">
+        <div class="full-inventory-icon" id="fullInventoryLottieIcon"></div>
+        <h2 class="full-inventory-title">Your Complete Inventory</h2>
+      </div>
+      <button class="full-inventory-close" id="fullInventoryClose">×</button>
+    </div>
+    
+    <div class="inventory-stats">
+      <div class="stat-card">
+        <div class="stat-icon">🎁</div>
+        <div class="stat-content">
+          <div class="stat-value" id="totalGiftsCount">0</div>
+          <div class="stat-label">Total Gifts</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-content">
+          <div class="stat-value" id="totalGiftValue">0</div>
+          <div class="stat-label">Total Value</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-content">
+          <div class="stat-value" id="rareGiftsCount">0</div>
+          <div class="stat-label">Rare Gifts</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inventory-filters">
+      <button class="filter-btn active" data-filter="all">All Gifts</button>
+      <button class="filter-btn" data-filter="telegram">Telegram Gifts</button>
+      <button class="filter-btn" data-filter="nft">NFTs</button>
+      <button class="filter-btn" data-filter="rare">Rare Only</button>
+    </div>
+
+    <div class="full-inventory-grid" id="fullInventoryGrid"></div>
+
+    <div class="empty-inventory" id="emptyInventory" style="display: none;">
+      <div class="empty-icon">📦</div>
+      <h3>No Gifts Yet</h3>
+      <p>Win your first gift by spinning the wheel!</p>
+    </div>
+  </div>
+</div>
+
 </div>
 <!-- End of Main Content -->
 
@@ -813,7 +810,6 @@
 
 <!-- Finally load your script -->
 <script src="script.js"></script>
-<script src="script_addon.js"></script> 
-  
+
 </body>
 </html>
