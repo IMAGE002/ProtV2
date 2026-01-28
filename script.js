@@ -1632,7 +1632,8 @@ addStars(amount) {
   this.updateStarBalanceDisplay();
   Utils.showToast(`✓ Received ${amount} stars!`, 'success');
   console.log(`⭐ Added ${amount} stars. New balance: ${STATE.userStars}`);
-}
+  }
+}; 
 // ============================================
 // SPIN WHEEL
 // ============================================
