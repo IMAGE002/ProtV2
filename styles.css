@@ -3289,6 +3289,7 @@ font-size: 0.95rem;
   border: 2px solid rgba(245, 194, 107, 0.6);
   position: relative;
   overflow: hidden;
+  cursor: default; /* UPDATED: Changed from pointer to default */
 }
 
 .notification-cube.gift-notification::before {
@@ -3305,22 +3306,25 @@ font-size: 0.95rem;
 }
 
 .notification-cube.gift-notification:hover {
-  transform: scale(1.08);
+  transform: scale(1.02); /* UPDATED: Changed from 1.08 to 1.02 */
   background: linear-gradient(135deg, rgba(245, 194, 107, 0.35) 0%, rgba(232, 168, 77, 0.25) 100%);
   border-color: rgba(245, 194, 107, 0.9);
   box-shadow: 0 0 25px rgba(245, 194, 107, 0.6);
+  cursor: default; /* ADDED: Non-interactive cursor */
 }
 
 .notification-cube.nft-notification {
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.25) 0%, rgba(167, 139, 250, 0.15) 100%);
   border: 2px solid rgba(139, 92, 246, 0.6);
+  cursor: default; /* ADDED: Non-interactive cursor */
 }
 
 .notification-cube.nft-notification:hover {
-  transform: scale(1.08);
+  transform: scale(1.02); /* UPDATED: Changed from 1.08 to 1.02 */
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.35) 0%, rgba(167, 139, 250, 0.25) 100%);
   border-color: rgba(139, 92, 246, 0.9);
   box-shadow: 0 0 25px rgba(139, 92, 246, 0.6);
+  cursor: default; /* ADDED: Non-interactive cursor */
 }
 
 .gift-notification-lottie {
@@ -3348,6 +3352,12 @@ font-size: 0.95rem;
 
 .nft-notification .gift-notification-label {
   color: #a78bfa;
+}
+
+/* ADDED: Hide close buttons on gift notifications */
+.notification-cube.gift-notification .close-btn,
+.notification-cube.nft-notification .close-btn {
+  display: none !important;
 }
 
 /* ============================================
