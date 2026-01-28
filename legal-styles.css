@@ -230,9 +230,6 @@ body {
   border-radius: var(--radius-lg);
   padding: var(--spacing-xl);
   margin-bottom: var(--spacing-xl);
-  position: sticky;
-  top: 80px;
-  z-index: 90;
 }
 
 .toc h3 {
@@ -659,8 +656,7 @@ tbody tr:last-child td {
   }
   
   .toc {
-    position: relative;
-    top: 0;
+    margin-bottom: var(--spacing-lg);
   }
   
   .toc h3 {
