@@ -480,7 +480,7 @@ const TelegramApp = {
       
       Utils.hideLoading();
     });
-
+  },
   initFallbackMode() {
     this.updateUserProfile({
       first_name: 'Test User',
