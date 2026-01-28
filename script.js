@@ -481,9 +481,6 @@ const TelegramApp = {
       Utils.hideLoading();
     });
 
-    console.log('✅ Payment handlers initialized');
-  }
-};
   initFallbackMode() {
     this.updateUserProfile({
       first_name: 'Test User',
