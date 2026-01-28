@@ -70,6 +70,44 @@ const VALID_PROMOCODES = {
 };
 
 // ============================================
+// DEPOSIT CONFIGURATION
+// ============================================
+
+const DEPOSIT_PACKAGES = {
+  stars: [
+    { amount: 1, coins: 10, popular: false },
+    { amount: 25, coins: 250, popular: false },
+    { amount: 50, coins: 500, popular: false },
+    { amount: 75, coins: 750, popular: true },
+    { amount: 100, coins: 1000, popular: false },
+    { amount: 250, coins: 2500, popular: false },
+    { amount: 500, coins: 5000, popular: false },
+    { amount: 750, coins: 7500, popular: false },
+    { amount: 1000, coins: 10000, popular: false },
+    { amount: 2500, coins: 25000, popular: false },
+    { amount: 5000, coins: 50000, popular: true },
+    { amount: 7500, coins: 75000, popular: false },
+    { amount: 10000, coins: 100000, popular: false }
+  ],
+  ton: [
+    { amount: 0.5, coins: 50, popular: false },
+    { amount: 1, coins: 100, popular: false },
+    { amount: 2, coins: 200, popular: false },
+    { amount: 5, coins: 500, popular: true },
+    { amount: 10, coins: 1000, popular: false },
+    { amount: 25, coins: 2500, popular: false },
+    { amount: 50, coins: 5000, popular: false },
+    { amount: 100, coins: 10000, popular: true },
+    { amount: 250, coins: 25000, popular: false },
+    { amount: 500, coins: 50000, popular: false },
+    { amount: 1000, coins: 100000, popular: false }
+  ]
+};
+
+const STAR_TO_COIN_RATE = 10; // 1 Star = 10 Coins
+const TON_TO_COIN_RATE = 100; // 1 TON = 100 Coins
+
+// ============================================
 // GLOBAL STATE
 // ============================================
 
@@ -132,6 +170,10 @@ const STATE = {
     showInLeaderboard: true,
     shareStats: true
   },
+  
+  // Deposit
+  currentDepositTab: 'stars',
+  userStars: 0,  // User's star balance
   
   // Modals
   currentModalPrize: null,
@@ -819,6 +861,10 @@ const Navigation = {
     if (pageName === 'leaderboard') {
       Leaderboard.init();
     }
+    
+    if (pageName === 'deposit') {
+      Deposit.init();
+    }
   }
 };
 
@@ -1338,6 +1384,337 @@ const Leaderboard = {
     if (STATE.currentPage === 'leaderboard') {
       this.updateYourRank(STATE.currentLeaderboardTab);
     }
+  }
+};
+
+// ============================================
+// DEPOSIT SYSTEM
+// ============================================
+
+const Deposit = {
+  init() {
+    this.loadStarBalance();
+    this.setupTabs();
+    this.setupConverter();
+    this.renderPackages('stars');
+    this.initIcons();
+    
+    // Update star balance display
+    this.updateStarBalanceDisplay();
+  },
+
+  loadStarBalance() {
+    const saved = localStorage.getItem('userStars');
+    if (saved) {
+      try {
+        STATE.userStars = parseInt(saved);
+      } catch (error) {
+        console.error('Error loading star balance:', error);
+        STATE.userStars = 0;
+      }
+    }
+  },
+
+  saveStarBalance() {
+    try {
+      localStorage.setItem('userStars', STATE.userStars.toString());
+    } catch (error) {
+      console.error('Error saving star balance:', error);
+    }
+  },
+
+  updateStarBalanceDisplay() {
+    const balanceEl = document.getElementById('userStarBalance');
+    const currencyStarsEl = document.getElementById('currencyStars');
+    
+    if (balanceEl) {
+      balanceEl.textContent = STATE.userStars.toLocaleString();
+    }
+    
+    if (currencyStarsEl) {
+      currencyStarsEl.textContent = STATE.userStars.toLocaleString();
+    }
+  },
+
+  setupTabs() {
+    const tabs = document.querySelectorAll('.deposit-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        const tabType = tab.dataset.tab;
+        STATE.currentDepositTab = tabType;
+        
+        document.querySelectorAll('.deposit-list').forEach(list => {
+          list.classList.remove('active');
+        });
+        
+        const list = document.getElementById(`deposit-${tabType}`);
+        if (list) list.classList.add('active');
+        
+        this.renderPackages(tabType);
+      });
+    });
+  },
+
+  setupConverter() {
+    const input = document.getElementById('starConvertInput');
+    const convertBtn = document.getElementById('convertStarsBtn');
+    const resultEl = document.getElementById('convertedCoins');
+
+    if (input) {
+      input.addEventListener('input', (e) => {
+        const stars = parseInt(e.target.value) || 0;
+        const coins = stars * STAR_TO_COIN_RATE;
+        if (resultEl) {
+          resultEl.textContent = coins.toLocaleString();
+        }
+      });
+    }
+
+    if (convertBtn) {
+      convertBtn.addEventListener('click', () => this.convertStars());
+    }
+  },
+
+  convertStars() {
+    const input = document.getElementById('starConvertInput');
+    if (!input) return;
+
+    const stars = parseInt(input.value) || 0;
+
+    if (stars <= 0) {
+      Utils.showToast('Please enter a valid amount', 'error');
+      return;
+    }
+
+    if (stars > STATE.userStars) {
+      Utils.showToast('Insufficient star balance', 'error');
+      return;
+    }
+
+    const coins = stars * STAR_TO_COIN_RATE;
+    
+    STATE.userStars -= stars;
+    this.saveStarBalance();
+    this.updateStarBalanceDisplay();
+    Currency.add(coins);
+
+    input.value = '';
+    const resultEl = document.getElementById('convertedCoins');
+    if (resultEl) resultEl.textContent = '0';
+
+    Utils.showToast(`✓ Converted ${stars} stars to ${coins.toLocaleString()} coins!`, 'success');
+    
+    console.log(`✅ Converted: ${stars} stars → ${coins} coins`);
+  },
+
+  renderPackages(type) {
+    const grid = document.querySelector(`#deposit-${type} .packages-grid`);
+    if (!grid) return;
+
+    grid.innerHTML = '';
+    const packages = DEPOSIT_PACKAGES[type];
+
+    packages.forEach((pkg, index) => {
+      const card = this.createPackageCard(pkg, type, index);
+      grid.appendChild(card);
+    });
+  },
+
+  createPackageCard(pkg, type, index) {
+    const card = document.createElement('div');
+    card.className = 'package-card';
+    card.style.animationDelay = `${index * 0.05}s`;
+
+    if (pkg.popular) {
+      const badge = document.createElement('div');
+      badge.className = 'popular-badge';
+      badge.textContent = 'Popular';
+      card.appendChild(badge);
+    }
+
+    const icon = document.createElement('div');
+    icon.className = 'package-icon';
+    
+    if (type === 'stars') {
+      icon.id = `pkg-star-${index}`;
+    } else {
+      const img = document.createElement('img');
+      img.src = 'assets/TON.svg';
+      img.alt = 'TON';
+      icon.appendChild(img);
+    }
+    card.appendChild(icon);
+
+    const amount = document.createElement('div');
+    amount.className = 'package-amount';
+    amount.textContent = type === 'ton' && pkg.amount < 1 
+      ? pkg.amount.toFixed(1) 
+      : pkg.amount.toLocaleString();
+    card.appendChild(amount);
+
+    const currency = document.createElement('div');
+    currency.className = 'package-currency';
+    currency.textContent = type === 'stars' ? 'Stars' : 'TON';
+    card.appendChild(currency);
+
+    const divider = document.createElement('div');
+    divider.className = 'package-divider';
+    card.appendChild(divider);
+
+    const coins = document.createElement('div');
+    coins.className = 'package-coins';
+    coins.innerHTML = `
+      <img src="assets/Coin.svg" alt="Coin">
+      <span>${pkg.coins.toLocaleString()}</span>
+    `;
+    card.appendChild(coins);
+
+    const buyBtn = document.createElement('button');
+    buyBtn.className = 'package-buy-btn';
+    buyBtn.textContent = 'Purchase';
+    buyBtn.addEventListener('click', () => this.purchasePackage(pkg, type));
+    card.appendChild(buyBtn);
+
+    return card;
+  },
+
+  purchasePackage(pkg, type) {
+    if (!STATE.tg) {
+      alert(`Demo Mode:\n\nPurchase ${pkg.amount} ${type.toUpperCase()}\nReceive ${pkg.coins.toLocaleString()} Void Coins`);
+      
+      // Demo: auto-add for testing
+      if (type === 'stars') {
+        STATE.userStars += pkg.amount;
+        this.saveStarBalance();
+        this.updateStarBalanceDisplay();
+      } else {
+        // TON auto-converts to coins
+        Currency.add(pkg.coins);
+      }
+      
+      Utils.showToast(`✓ Demo purchase successful!`, 'success');
+      return;
+    }
+
+    if (type === 'stars') {
+      // Telegram Stars purchase flow
+      const purchaseData = {
+        action: 'purchase_stars',
+        amount: pkg.amount,
+        coins: pkg.coins,
+        timestamp: Date.now()
+      };
+      
+      const success = TelegramApp.sendData(purchaseData);
+      
+      if (success) {
+        Utils.showToast('Purchase request sent to bot!', 'success');
+        console.log(`📤 Stars purchase request: ${pkg.amount} stars`);
+      } else {
+        Utils.showToast('Error processing purchase', 'error');
+      }
+    } else {
+      // TON purchase flow - auto-converts to coins
+      const purchaseData = {
+        action: 'purchase_ton',
+        amount: pkg.amount,
+        coins: pkg.coins,
+        timestamp: Date.now()
+      };
+      
+      const success = TelegramApp.sendData(purchaseData);
+      
+      if (success) {
+        Utils.showToast('TON purchase request sent!', 'success');
+        console.log(`📤 TON purchase request: ${pkg.amount} TON → ${pkg.coins} coins`);
+        
+        // Auto-add coins (in production, wait for blockchain confirmation)
+        setTimeout(() => {
+          Currency.add(pkg.coins);
+          Utils.showToast(`✓ Received ${pkg.coins.toLocaleString()} coins!`, 'success');
+        }, 1000);
+      } else {
+        Utils.showToast('Error processing purchase', 'error');
+      }
+    }
+  },
+
+  initIcons() {
+    setTimeout(() => {
+      // Header star icon
+      const headerIcon = document.getElementById('depositStarIcon');
+      if (headerIcon && headerIcon.children.length === 0) {
+        lottie.loadAnimation({
+          container: headerIcon,
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: 'assets/TStars.json'
+        });
+      }
+
+      // Balance star icon
+      const balanceIcon = document.getElementById('balanceStarIcon');
+      if (balanceIcon && balanceIcon.children.length === 0) {
+        lottie.loadAnimation({
+          container: balanceIcon,
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: 'assets/TStars.json'
+        });
+      }
+
+      // Converter star icon
+      const converterIcon = document.getElementById('converterStarIcon');
+      if (converterIcon && converterIcon.children.length === 0) {
+        lottie.loadAnimation({
+          container: converterIcon,
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: 'assets/TStars.json'
+        });
+      }
+
+      // Stars tab icon
+      const starsTabIcon = document.getElementById('starsTabIcon');
+      if (starsTabIcon && starsTabIcon.children.length === 0) {
+        lottie.loadAnimation({
+          container: starsTabIcon,
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: 'assets/TStars.json'
+        });
+      }
+
+      // Package star icons
+      DEPOSIT_PACKAGES.stars.forEach((pkg, index) => {
+        const pkgIcon = document.getElementById(`pkg-star-${index}`);
+        if (pkgIcon && pkgIcon.children.length === 0) {
+          lottie.loadAnimation({
+            container: pkgIcon,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: 'assets/TStars.json'
+          });
+        }
+      });
+    }, 500);
+  },
+
+  // Public method to add stars (called when user purchases)
+  addStars(amount) {
+    STATE.userStars += amount;
+    this.saveStarBalance();
+    this.updateStarBalanceDisplay();
+    Utils.showToast(`✓ Received ${amount} stars!`, 'success');
+    console.log(`⭐ Added ${amount} stars. New balance: ${STATE.userStars}`);
   }
 };
 
@@ -2346,6 +2723,7 @@ window.TelegramGame = {
   verifyPrizeExists: Inventory.verify,
   addCurrency: Currency.add,
   sendDataToBot: TelegramApp.sendData,
+  addStars: (amount) => Deposit.addStars(amount),
   
   // Translation
   t: Utils.t,
@@ -2360,7 +2738,8 @@ window.TelegramGame = {
   Leaderboard,
   Notifications,
   PrizeModal,
-  FullInventoryModal
+  FullInventoryModal,
+  Deposit
 };
 
 // ============================================
