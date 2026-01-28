@@ -47,6 +47,13 @@
     <img src="assets/Coin.svg" alt="Currency">
   </div>
   <div class="currency-amount" id="currencyAmount">0</div>
+  
+  <!-- Star Balance -->
+  <div class="currency-divider"></div>
+  <div class="currency-icon-small">
+    <img src="assets/TStars.svg" alt="Stars">
+  </div>
+  <div class="currency-amount-small" id="currencyStars">0</div>
 </div>
 
 <!-- Hamburger Menu Button -->
@@ -266,12 +273,101 @@
   </div>
 
   <!-- DEPOSIT PAGE -->
-  <div class="page-content" id="page-deposit">
-    <div class="simple-page">
-      <h1 data-i18n="deposit">💰 Deposit</h1>
-      <p>This is the deposit page. Connect your wallet and manage your deposits here.</p>
+<div class="page-content" id="page-deposit">
+  <div class="deposit-page">
+    <!-- Deposit Header with Balance -->
+    <div class="deposit-header">
+      <div class="deposit-icon" id="depositStarIcon"></div>
+      <h1 class="deposit-title">Deposit</h1>
+      <p class="deposit-subtitle">Purchase Void Coins with Stars or TON</p>
+      
+      <!-- Current Star Balance -->
+      <div class="star-balance-display">
+        <div class="balance-icon" id="balanceStarIcon"></div>
+        <div class="balance-info">
+          <div class="balance-label">Your Star Balance</div>
+          <div class="balance-amount" id="userStarBalance">0</div>
+        </div>
+      </div>
+      
+      <!-- Star to Coin Converter -->
+      <div class="star-converter">
+        <div class="converter-header">
+          <svg class="converter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6v12M6 12h12"/>
+          </svg>
+          <span>Convert Stars to Void Coins</span>
+        </div>
+        <div class="converter-input-wrapper">
+          <div class="converter-input-group">
+            <div class="input-icon" id="converterStarIcon"></div>
+            <input 
+              type="number" 
+              id="starConvertInput" 
+              class="converter-input" 
+              placeholder="Enter stars..."
+              min="1"
+            >
+          </div>
+          <div class="converter-arrow">→</div>
+          <div class="converter-result">
+            <img src="assets/Coin.svg" alt="Coin">
+            <span id="convertedCoins">0</span>
+          </div>
+        </div>
+        <button class="converter-btn" id="convertStarsBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 16V4M7 4L3 8M7 4l4 4M17 8v12M17 20l4-4M17 20l-4-4"/>
+          </svg>
+          Convert Now
+        </button>
+        <div class="converter-rate">Exchange Rate: 1 Star = 10 Void Coins</div>
+      </div>
+    </div>
+
+    <!-- Deposit Tabs -->
+    <div class="deposit-tabs">
+      <button class="deposit-tab active" data-tab="stars">
+        <div class="tab-icon" id="starsTabIcon"></div>
+        <span class="tab-label">Telegram Stars</span>
+      </button>
+      <button class="deposit-tab" data-tab="ton">
+        <img src="assets/TON.svg" alt="TON" class="tab-icon-img">
+        <span class="tab-label">TON Coin</span>
+      </button>
+    </div>
+
+    <!-- Deposit Content -->
+    <div class="deposit-content">
+      <!-- Stars Packages -->
+      <div class="deposit-list active" id="deposit-stars">
+        <div class="packages-grid">
+          <!-- Packages will be dynamically generated -->
+        </div>
+      </div>
+
+      <!-- TON Packages -->
+      <div class="deposit-list" id="deposit-ton">
+        <div class="packages-grid">
+          <!-- Packages will be dynamically generated -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Card -->
+    <div class="deposit-info-card">
+      <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 16v-4M12 8h.01"/>
+      </svg>
+      <div class="info-content">
+        <h3>Secure Payment</h3>
+        <p>All transactions are processed securely through Telegram. Stars can be converted to Void Coins instantly, while TON purchases are converted automatically.</p>
+      </div>
     </div>
   </div>
+</div>
 
   <!-- SETTINGS PAGE -->
   <div class="page-content" id="page-settings">
