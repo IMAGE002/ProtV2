@@ -526,31 +526,35 @@ const TelegramApp = {
       console.log('✅ Payment successful!');
       Utils.showToast('Payment successful! Adding coins...', 'success');
       
-      // CRITICAL: Get product info and add coins
-      const productId = event.url ? new URLSearchParams(event.url.split('?')[1]).get('product_id') : null;
+      // Parse the invoice payload to get product info
+      const url = event.url || '';
+      const urlParams = new URLSearchParams(url.split('?')[1] || '');
+      const invoicePayload = urlParams.get('invoice_payload') || urlParams.get('payload');
       
-      // Find the product in our packages
       let product = null;
-      if (productId) {
-        product = DEPOSIT_PACKAGES.stars.find(p => p.id === productId) || 
-                  DEPOSIT_PACKAGES.ton.find(p => p.id === productId);
+      
+      if (invoicePayload) {
+        try {
+          const parsed = JSON.parse(invoicePayload);
+          const productId = parsed.product_id;
+          
+          // Find product in packages
+          product = DEPOSIT_PACKAGES.stars.find(p => p.id === productId) || 
+                    DEPOSIT_PACKAGES.ton.find(p => p.id === productId);
+        } catch (e) {
+          console.error('Error parsing payload:', e);
+        }
       }
       
-      // If we found the product, add coins
       if (product) {
         console.log('💰 Adding coins:', product.coins);
         
-        // Add coins to state
         const oldBalance = STATE.virtualCurrency;
         STATE.virtualCurrency += product.coins;
         
-        // Animate the change
         Currency.animateChange(oldBalance, STATE.virtualCurrency);
-        
-        // Save to cloud storage
         await BackendAPI.saveUserBalance(STATE.virtualCurrency);
         
-        // Show success
         setTimeout(() => {
           Utils.showToast(`✅ ${product.coins} coins added!`, 'success');
         }, 1000);
@@ -558,22 +562,20 @@ const TelegramApp = {
         console.log(`✅ Payment complete: ${product.coins} coins added`);
       } else {
         console.warn('⚠️ Product not found, syncing from backend...');
-        // Fallback: sync from cloud
         await BackendAPI.syncBalance();
       }
       
-      // Reload WebApp after 2 seconds to allow another purchase
-      setTimeout(() => {
-        console.log('🔄 Reloading WebApp for next purchase...');
-        window.location.reload();
-      }, 2000);
+      // Allow immediate next purchase - NO RELOAD
+      console.log('✅ Ready for next purchase');
       
     } else if (event.status === 'cancelled') {
       console.log('❌ Payment cancelled by user');
       Utils.showToast('Payment cancelled', 'error');
+      // User can immediately try again
     } else if (event.status === 'failed') {
       console.log('❌ Payment failed');
       Utils.showToast('Payment failed. Please try again.', 'error');
+      // User can immediately try again
     }
   });
 },
