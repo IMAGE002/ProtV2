@@ -94,17 +94,17 @@ const DEPOSIT_PACKAGES = {
     { id: 'package_giant', amount: 10000, coins: 100000, popular: false }
   ],
   ton: [
-    { amount: 0.5, coins: 50, popular: false },
-    { amount: 1, coins: 100, popular: false },
-    { amount: 2, coins: 200, popular: false },
-    { amount: 5, coins: 500, popular: true },
-    { amount: 10, coins: 1000, popular: false },
-    { amount: 25, coins: 2500, popular: false },
-    { amount: 50, coins: 5000, popular: false },
-    { amount: 100, coins: 10000, popular: true },
-    { amount: 250, coins: 25000, popular: false },
-    { amount: 500, coins: 50000, popular: false },
-    { amount: 1000, coins: 100000, popular: false }
+    { id: 'ton_tiny', amount: 0.5, coins: 50, popular: false },
+    { id: 'ton_mini', amount: 1, coins: 100, popular: false },
+    { id: 'ton_small', amount: 2, coins: 200, popular: false },
+    { id: 'ton_medium', amount: 5, coins: 500, popular: true },
+    { id: 'ton_large', amount: 10, coins: 1000, popular: false },
+    { id: 'ton_xlarge', amount: 25, coins: 2500, popular: false },
+    { id: 'ton_huge', amount: 50, coins: 5000, popular: false },
+    { id: 'ton_mega', amount: 100, coins: 10000, popular: true },
+    { id: 'ton_giant', amount: 250, coins: 25000, popular: false },
+    { id: 'ton_super', amount: 500, coins: 50000, popular: false },
+    { id: 'ton_ultra', amount: 1000, coins: 100000, popular: false }
   ]
 };
 
@@ -459,45 +459,6 @@ const BackendAPI = {
       STATE.syncIntervalId = null;
     }
   }
-};
-
-// ============================================
-// TELEGRAM WEB APP INITIALIZATION
-// ============================================
-
-javascript// ============================================
-// FIXED: DEPOSIT PACKAGES - Added 'id' field to match bot
-// ============================================
-
-const DEPOSIT_PACKAGES = {
-  stars: [
-    { id: 'package_tiny', amount: 1, coins: 10, popular: false },
-    { id: 'package_mini', amount: 25, coins: 250, popular: false },
-    { id: 'package_small', amount: 50, coins: 500, popular: false },
-    { id: 'package_bit', amount: 75, coins: 750, popular: true },
-    { id: 'package_medium', amount: 100, coins: 1000, popular: false },
-    { id: 'package_biggermedium', amount: 250, coins: 2500, popular: false },
-    { id: 'package_moderate', amount: 500, coins: 5000, popular: false },
-    { id: 'package_large', amount: 750, coins: 7500, popular: false },
-    { id: 'package_superlarge', amount: 1000, coins: 10000, popular: false },
-    { id: 'package_huge', amount: 2500, coins: 25000, popular: false },
-    { id: 'package_xlsize', amount: 5000, coins: 50000, popular: true },
-    { id: 'package_mega', amount: 7500, coins: 75000, popular: false },
-    { id: 'package_giant', amount: 10000, coins: 100000, popular: false }
-  ],
-  ton: [
-    { id: 'ton_tiny', amount: 0.5, coins: 50, popular: false },
-    { id: 'ton_mini', amount: 1, coins: 100, popular: false },
-    { id: 'ton_small', amount: 2, coins: 200, popular: false },
-    { id: 'ton_medium', amount: 5, coins: 500, popular: true },
-    { id: 'ton_large', amount: 10, coins: 1000, popular: false },
-    { id: 'ton_xlarge', amount: 25, coins: 2500, popular: false },
-    { id: 'ton_huge', amount: 50, coins: 5000, popular: false },
-    { id: 'ton_mega', amount: 100, coins: 10000, popular: true },
-    { id: 'ton_giant', amount: 250, coins: 25000, popular: false },
-    { id: 'ton_super', amount: 500, coins: 50000, popular: false },
-    { id: 'ton_ultra', amount: 1000, coins: 100000, popular: false }
-  ]
 };
 
 // ============================================
