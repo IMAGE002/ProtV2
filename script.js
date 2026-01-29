@@ -1634,29 +1634,39 @@ const Deposit = {
     return;
   }
   
-  console.log('💳 Requesting invoice for:', pkg.id);
+  console.log('💳 Initiating purchase for:', pkg.id);
+  console.log('📱 Telegram object:', STATE.tg);
+  console.log('📱 Available methods:', Object.keys(STATE.tg));
   
-  // Send data to bot
-  const purchaseData = {
-    action: 'create_star_invoice',
-    product_id: pkg.id
-  };
+  // Replace with YOUR bot username (without @)
+  const botUsername = 'YOUR_BOT_USERNAME'; // ⚠️ CHANGE THIS!
   
-  const success = TelegramApp.sendData(purchaseData);
+  // Create deep link
+  const deepLink = `https://t.me/${botUsername}?start=invoice_${pkg.id}`;
   
-  if (success) {
-    Utils.showToast('Invoice sent! Check your chat...', 'success');
-    
-    // ⚠️ REMOVED THE AUTOMATIC CLOSE - Let user close manually or wait for invoice
-    // The bot will send the invoice to the chat
-    // User can then minimize the WebApp to see it
-    
-    console.log('✅ Purchase request sent to bot');
-    
-  } else {
-    Utils.showToast('Error sending request to bot', 'error');
+  console.log('📱 Deep link:', deepLink);
+  
+  // Show confirmation
+  Utils.showToast('Opening payment...', 'success');
+  
+  // METHOD 1: Try openLink (more reliable on mobile)
+  if (STATE.tg.openLink) {
+    console.log('✅ Using openLink method');
+    STATE.tg.openLink(deepLink);
+    return;
   }
-},
+  
+  // METHOD 2: Fallback to openTelegramLink
+  if (STATE.tg.openTelegramLink) {
+    console.log('✅ Using openTelegramLink method');
+    STATE.tg.openTelegramLink(deepLink);
+    return;
+  }
+  
+  // METHOD 3: Last resort - direct window.open
+  console.log('⚠️ Using window.open fallback');
+  window.open(deepLink, '_blank');
+}
   
   initIcons() {
     setTimeout(() => {
