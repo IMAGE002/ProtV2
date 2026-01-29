@@ -1666,7 +1666,7 @@ const Deposit = {
   // METHOD 3: Last resort - direct window.open
   console.log('⚠️ Using window.open fallback');
   window.open(deepLink, '_blank');
-}
+},
   
   initIcons() {
     setTimeout(() => {
