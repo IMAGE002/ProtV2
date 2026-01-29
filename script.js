@@ -516,70 +516,32 @@ const TelegramApp = {
     }
   },
 
-  setupPaymentHandlers() {
+ setupPaymentHandlers() {
   if (!STATE.tg) return;
   
+  // Listen for invoice closed event
   STATE.tg.onEvent('invoiceClosed', async (event) => {
     console.log('📱 Invoice closed:', event);
     
     if (event.status === 'paid') {
       console.log('✅ Payment successful!');
-      Utils.showToast('Payment successful! Adding coins...', 'success');
       
-      // Parse the invoice payload to get product info
-      const url = event.url || '';
-      const urlParams = new URLSearchParams(url.split('?')[1] || '');
-      const invoicePayload = urlParams.get('invoice_payload') || urlParams.get('payload');
-      
-      let product = null;
-      
-      if (invoicePayload) {
-        try {
-          const parsed = JSON.parse(invoicePayload);
-          const productId = parsed.product_id;
-          
-          // Find product in packages
-          product = DEPOSIT_PACKAGES.stars.find(p => p.id === productId) || 
-                    DEPOSIT_PACKAGES.ton.find(p => p.id === productId);
-        } catch (e) {
-          console.error('Error parsing payload:', e);
-        }
-      }
-      
-      if (product) {
-        console.log('💰 Adding coins:', product.coins);
-        
-        const oldBalance = STATE.virtualCurrency;
-        STATE.virtualCurrency += product.coins;
-        
-        Currency.animateChange(oldBalance, STATE.virtualCurrency);
-        await BackendAPI.saveUserBalance(STATE.virtualCurrency);
-        
-        setTimeout(() => {
-          Utils.showToast(`✅ ${product.coins} coins added!`, 'success');
-        }, 1000);
-        
-        console.log(`✅ Payment complete: ${product.coins} coins added`);
-      } else {
-        console.warn('⚠️ Product not found, syncing from backend...');
+      // Wait for bot to process payment
+      setTimeout(async () => {
         await BackendAPI.syncBalance();
-      }
-      
-      // Allow immediate next purchase - NO RELOAD
-      console.log('✅ Ready for next purchase');
+        Utils.showToast('✅ Coins added!', 'success');
+      }, 2000);
       
     } else if (event.status === 'cancelled') {
-      console.log('❌ Payment cancelled by user');
+      console.log('❌ Payment cancelled');
       Utils.showToast('Payment cancelled', 'error');
-      // User can immediately try again
     } else if (event.status === 'failed') {
       console.log('❌ Payment failed');
-      Utils.showToast('Payment failed. Please try again.', 'error');
-      // User can immediately try again
+      Utils.showToast('Payment failed', 'error');
     }
   });
 },
-
+  
 initFallbackMode() {
   this.updateUserProfile({
     first_name: 'Test User',
