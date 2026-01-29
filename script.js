@@ -1639,7 +1639,7 @@ const Deposit = {
   console.log('📱 Available methods:', Object.keys(STATE.tg));
   
   // Replace with YOUR bot username (without @)
-  const botUsername = 'YOUR_BOT_USERNAME'; // ⚠️ CHANGE THIS!
+  const botUsername = 'VoidGiftsOfficialBot'; // ⚠️ CHANGE THIS!
   
   // Create deep link
   const deepLink = `https://t.me/${botUsername}?start=invoice_${pkg.id}`;
