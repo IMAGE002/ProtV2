@@ -491,56 +491,56 @@ const TelegramApp = {
 
   setupPaymentHandlers() {
   if (!STATE.tg) return;
-  
+
   STATE.tg.onEvent('invoiceClosed', async (event) => {
     console.log('📱 Invoice closed:', event);
-    
+
     if (event.status === 'paid') {
       console.log('✅ Payment successful!');
       Utils.showToast('Payment successful! Adding coins...', 'success');
-      
+
       // CRITICAL: Get product info and add coins
       const productId = event.url ? new URLSearchParams(event.url.split('?')[1]).get('product_id') : null;
-      
+
       // Find the product in our packages
       let product = null;
       if (productId) {
         product = DEPOSIT_PACKAGES.stars.find(p => p.id === productId) || 
                   DEPOSIT_PACKAGES.ton.find(p => p.id === productId);
       }
-      
+
       // If we found the product, add coins
       if (product) {
         console.log('💰 Adding coins:', product.coins);
-        
+
         // Add coins to state
         const oldBalance = STATE.virtualCurrency;
         STATE.virtualCurrency += product.coins;
-        
+
         // Animate the change
         Currency.animateChange(oldBalance, STATE.virtualCurrency);
-        
+
         // Save to cloud storage
         await BackendAPI.saveUserBalance(STATE.virtualCurrency);
-        
+
         // Show success
         setTimeout(() => {
-          Utils.showToast(`✅ ${product.coins} coins added!`, 'success');
+          Utils.showToast✅ ${product.coins} coins added!, 'success');
         }, 1000);
-        
-        console.log(`✅ Payment complete: ${product.coins} coins added`);
+
+        console.log✅ Payment complete: ${product.coins} coins added);
       } else {
         console.warn('⚠️ Product not found, syncing from backend...');
         // Fallback: sync from cloud
         await BackendAPI.syncBalance();
       }
-      
+
       // Reload WebApp after 2 seconds to allow another purchase
       setTimeout(() => {
         console.log('🔄 Reloading WebApp for next purchase...');
         window.location.reload();
       }, 2000);
-      
+
     } else if (event.status === 'cancelled') {
       console.log('❌ Payment cancelled by user');
       Utils.showToast('Payment cancelled', 'error');
@@ -549,7 +549,8 @@ const TelegramApp = {
       Utils.showToast('Payment failed. Please try again.', 'error');
     }
   });
-}
+},
+  
   initFallbackMode() {
     this.updateUserProfile({
       first_name: 'Test User',
