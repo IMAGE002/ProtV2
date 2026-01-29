@@ -21,7 +21,11 @@ const CONFIG = {
   SPIN_DURATION: 4500,
   SPIN_MAX_SPEED: 25,
   CUBE_WIDTH: 120,
-  GAP_WIDTH: 48
+  GAP_WIDTH: 48,
+  
+  // ADDED: Backend API configuration
+  BACKEND_API_URL: 'https://your-api-server.com', // CHANGE THIS to your actual API URL
+  BALANCE_SYNC_INTERVAL: 30000 // Sync every 30 seconds
 };
 
 const RARE_GIFTS = ['Ring', 'Trophy', 'Diamond', 'Calendar'];
@@ -75,19 +79,19 @@ const VALID_PROMOCODES = {
 
 const DEPOSIT_PACKAGES = {
   stars: [
-    { amount: 1, coins: 10, popular: false },
-    { amount: 25, coins: 250, popular: false },
-    { amount: 50, coins: 500, popular: false },
-    { amount: 75, coins: 750, popular: true },
-    { amount: 100, coins: 1000, popular: false },
-    { amount: 250, coins: 2500, popular: false },
-    { amount: 500, coins: 5000, popular: false },
-    { amount: 750, coins: 7500, popular: false },
-    { amount: 1000, coins: 10000, popular: false },
-    { amount: 2500, coins: 25000, popular: false },
-    { amount: 5000, coins: 50000, popular: true },
-    { amount: 7500, coins: 75000, popular: false },
-    { amount: 10000, coins: 100000, popular: false }
+    { id: 'package_tiny', amount: 1, coins: 10, popular: false },
+    { id: 'package_mini', amount: 25, coins: 250, popular: false },
+    { id: 'package_small', amount: 50, coins: 500, popular: false },
+    { id: 'package_bit', amount: 75, coins: 750, popular: true },
+    { id: 'package_medium', amount: 100, coins: 1000, popular: false },
+    { id: 'package_biggermedium', amount: 250, coins: 2500, popular: false },
+    { id: 'package_moderate', amount: 500, coins: 5000, popular: false },
+    { id: 'package_large', amount: 750, coins: 7500, popular: false },
+    { id: 'package_superlarge', amount: 1000, coins: 10000, popular: false },
+    { id: 'package_huge', amount: 2500, coins: 25000, popular: false },
+    { id: 'package_xlsize', amount: 5000, coins: 50000, popular: true },
+    { id: 'package_mega', amount: 7500, coins: 75000, popular: false },
+    { id: 'package_giant', amount: 10000, coins: 100000, popular: false }
   ],
   ton: [
     { amount: 0.5, coins: 50, popular: false },
@@ -173,14 +177,19 @@ const STATE = {
   
   // Deposit
   currentDepositTab: 'stars',
-  userStars: 0,  // User's star balance
+  // REMOVED: userStars (security issue)
   
   // Modals
   currentModalPrize: null,
   currentFilter: 'all',
   
   // Promocodes
-  redeemedCodes: []
+  redeemedCodes: [],
+  
+  // Backend sync
+  isSyncing: false,
+  lastBalanceSync: null,
+  syncIntervalId: null
 };
 
 // ============================================
@@ -370,36 +379,45 @@ const Utils = {
 
 const BackendAPI = {
   async getUserBalance() {
-    if (!STATE.tg || !STATE.userData) {
-      console.warn('⚠️ No Telegram user data');
-      return null;
+    if (!STATE.tg || !STATE.tg.CloudStorage) {
+      console.warn('⚠️ Telegram Cloud Storage not available');
+      return STATE.virtualCurrency;
     }
     
-    try {
-      // TODO: Replace with your actual backend API
-      // This endpoint should verify Telegram initData
-      const response = await fetch(`${CONFIG.BACKEND_API_URL}/api/user/balance`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          initData: STATE.tg.initData,
-          userId: STATE.userData.id
-        })
+    return new Promise((resolve) => {
+      STATE.tg.CloudStorage.getItem('userBalance', (error, value) => {
+        if (error) {
+          console.error('❌ Error reading balance:', error);
+          resolve(STATE.virtualCurrency);
+        } else {
+          const balance = value ? parseInt(value) : STATE.virtualCurrency;
+          console.log('📖 Read balance from cloud:', balance);
+          resolve(balance);
+        }
       });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-      
-      const data = await response.json();
-      return data.coins || 0;
-      
-    } catch (error) {
-      console.error('❌ Error fetching balance:', error);
-      return null;
+    });
+  },
+  
+  async saveUserBalance(balance) {
+    if (!STATE.tg || !STATE.tg.CloudStorage) {
+      console.warn('⚠️ Cloud Storage not available, using localStorage fallback');
+      localStorage.setItem('userBalance', balance.toString());
+      return true;
     }
+    
+    return new Promise((resolve) => {
+      STATE.tg.CloudStorage.setItem('userBalance', balance.toString(), (error, success) => {
+        if (error) {
+          console.error('❌ Error saving balance:', error);
+          // Fallback to localStorage
+          localStorage.setItem('userBalance', balance.toString());
+          resolve(false);
+        } else {
+          console.log('💾 Balance saved to cloud:', balance);
+          resolve(success);
+        }
+      });
+    });
   },
   
   async syncBalance() {
@@ -408,18 +426,14 @@ const BackendAPI = {
     STATE.isSyncing = true;
     const balance = await this.getUserBalance();
     
-    if (balance !== null) {
+    if (balance !== STATE.virtualCurrency) {
       const oldBalance = STATE.virtualCurrency;
       STATE.virtualCurrency = balance;
       Currency.update();
-      
-      if (balance !== oldBalance) {
-        console.log(`💰 Balance synced: ${oldBalance} → ${balance}`);
-      }
-      
-      STATE.lastBalanceSync = Date.now();
+      console.log(`💰 Balance synced: ${oldBalance} → ${balance}`);
     }
     
+    STATE.lastBalanceSync = Date.now();
     STATE.isSyncing = false;
   },
   
@@ -436,7 +450,7 @@ const BackendAPI = {
       this.syncBalance();
     }, CONFIG.BALANCE_SYNC_INTERVAL);
     
-    console.log('✅ Balance sync started (every 30s)');
+    console.log('✅ Cloud Storage sync started (every 30s)');
   },
   
   stopPeriodicSync() {
@@ -451,6 +465,142 @@ const BackendAPI = {
 // TELEGRAM WEB APP INITIALIZATION
 // ============================================
 
+javascript// ============================================
+// FIXED: DEPOSIT PACKAGES - Added 'id' field to match bot
+// ============================================
+
+const DEPOSIT_PACKAGES = {
+  stars: [
+    { id: 'package_tiny', amount: 1, coins: 10, popular: false },
+    { id: 'package_mini', amount: 25, coins: 250, popular: false },
+    { id: 'package_small', amount: 50, coins: 500, popular: false },
+    { id: 'package_bit', amount: 75, coins: 750, popular: true },
+    { id: 'package_medium', amount: 100, coins: 1000, popular: false },
+    { id: 'package_biggermedium', amount: 250, coins: 2500, popular: false },
+    { id: 'package_moderate', amount: 500, coins: 5000, popular: false },
+    { id: 'package_large', amount: 750, coins: 7500, popular: false },
+    { id: 'package_superlarge', amount: 1000, coins: 10000, popular: false },
+    { id: 'package_huge', amount: 2500, coins: 25000, popular: false },
+    { id: 'package_xlsize', amount: 5000, coins: 50000, popular: true },
+    { id: 'package_mega', amount: 7500, coins: 75000, popular: false },
+    { id: 'package_giant', amount: 10000, coins: 100000, popular: false }
+  ],
+  ton: [
+    { id: 'ton_tiny', amount: 0.5, coins: 50, popular: false },
+    { id: 'ton_mini', amount: 1, coins: 100, popular: false },
+    { id: 'ton_small', amount: 2, coins: 200, popular: false },
+    { id: 'ton_medium', amount: 5, coins: 500, popular: true },
+    { id: 'ton_large', amount: 10, coins: 1000, popular: false },
+    { id: 'ton_xlarge', amount: 25, coins: 2500, popular: false },
+    { id: 'ton_huge', amount: 50, coins: 5000, popular: false },
+    { id: 'ton_mega', amount: 100, coins: 10000, popular: true },
+    { id: 'ton_giant', amount: 250, coins: 25000, popular: false },
+    { id: 'ton_super', amount: 500, coins: 50000, popular: false },
+    { id: 'ton_ultra', amount: 1000, coins: 100000, popular: false }
+  ]
+};
+
+// ============================================
+// FIXED: REMOVED GLOBAL STATE - userStars (SECURITY ISSUE)
+// ============================================
+
+const STATE = {
+  // Telegram
+  tg: window.Telegram?.WebApp || null,
+  userData: null,
+  
+  // Game
+  currentPage: 'home',
+  virtualCurrency: 0,
+  inventoryItems: [],
+  
+  // Notifications
+  notifications: [],
+  liveGiftNotifications: [],
+  
+  // Spin wheel
+  isSpinning: false,
+  currentWinningPrize: null,
+  scrollPosition: 0,
+  scrollSpeed: 1,
+  animationFrameId: null,
+  lottieInstances: new Map(),
+  lastScaleUpdate: 0,
+  
+  // Leaderboard
+  currentLeaderboardTab: 'coins',
+  leaderboardData: {
+    coins: [
+      { id: 1, name: 'CryptoKing', username: 'cryptoking', coins: 15420, avatar: null },
+      { id: 2, name: 'MoonWalker', username: 'moonwalker', coins: 12850, avatar: null },
+      { id: 3, name: 'DiamondHands', username: 'diamondhands', coins: 10370, avatar: null },
+      { id: 4, name: 'TokenMaster', username: 'tokenmaster', coins: 8920, avatar: null },
+      { id: 5, name: 'BlockChainer', username: 'blockchainer', coins: 7540, avatar: null },
+      { id: 6, name: 'NFT Hunter', username: 'nfthunter', coins: 6230, avatar: null },
+      { id: 7, name: 'Satoshi Fan', username: 'satoshifan', coins: 5180, avatar: null },
+      { id: 8, name: 'Whale Watcher', username: 'whalewatcher', coins: 4560, avatar: null },
+    ],
+    gifts: [
+      { id: 1, name: 'GiftCollector', username: 'giftcollector', gifts: 87, avatar: null },
+      { id: 2, name: 'Present Pro', username: 'presentpro', gifts: 65, avatar: null },
+      { id: 3, name: 'Lucky Winner', username: 'luckywinner', gifts: 52, avatar: null },
+      { id: 4, name: 'Spin Master', username: 'spinmaster', gifts: 43, avatar: null },
+      { id: 5, name: 'Fortune Finder', username: 'fortunefinder', gifts: 38, avatar: null },
+      { id: 6, name: 'Reward Hunter', username: 'rewardhunter', gifts: 31, avatar: null },
+      { id: 7, name: 'Loot Lord', username: 'lootlord', gifts: 27, avatar: null },
+      { id: 8, name: 'Prize Collector', username: 'prizecollector', gifts: 19, avatar: null },
+    ]
+  },
+  
+  // Settings
+  settings: {
+    language: 'en',
+    pushNotifications: true,
+    soundEffects: true,
+    prizeAlerts: true,
+    animationsEnabled: true,
+    confettiEffects: true,
+    showInLeaderboard: true,
+    shareStats: true
+  },
+  
+  // Deposit
+  currentDepositTab: 'stars',
+  // REMOVED: userStars (security issue)
+  
+  // Modals
+  currentModalPrize: null,
+  currentFilter: 'all',
+  
+  // Promocodes
+  redeemedCodes: [],
+  
+  // Backend sync
+  isSyncing: false,
+  lastBalanceSync: null,
+  syncIntervalId: null
+};
+
+// ============================================
+// FIXED: BACKEND API - Added proper configuration
+// ============================================
+
+const CONFIG = {
+  MAX_INVENTORY_DISPLAY: 6,
+  MAX_NOTIFICATIONS: 15,
+  MAX_LIVE_NOTIFICATIONS: 15,
+  NOTIFICATION_DURATION: 25000,
+  LOADING_MIN_TIME: 2000,
+  SPIN_DURATION: 4500,
+  SPIN_MAX_SPEED: 25,
+  CUBE_WIDTH: 120,
+  GAP_WIDTH: 48,
+};
+
+// ============================================
+// FIXED: TELEGRAM APP - Enhanced payment handlers with reload
+// ============================================
+
 const TelegramApp = {
   init() {
     console.log('🔧 Initializing Telegram WebApp...');
@@ -458,22 +608,20 @@ const TelegramApp = {
     if (STATE.tg) {
       console.log('✅ Telegram WebApp available');
       
-      // Get user data
       if (STATE.tg.initDataUnsafe?.user) {
         STATE.userData = STATE.tg.initDataUnsafe.user;
         this.updateUserProfile(STATE.userData);
         console.log('👤 User:', STATE.userData);
       }
       
-      // Setup payment handlers
       this.setupPaymentHandlers();
-      
-      // Apply theme
       this.applyTheme();
       
-      // Make WebApp ready
       STATE.tg.ready();
       STATE.tg.expand();
+      
+      // ADDED: Start balance sync
+      BackendAPI.startPeriodicSync();
       
     } else {
       console.warn('⚠️ Telegram WebApp not available - running in fallback mode');
@@ -481,34 +629,67 @@ const TelegramApp = {
     }
   },
 
-  setupPaymentHandlers() {
-    if (!STATE.tg) return;
-    STATE.tg.onEvent('invoiceClosed', async (event) => {
-      console.log('📱 Invoice closed:', event);
+ setupPaymentHandlers() {
+  if (!STATE.tg) return;
+  
+  STATE.tg.onEvent('invoiceClosed', async (event) => {
+    console.log('📱 Invoice closed:', event);
+    
+    if (event.status === 'paid') {
+      console.log('✅ Payment successful!');
+      Utils.showToast('Payment successful! Adding coins...', 'success');
       
-      if (event.status === 'paid') {
-        console.log('✅ Payment successful!');
-        Utils.showToast('Payment successful! Updating balance...', 'success');
-        
-        // CRITICAL: Sync balance from backend
-        await BackendAPI.syncBalance();
-        
-        // Show success animation
-        setTimeout(() => {
-          Utils.showToast('✅ Coins added to your account!', 'success'); // <- Fixed
-        }, 1000);
-        
-      } else if (event.status === 'cancelled') {
-        console.log('❌ Payment cancelled by user');
-        Utils.showToast('Payment cancelled', 'error');
-      } else if (event.status === 'failed') {
-        console.log('❌ Payment failed');
-        Utils.showToast('Payment failed. Please try again.', 'error');
+      // CRITICAL: Get product info and add coins
+      const productId = event.url ? new URLSearchParams(event.url.split('?')[1]).get('product_id') : null;
+      
+      // Find the product in our packages
+      let product = null;
+      if (productId) {
+        product = DEPOSIT_PACKAGES.stars.find(p => p.id === productId) || 
+                  DEPOSIT_PACKAGES.ton.find(p => p.id === productId);
       }
       
-      Utils.hideLoading();
-    });
-  },
+      // If we found the product, add coins
+      if (product) {
+        console.log('💰 Adding coins:', product.coins);
+        
+        // Add coins to state
+        const oldBalance = STATE.virtualCurrency;
+        STATE.virtualCurrency += product.coins;
+        
+        // Animate the change
+        Currency.animateChange(oldBalance, STATE.virtualCurrency);
+        
+        // Save to cloud storage
+        await BackendAPI.saveUserBalance(STATE.virtualCurrency);
+        
+        // Show success
+        setTimeout(() => {
+          Utils.showToast(`✅ ${product.coins} coins added!`, 'success');
+        }, 1000);
+        
+        console.log(`✅ Payment complete: ${product.coins} coins added`);
+      } else {
+        console.warn('⚠️ Product not found, syncing from backend...');
+        // Fallback: sync from cloud
+        await BackendAPI.syncBalance();
+      }
+      
+      // Reload WebApp after 2 seconds to allow another purchase
+      setTimeout(() => {
+        console.log('🔄 Reloading WebApp for next purchase...');
+        window.location.reload();
+      }, 2000);
+      
+    } else if (event.status === 'cancelled') {
+      console.log('❌ Payment cancelled by user');
+      Utils.showToast('Payment cancelled', 'error');
+    } else if (event.status === 'failed') {
+      console.log('❌ Payment failed');
+      Utils.showToast('Payment failed. Please try again.', 'error');
+    }
+  });
+}
 
   initFallbackMode() {
     this.updateUserProfile({
@@ -669,6 +850,9 @@ const Currency = {
     const oldValue = STATE.virtualCurrency;
     const newValue = STATE.virtualCurrency + amount;
     this.animateChange(oldValue, newValue);
+    
+    // ADDED: Save to cloud storage
+    BackendAPI.saveUserBalance(newValue);
   },
   
   animateChange(oldValue, newValue, duration = 1000) {
@@ -1503,10 +1687,28 @@ const Leaderboard = {
 const Deposit = {
   init() {
     console.log('✅ Deposit initialized');
-    // Render packages when page loads
     this.renderPackages('stars');
     this.renderPackages('ton');
     this.initIcons();
+    
+    // ADDED: Setup tab switching
+    const tabs = document.querySelectorAll('.deposit-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        const tabType = tab.dataset.tab;
+        STATE.currentDepositTab = tabType;
+        
+        document.querySelectorAll('.deposit-list').forEach(list => {
+          list.classList.remove('active');
+        });
+        
+        const list = document.getElementById(`deposit-${tabType}`);
+        if (list) list.classList.add('active');
+      });
+    });
   },
 
   renderPackages(type) {
@@ -1536,7 +1738,7 @@ const Deposit = {
 
     const icon = document.createElement('div');
     icon.className = 'package-icon';
-    icon.id = `pkg-star-${index}`;
+    icon.id = `pkg-${type}-${index}`;
     card.appendChild(icon);
 
     const amount = document.createElement('div');
@@ -1546,7 +1748,7 @@ const Deposit = {
 
     const currency = document.createElement('div');
     currency.className = 'package-currency';
-    currency.textContent = 'Stars';
+    currency.textContent = type === 'stars' ? 'Stars' : 'TON';
     card.appendChild(currency);
 
     const divider = document.createElement('div');
@@ -1564,21 +1766,23 @@ const Deposit = {
     const buyBtn = document.createElement('button');
     buyBtn.className = 'package-buy-btn';
     buyBtn.textContent = 'Purchase';
-    buyBtn.addEventListener('click', () => this.purchasePackage(pkg));
+    buyBtn.addEventListener('click', () => this.purchasePackage(pkg, type));
     card.appendChild(buyBtn);
 
     return card;
   },
 
-  purchasePackage(pkg) {
+  // FIXED: Now properly sends pkg.id to bot
+  purchasePackage(pkg, type) {
     if (!STATE.tg) {
       Utils.showToast('Telegram WebApp not available', 'error');
       return;
     }
     
+    // CRITICAL FIX: pkg.id is now defined and matches bot's PRODUCTS
     const purchaseData = {
-      action: 'create_star_invoice',
-      product_id: pkg.id
+      action: type === 'stars' ? 'create_star_invoice' : 'create_ton_invoice',
+      product_id: pkg.id  // ✅ Now properly defined
     };
     
     console.log('📤 Requesting invoice for:', pkg.id);
@@ -1638,8 +1842,22 @@ const Deposit = {
         });
       }
       
+      // Initialize all package icons
       DEPOSIT_PACKAGES.stars.forEach((pkg, index) => {
-        const pkgIcon = document.getElementById(`pkg-star-${index}`);
+        const pkgIcon = document.getElementById(`pkg-stars-${index}`);
+        if (pkgIcon && pkgIcon.children.length === 0) {
+          lottie.loadAnimation({
+            container: pkgIcon,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: 'assets/TStars.json'
+          });
+        }
+      });
+      
+      DEPOSIT_PACKAGES.ton.forEach((pkg, index) => {
+        const pkgIcon = document.getElementById(`pkg-ton-${index}`);
         if (pkgIcon && pkgIcon.children.length === 0) {
           lottie.loadAnimation({
             container: pkgIcon,
@@ -1651,27 +1869,9 @@ const Deposit = {
         }
       });
     }, 500);
-  },
-
-  addStars(amount) {
-    STATE.userStars += amount;
-    this.saveStarBalance();
-    this.updateStarBalanceDisplay();
-    Utils.showToast(`✓ Received ${amount} stars!`, 'success');
-    console.log(`⭐ Added ${amount} stars. New balance: ${STATE.userStars}`);
-  },
-
-  saveStarBalance() {
-    localStorage.setItem('userStars', STATE.userStars);
-  },
-
-  updateStarBalanceDisplay() {
-    const balanceDisplay = document.getElementById('userStarBalance');
-    if (balanceDisplay) {
-      balanceDisplay.textContent = STATE.userStars.toLocaleString();
-    }
   }
 };
+
 // ============================================
 // SPIN WHEEL
 // ============================================
@@ -2677,7 +2877,7 @@ window.TelegramGame = {
   verifyPrizeExists: Inventory.verify,
   addCurrency: Currency.add,
   sendDataToBot: TelegramApp.sendData,
-  addStars: (amount) => Deposit.addStars(amount),
+  // REMOVED: addStars (security issue)
   
   // Translation
   t: Utils.t,
@@ -2713,8 +2913,13 @@ function initializeApp() {
   ContentBoxes.init();
   EventListeners.init();
   
+  // ADDED: Load balance from cloud on startup
+  BackendAPI.syncBalance().then(() => {
+    Currency.update();
+    console.log('✅ Initial balance loaded:', STATE.virtualCurrency);
+  });
+  
   // Update displays
-  Currency.update();
   Inventory.updateDisplay();
   
   // Initialize animations on page load
