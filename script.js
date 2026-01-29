@@ -22,11 +22,9 @@ const CONFIG = {
   SPIN_MAX_SPEED: 25,
   CUBE_WIDTH: 120,
   GAP_WIDTH: 48,
-  
-  // ADDED: Backend API configuration
-  BACKEND_API_URL: 'https://your-api-server.com', // CHANGE THIS to your actual API URL
-  BALANCE_SYNC_INTERVAL: 30000 // Sync every 30 seconds
+  BALANCE_SYNC_INTERVAL: 30000
 };
+
 
 const RARE_GIFTS = ['Ring', 'Trophy', 'Diamond', 'Calendar'];
 const NFT_GIFTS = ['Calendar'];
@@ -191,7 +189,6 @@ const STATE = {
   lastBalanceSync: null,
   syncIntervalId: null
 };
-
 // ============================================
 // TRANSLATIONS
 // ============================================
@@ -460,106 +457,8 @@ const BackendAPI = {
     }
   }
 };
-
 // ============================================
-// FIXED: REMOVED GLOBAL STATE - userStars (SECURITY ISSUE)
-// ============================================
-
-const STATE = {
-  // Telegram
-  tg: window.Telegram?.WebApp || null,
-  userData: null,
-  
-  // Game
-  currentPage: 'home',
-  virtualCurrency: 0,
-  inventoryItems: [],
-  
-  // Notifications
-  notifications: [],
-  liveGiftNotifications: [],
-  
-  // Spin wheel
-  isSpinning: false,
-  currentWinningPrize: null,
-  scrollPosition: 0,
-  scrollSpeed: 1,
-  animationFrameId: null,
-  lottieInstances: new Map(),
-  lastScaleUpdate: 0,
-  
-  // Leaderboard
-  currentLeaderboardTab: 'coins',
-  leaderboardData: {
-    coins: [
-      { id: 1, name: 'CryptoKing', username: 'cryptoking', coins: 15420, avatar: null },
-      { id: 2, name: 'MoonWalker', username: 'moonwalker', coins: 12850, avatar: null },
-      { id: 3, name: 'DiamondHands', username: 'diamondhands', coins: 10370, avatar: null },
-      { id: 4, name: 'TokenMaster', username: 'tokenmaster', coins: 8920, avatar: null },
-      { id: 5, name: 'BlockChainer', username: 'blockchainer', coins: 7540, avatar: null },
-      { id: 6, name: 'NFT Hunter', username: 'nfthunter', coins: 6230, avatar: null },
-      { id: 7, name: 'Satoshi Fan', username: 'satoshifan', coins: 5180, avatar: null },
-      { id: 8, name: 'Whale Watcher', username: 'whalewatcher', coins: 4560, avatar: null },
-    ],
-    gifts: [
-      { id: 1, name: 'GiftCollector', username: 'giftcollector', gifts: 87, avatar: null },
-      { id: 2, name: 'Present Pro', username: 'presentpro', gifts: 65, avatar: null },
-      { id: 3, name: 'Lucky Winner', username: 'luckywinner', gifts: 52, avatar: null },
-      { id: 4, name: 'Spin Master', username: 'spinmaster', gifts: 43, avatar: null },
-      { id: 5, name: 'Fortune Finder', username: 'fortunefinder', gifts: 38, avatar: null },
-      { id: 6, name: 'Reward Hunter', username: 'rewardhunter', gifts: 31, avatar: null },
-      { id: 7, name: 'Loot Lord', username: 'lootlord', gifts: 27, avatar: null },
-      { id: 8, name: 'Prize Collector', username: 'prizecollector', gifts: 19, avatar: null },
-    ]
-  },
-  
-  // Settings
-  settings: {
-    language: 'en',
-    pushNotifications: true,
-    soundEffects: true,
-    prizeAlerts: true,
-    animationsEnabled: true,
-    confettiEffects: true,
-    showInLeaderboard: true,
-    shareStats: true
-  },
-  
-  // Deposit
-  currentDepositTab: 'stars',
-  // REMOVED: userStars (security issue)
-  
-  // Modals
-  currentModalPrize: null,
-  currentFilter: 'all',
-  
-  // Promocodes
-  redeemedCodes: [],
-  
-  // Backend sync
-  isSyncing: false,
-  lastBalanceSync: null,
-  syncIntervalId: null
-};
-
-// ============================================
-// FIXED: BACKEND API - Added proper configuration
-// ============================================
-
-const CONFIG = {
-  MAX_INVENTORY_DISPLAY: 6,
-  MAX_NOTIFICATIONS: 15,
-  MAX_LIVE_NOTIFICATIONS: 15,
-  NOTIFICATION_DURATION: 25000,
-  LOADING_MIN_TIME: 2000,
-  SPIN_DURATION: 4500,
-  SPIN_MAX_SPEED: 25,
-  CUBE_WIDTH: 120,
-  GAP_WIDTH: 48,
-};
-
-// ============================================
-// FIXED: TELEGRAM APP - Enhanced payment handlers with reload
+// TELEGRAM WEB APP INITIALIZATION
 // ============================================
 
 const TelegramApp = {
@@ -590,7 +489,7 @@ const TelegramApp = {
     }
   },
 
- setupPaymentHandlers() {
+  setupPaymentHandlers() {
   if (!STATE.tg) return;
   
   STATE.tg.onEvent('invoiceClosed', async (event) => {
@@ -722,6 +621,7 @@ const TelegramApp = {
   }
 };
 
+
 // ============================================
 // LOADING SCREEN
 // ============================================
@@ -850,7 +750,6 @@ const Currency = {
     }
   }
 };
-
 // ============================================
 // INVENTORY SYSTEM
 // ============================================
@@ -2824,7 +2723,6 @@ const EventListeners = {
 // GLOBAL API
 // ============================================
 
-// Export to window for external access
 window.TelegramGame = {
   // Core
   state: STATE,
@@ -2856,7 +2754,6 @@ window.TelegramGame = {
   FullInventoryModal,
   Deposit
 };
-
 // ============================================
 // INITIALIZATION
 // ============================================
