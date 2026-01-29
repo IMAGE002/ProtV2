@@ -1628,7 +1628,7 @@ const Deposit = {
   },
 
   // FIXED: Now properly sends pkg.id to bot
-  purchasePackage(pkg, type) {
+ purchasePackage(pkg, type) {
   if (!STATE.tg) {
     Utils.showToast('Telegram WebApp not available', 'error');
     return;
@@ -1645,16 +1645,16 @@ const Deposit = {
   const success = TelegramApp.sendData(purchaseData);
   
   if (success) {
-    Utils.showToast('Creating invoice...', 'success');
+    Utils.showToast('Invoice sent! Check your chat...', 'success');
     
-    // Close WebApp so user can see the invoice in chat
-    setTimeout(() => {
-      console.log('📱 Closing WebApp to show invoice');
-      STATE.tg.close();
-    }, 1000);
+    // ⚠️ REMOVED THE AUTOMATIC CLOSE - Let user close manually or wait for invoice
+    // The bot will send the invoice to the chat
+    // User can then minimize the WebApp to see it
+    
+    console.log('✅ Purchase request sent to bot');
     
   } else {
-    Utils.showToast('Error creating invoice', 'error');
+    Utils.showToast('Error sending request to bot', 'error');
   }
 },
   
