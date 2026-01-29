@@ -550,7 +550,6 @@ const TelegramApp = {
     }
   });
 }
-
   initFallbackMode() {
     this.updateUserProfile({
       first_name: 'Test User',
