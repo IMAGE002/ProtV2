@@ -557,7 +557,7 @@ initFallbackMode() {
     username: 'testuser',
     photo_url: null
   });
-}
+},
   
   updateUserProfile(user) {
     const accountName = document.querySelector('.account-name');
