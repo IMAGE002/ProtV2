@@ -375,46 +375,64 @@ const Utils = {
 };
 
 const BackendAPI = {
+  // Check if CloudStorage is available
+  isCloudStorageAvailable() {
+    return STATE.tg && 
+           STATE.tg.CloudStorage && 
+           typeof STATE.tg.CloudStorage.getItem === 'function';
+  },
+
   async getUserBalance() {
-    if (!STATE.tg || !STATE.tg.CloudStorage) {
-      console.warn('⚠️ Telegram Cloud Storage not available');
-      return STATE.virtualCurrency;
+    // Try CloudStorage first
+    if (this.isCloudStorageAvailable()) {
+      return new Promise((resolve) => {
+        STATE.tg.CloudStorage.getItem('userBalance', (error, value) => {
+          if (error) {
+            console.warn('⚠️ CloudStorage error, using localStorage:', error);
+            const fallback = localStorage.getItem('userBalance');
+            resolve(fallback ? parseInt(fallback) : STATE.virtualCurrency);
+          } else {
+            const balance = value ? parseInt(value) : STATE.virtualCurrency;
+            console.log('📖 Balance from CloudStorage:', balance);
+            resolve(balance);
+          }
+        });
+      });
     }
     
-    return new Promise((resolve) => {
-      STATE.tg.CloudStorage.getItem('userBalance', (error, value) => {
-        if (error) {
-          console.error('❌ Error reading balance:', error);
-          resolve(STATE.virtualCurrency);
-        } else {
-          const balance = value ? parseInt(value) : STATE.virtualCurrency;
-          console.log('📖 Read balance from cloud:', balance);
-          resolve(balance);
-        }
-      });
-    });
+    // Fallback to localStorage
+    console.log('📖 Using localStorage (CloudStorage unavailable)');
+    const saved = localStorage.getItem('userBalance');
+    return saved ? parseInt(saved) : STATE.virtualCurrency;
   },
   
   async saveUserBalance(balance) {
-    if (!STATE.tg || !STATE.tg.CloudStorage) {
-      console.warn('⚠️ Cloud Storage not available, using localStorage fallback');
-      localStorage.setItem('userBalance', balance.toString());
-      return true;
+    let cloudSaved = false;
+    
+    // Try CloudStorage first
+    if (this.isCloudStorageAvailable()) {
+      cloudSaved = await new Promise((resolve) => {
+        STATE.tg.CloudStorage.setItem('userBalance', balance.toString(), (error, success) => {
+          if (error) {
+            console.warn('⚠️ CloudStorage save failed:', error);
+            resolve(false);
+          } else {
+            console.log('💾 Balance saved to CloudStorage:', balance);
+            resolve(true);
+          }
+        });
+      });
     }
     
-    return new Promise((resolve) => {
-      STATE.tg.CloudStorage.setItem('userBalance', balance.toString(), (error, success) => {
-        if (error) {
-          console.error('❌ Error saving balance:', error);
-          // Fallback to localStorage
-          localStorage.setItem('userBalance', balance.toString());
-          resolve(false);
-        } else {
-          console.log('💾 Balance saved to cloud:', balance);
-          resolve(success);
-        }
-      });
-    });
+    // Always save to localStorage as backup
+    try {
+      localStorage.setItem('userBalance', balance.toString());
+      console.log('💾 Balance saved to localStorage:', balance);
+      return true;
+    } catch (error) {
+      console.error('❌ localStorage save failed:', error);
+      return cloudSaved;
+    }
   },
   
   async syncBalance() {
@@ -438,22 +456,31 @@ const BackendAPI = {
     // Sync immediately
     this.syncBalance();
     
-    // Then sync periodically
+    // Log storage method
+    if (this.isCloudStorageAvailable()) {
+      console.log('✅ Using Telegram CloudStorage');
+    } else {
+      console.log('✅ Using localStorage (CloudStorage not available)');
+    }
+    
+    // Stop existing interval
     if (STATE.syncIntervalId) {
       clearInterval(STATE.syncIntervalId);
     }
     
+    // Sync every 30 seconds
     STATE.syncIntervalId = setInterval(() => {
       this.syncBalance();
     }, CONFIG.BALANCE_SYNC_INTERVAL);
     
-    console.log('✅ Cloud Storage sync started (every 30s)');
+    console.log('✅ Periodic sync started (every 30s)');
   },
   
   stopPeriodicSync() {
     if (STATE.syncIntervalId) {
       clearInterval(STATE.syncIntervalId);
       STATE.syncIntervalId = null;
+      console.log('🛑 Periodic sync stopped');
     }
   }
 };
