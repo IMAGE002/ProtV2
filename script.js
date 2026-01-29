@@ -519,27 +519,31 @@ const TelegramApp = {
  setupPaymentHandlers() {
   if (!STATE.tg) return;
   
-  // Listen for invoice closed event
+  // Listen for successful payment (when WebApp is reopened)
   STATE.tg.onEvent('invoiceClosed', async (event) => {
-    console.log('📱 Invoice closed:', event);
+    console.log('📱 Invoice event:', event);
     
     if (event.status === 'paid') {
       console.log('✅ Payment successful!');
+      Utils.showToast('Payment successful! Syncing coins...', 'success');
       
-      // Wait for bot to process payment
+      // Sync balance from cloud storage
       setTimeout(async () => {
         await BackendAPI.syncBalance();
         Utils.showToast('✅ Coins added!', 'success');
       }, 2000);
       
     } else if (event.status === 'cancelled') {
-      console.log('❌ Payment cancelled');
+      console.log('❌ Payment cancelled by user');
       Utils.showToast('Payment cancelled', 'error');
+      
     } else if (event.status === 'failed') {
       console.log('❌ Payment failed');
-      Utils.showToast('Payment failed', 'error');
+      Utils.showToast('Payment failed. Please try again.', 'error');
     }
   });
+  
+  console.log('✅ Payment handlers initialized');
 },
   
 initFallbackMode() {
@@ -1625,27 +1629,34 @@ const Deposit = {
 
   // FIXED: Now properly sends pkg.id to bot
   purchasePackage(pkg, type) {
-    if (!STATE.tg) {
-      Utils.showToast('Telegram WebApp not available', 'error');
-      return;
-    }
+  if (!STATE.tg) {
+    Utils.showToast('Telegram WebApp not available', 'error');
+    return;
+  }
+  
+  console.log('💳 Requesting invoice for:', pkg.id);
+  
+  // Send data to bot
+  const purchaseData = {
+    action: 'create_star_invoice',
+    product_id: pkg.id
+  };
+  
+  const success = TelegramApp.sendData(purchaseData);
+  
+  if (success) {
+    Utils.showToast('Creating invoice...', 'success');
     
-    // CRITICAL FIX: pkg.id is now defined and matches bot's PRODUCTS
-    const purchaseData = {
-      action: type === 'stars' ? 'create_star_invoice' : 'create_ton_invoice',
-      product_id: pkg.id  // ✅ Now properly defined
-    };
+    // Close WebApp so user can see the invoice in chat
+    setTimeout(() => {
+      console.log('📱 Closing WebApp to show invoice');
+      STATE.tg.close();
+    }, 1000);
     
-    console.log('📤 Requesting invoice for:', pkg.id);
-    
-    const success = TelegramApp.sendData(purchaseData);
-    
-    if (success) {
-      Utils.showToast('Opening payment...', 'success');
-    } else {
-      Utils.showToast('Error creating invoice', 'error');
-    }
-  },
+  } else {
+    Utils.showToast('Error creating invoice', 'error');
+  }
+},
   
   initIcons() {
     setTimeout(() => {
@@ -2752,6 +2763,23 @@ window.TelegramGame = {
 function initializeApp() {
   console.log('🚀 Initializing Telegram Game App...');
   
+  // Check if opened with coin reward parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const coinsToAdd = urlParams.get('coins');
+  
+  if (coinsToAdd) {
+    const amount = parseInt(coinsToAdd);
+    console.log(`💰 Auto-adding ${amount} coins from payment`);
+    
+    setTimeout(async () => {
+      const oldBalance = STATE.virtualCurrency;
+      STATE.virtualCurrency += amount;
+      await BackendAPI.saveUserBalance(STATE.virtualCurrency);
+      Currency.animateChange(oldBalance, STATE.virtualCurrency);
+      Utils.showToast(`✅ ${amount} coins added!`, 'success');
+    }, 2000);
+  }
+  
   // Initialize in order
   TelegramApp.init();
   LoadingScreen.init();
@@ -2762,7 +2790,7 @@ function initializeApp() {
   ContentBoxes.init();
   EventListeners.init();
   
-  // ADDED: Load balance from cloud on startup
+  // Load balance from cloud on startup
   BackendAPI.syncBalance().then(() => {
     Currency.update();
     console.log('✅ Initial balance loaded:', STATE.virtualCurrency);
