@@ -517,34 +517,33 @@ const TelegramApp = {
   },
 
  setupPaymentHandlers() {
-  if (!STATE.tg) return;
-  
-  // Listen for successful payment (when WebApp is reopened)
-  STATE.tg.onEvent('invoiceClosed', async (event) => {
-    console.log('📱 Invoice event:', event);
+    if (!STATE.tg) return;
     
-    if (event.status === 'paid') {
-      console.log('✅ Payment successful!');
-      Utils.showToast('Payment successful! Syncing coins...', 'success');
+    console.log('✅ Payment handlers initialized');
+    console.log('📱 Using mobile-optimized deep link flow');
+    console.log('🔗 Payments will open native Telegram invoice UI');
+    
+    // Listen for when user returns from payment
+    STATE.tg.onEvent('viewportChanged', (event) => {
+      console.log('📱 Viewport changed:', event);
       
-      // Sync balance from cloud storage
-      setTimeout(async () => {
-        await BackendAPI.syncBalance();
-        Utils.showToast('✅ Coins added!', 'success');
-      }, 2000);
-      
-    } else if (event.status === 'cancelled') {
-      console.log('❌ Payment cancelled by user');
-      Utils.showToast('Payment cancelled', 'error');
-      
-    } else if (event.status === 'failed') {
-      console.log('❌ Payment failed');
-      Utils.showToast('Payment failed. Please try again.', 'error');
-    }
-  });
-  
-  console.log('✅ Payment handlers initialized');
-},
+      // Check if user just returned from payment
+      if (event.isStateStable) {
+        console.log('✅ User returned to app - syncing balance...');
+        setTimeout(() => {
+          BackendAPI.syncBalance();
+        }, 1000);
+      }
+    });
+    
+    // Listen for theme changes (happens when returning from payment)
+    STATE.tg.onEvent('themeChanged', () => {
+      console.log('🎨 Theme changed - user may have returned from payment');
+      setTimeout(() => {
+        BackendAPI.syncBalance();
+      }, 1000);
+    });
+  },
   
 initFallbackMode() {
   this.updateUserProfile({
@@ -1541,12 +1540,12 @@ const Leaderboard = {
 
 const Deposit = {
   init() {
-    console.log('✅ Deposit initialized');
+    console.log('✅ Deposit initialized (Mobile-Optimized)');
     this.renderPackages('stars');
     this.renderPackages('ton');
     this.initIcons();
     
-    // ADDED: Setup tab switching
+    // Setup tab switching
     const tabs = document.querySelectorAll('.deposit-tab');
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
@@ -1628,48 +1627,62 @@ const Deposit = {
   },
 
   // FIXED: Now properly sends pkg.id to bot
- purchasePackage(pkg, type) {
-  if (!STATE.tg) {
-    Utils.showToast('Telegram WebApp not available', 'error');
-    return;
-  }
-  
-  console.log('💳 Initiating purchase for:', pkg.id);
-  console.log('📱 Telegram object:', STATE.tg);
-  console.log('📱 Available methods:', Object.keys(STATE.tg));
-  
-  // Replace with YOUR bot username (without @)
-  const botUsername = 'VoidGiftsOfficialBot'; // ⚠️ CHANGE THIS!
-  
-  // Create deep link
-  const deepLink = `https://t.me/${botUsername}?start=invoice_${pkg.id}`;
-  
-  console.log('📱 Deep link:', deepLink);
-  
-  // Show confirmation
-  Utils.showToast('Opening payment...', 'success');
-  
-  // METHOD 1: Try openLink (more reliable on mobile)
-  if (STATE.tg.openLink) {
-    console.log('✅ Using openLink method');
-    STATE.tg.openLink(deepLink);
-    return;
-  }
-  
-  // METHOD 2: Fallback to openTelegramLink
-  if (STATE.tg.openTelegramLink) {
-    console.log('✅ Using openTelegramLink method');
-    STATE.tg.openTelegramLink(deepLink);
-    return;
-  }
-  
-  // METHOD 3: Last resort - direct window.open
-  console.log('⚠️ Using window.open fallback');
-  window.open(deepLink, '_blank');
-},
+purchasePackage(pkg, type) {
+    if (type === 'ton') {
+      Utils.showToast('TON payments coming soon!', 'error');
+      return;
+    }
+    
+    if (!STATE.tg) {
+      Utils.showToast('❌ Telegram WebApp not available', 'error');
+      console.error('Telegram WebApp not available');
+      return;
+    }
+    
+    console.log('💳 Initiating purchase:', pkg.id);
+    console.log('📦 Package:', pkg.title);
+    console.log('⭐ Stars:', pkg.stars);
+    console.log('🪙 Coins:', pkg.coins);
+    
+    try {
+      // REPLACE WITH YOUR BOT USERNAME (without @)
+      const botUsername = 'VoidGiftsOfficialBot'; // ⚠️ CHANGE THIS TO YOUR BOT!
+      
+      // Create deep link that triggers /start invoice_[product_id]
+      const deepLink = `https://t.me/${botUsername}?start=invoice_${pkg.id}`;
+      
+      console.log('🔗 Opening deep link:', deepLink);
+      
+      // Show loading message
+      Utils.showToast('Opening payment...', 'success');
+      
+      // Method 1: Try openTelegramLink (best for mobile)
+      if (STATE.tg.openTelegramLink) {
+        console.log('✅ Using openTelegramLink (Mobile)');
+        STATE.tg.openTelegramLink(deepLink);
+        return;
+      }
+      
+      // Method 2: Try openLink (fallback)
+      if (STATE.tg.openLink) {
+        console.log('✅ Using openLink (Desktop)');
+        STATE.tg.openLink(deepLink);
+        return;
+      }
+      
+      // Method 3: Direct window.open (last resort)
+      console.log('⚠️ Using window.open (Fallback)');
+      window.open(deepLink, '_blank');
+      
+    } catch (error) {
+      console.error('❌ Error initiating purchase:', error);
+      Utils.showToast('Error opening payment. Please try again.', 'error');
+    }
+  },
   
   initIcons() {
     setTimeout(() => {
+      // Header icon
       const headerIcon = document.getElementById('depositStarIcon');
       if (headerIcon && headerIcon.children.length === 0) {
         lottie.loadAnimation({
@@ -1681,6 +1694,7 @@ const Deposit = {
         });
       }
       
+      // Balance icon
       const balanceIcon = document.getElementById('balanceStarIcon');
       if (balanceIcon && balanceIcon.children.length === 0) {
         lottie.loadAnimation({
@@ -1692,6 +1706,7 @@ const Deposit = {
         });
       }
       
+      // Converter icon
       const converterIcon = document.getElementById('converterStarIcon');
       if (converterIcon && converterIcon.children.length === 0) {
         lottie.loadAnimation({
@@ -1703,6 +1718,7 @@ const Deposit = {
         });
       }
       
+      // Stars tab icon
       const starsTabIcon = document.getElementById('starsTabIcon');
       if (starsTabIcon && starsTabIcon.children.length === 0) {
         lottie.loadAnimation({
@@ -2773,24 +2789,14 @@ window.TelegramGame = {
 function initializeApp() {
   console.log('🚀 Initializing Telegram Game App...');
   
-  // Check if opened with coin reward parameter
-  const urlParams = new URLSearchParams(window.location.search);
-  const coinsToAdd = urlParams.get('coins');
+  // ============================================
+  // CHECK FOR PAYMENT SUCCESS (First Priority)
+  // ============================================
+  checkForPaymentSuccess();
   
-  if (coinsToAdd) {
-    const amount = parseInt(coinsToAdd);
-    console.log(`💰 Auto-adding ${amount} coins from payment`);
-    
-    setTimeout(async () => {
-      const oldBalance = STATE.virtualCurrency;
-      STATE.virtualCurrency += amount;
-      await BackendAPI.saveUserBalance(STATE.virtualCurrency);
-      Currency.animateChange(oldBalance, STATE.virtualCurrency);
-      Utils.showToast(`✅ ${amount} coins added!`, 'success');
-    }, 2000);
-  }
-  
-  // Initialize in order
+  // ============================================
+  // Initialize Core Systems
+  // ============================================
   TelegramApp.init();
   LoadingScreen.init();
   Navigation.init();
@@ -2800,16 +2806,25 @@ function initializeApp() {
   ContentBoxes.init();
   EventListeners.init();
   
-  // Load balance from cloud on startup
+  // ============================================
+  // Load Balance from Cloud Storage
+  // ============================================
   BackendAPI.syncBalance().then(() => {
     Currency.update();
     console.log('✅ Initial balance loaded:', STATE.virtualCurrency);
+  }).catch(error => {
+    console.error('❌ Error loading balance:', error);
+    Currency.update();
   });
   
-  // Update displays
+  // ============================================
+  // Update Displays
+  // ============================================
   Inventory.updateDisplay();
   
-  // Initialize animations on page load
+  // ============================================
+  // Initialize Animations on Page Load
+  // ============================================
   window.addEventListener('load', () => {
     SpinWheel.init();
     LottieAnimations.init();
@@ -2818,7 +2833,90 @@ function initializeApp() {
   console.log('✅ App initialized successfully');
 }
 
-// Start the app
+// ============================================
+// PAYMENT SUCCESS DETECTION FUNCTION
+// ============================================
+function checkForPaymentSuccess() {
+  // Check URL parameters for payment confirmation
+  const urlParams = new URLSearchParams(window.location.search);
+  const coinsToAdd = urlParams.get('coins');
+  const userId = urlParams.get('uid');
+  const timestamp = urlParams.get('t');
+  
+  if (coinsToAdd) {
+    const amount = parseInt(coinsToAdd);
+    
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('💰 PAYMENT SUCCESS DETECTED!');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log(`🪙 Coins to add: ${amount}`);
+    console.log(`👤 User ID: ${userId || 'Not provided'}`);
+    console.log(`🕐 Timestamp: ${timestamp ? new Date(parseInt(timestamp)).toLocaleString() : 'Not provided'}`);
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    
+    // Validate amount
+    if (isNaN(amount) || amount <= 0) {
+      console.error('❌ Invalid coin amount:', coinsToAdd);
+      cleanupURLParams();
+      return;
+    }
+    
+    // Show immediate feedback
+    Utils.showToast(`🎉 Payment successful! Adding ${amount} coins...`, 'success');
+    
+    // Add coins with animation delay
+    setTimeout(async () => {
+      try {
+        // Sync balance from cloud first
+        await BackendAPI.syncBalance();
+        
+        // Then show success
+        Utils.showToast(`✅ ${amount} coins added to your account!`, 'success');
+        
+        // Optional: Play success sound if enabled
+        if (STATE.settings.soundEffects && window.playSuccessSound) {
+          window.playSuccessSound();
+        }
+        
+        // Optional: Show confetti if enabled
+        if (STATE.settings.confettiEffects && window.showConfetti) {
+          window.showConfetti();
+        }
+        
+        console.log('✅ Payment processed successfully!');
+        console.log(`💰 New balance: ${STATE.virtualCurrency}`);
+        
+      } catch (error) {
+        console.error('❌ Error processing payment:', error);
+        Utils.showToast('⚠️ Error syncing balance. Please refresh.', 'error');
+      } finally {
+        // Clean up URL parameters
+        cleanupURLParams();
+      }
+    }, 2000);
+  }
+}
+
+// ============================================
+// CLEANUP URL PARAMETERS
+// ============================================
+function cleanupURLParams() {
+  try {
+    // Get current URL without query parameters
+    const newUrl = window.location.pathname + window.location.hash;
+    
+    // Replace URL without reloading page
+    window.history.replaceState({}, document.title, newUrl);
+    
+    console.log('🧹 URL parameters cleaned');
+  } catch (error) {
+    console.error('❌ Error cleaning URL:', error);
+  }
+}
+
+// ============================================
+// START THE APP
+// ============================================
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initializeApp);
 } else {
@@ -2826,3 +2924,6 @@ if (document.readyState === 'loading') {
 }
 
 console.log('✨ Telegram Game Complete System Loaded!');
+console.log('💳 Payment System: Mobile-Optimized');
+console.log('📱 Deep Link Flow: Enabled');
+console.log('☁️ Cloud Storage Sync: Active');
