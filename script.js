@@ -517,33 +517,33 @@ const TelegramApp = {
   },
 
  setupPaymentHandlers() {
-    if (!STATE.tg) return;
+  if (!STATE.tg) return;
+  
+  console.log('✅ Payment handlers initialized');
+  console.log('📱 Using WebAppData for instant invoice creation');
+  console.log('🔗 Invoice will appear directly in chat - NO /start needed!');
+  
+  // Listen for when user returns from payment
+  STATE.tg.onEvent('viewportChanged', (event) => {
+    console.log('📱 Viewport changed:', event);
     
-    console.log('✅ Payment handlers initialized');
-    console.log('📱 Using mobile-optimized deep link flow');
-    console.log('🔗 Payments will open native Telegram invoice UI');
-    
-    // Listen for when user returns from payment
-    STATE.tg.onEvent('viewportChanged', (event) => {
-      console.log('📱 Viewport changed:', event);
-      
-      // Check if user just returned from payment
-      if (event.isStateStable) {
-        console.log('✅ User returned to app - syncing balance...');
-        setTimeout(() => {
-          BackendAPI.syncBalance();
-        }, 1000);
-      }
-    });
-    
-    // Listen for theme changes (happens when returning from payment)
-    STATE.tg.onEvent('themeChanged', () => {
-      console.log('🎨 Theme changed - user may have returned from payment');
+    // Check if user just returned from payment
+    if (event.isStateStable) {
+      console.log('✅ User returned to app - syncing balance...');
       setTimeout(() => {
         BackendAPI.syncBalance();
       }, 1000);
-    });
-  },
+    }
+  });
+  
+  // Listen for theme changes (happens when returning from payment)
+  STATE.tg.onEvent('themeChanged', () => {
+    console.log('🎨 Theme changed - user may have returned from payment');
+    setTimeout(() => {
+      BackendAPI.syncBalance();
+    }, 1000);
+  });
+},
   
 initFallbackMode() {
   this.updateUserProfile({
@@ -1628,57 +1628,54 @@ const Deposit = {
 
   // FIXED: Now properly sends pkg.id to bot
 purchasePackage(pkg, type) {
-    if (type === 'ton') {
-      Utils.showToast('TON payments coming soon!', 'error');
-      return;
-    }
+  if (type === 'ton') {
+    Utils.showToast('TON payments coming soon!', 'error');
+    return;
+  }
+  
+  if (!STATE.tg) {
+    Utils.showToast('❌ Telegram WebApp not available', 'error');
+    console.error('Telegram WebApp not available');
+    return;
+  }
+  
+  console.log('💳 Initiating purchase:', pkg.id);
+  console.log('📦 Package:', pkg.title || `${pkg.coins} Coins`);
+  console.log('⭐ Stars:', pkg.amount);
+  console.log('🪙 Coins:', pkg.coins);
+  
+  try {
+    // REPLACE WITH YOUR BOT USERNAME (without @)
+    const botUsername = 'VoidGiftsOfficialBot'; // ⚠️ CHANGE THIS!
     
-    if (!STATE.tg) {
-      Utils.showToast('❌ Telegram WebApp not available', 'error');
-      console.error('Telegram WebApp not available');
-      return;
-    }
+    // Create deep link
+    const deepLink = `https://t.me/${botUsername}?start=buy_${pkg.id}`;
     
-    console.log('💳 Initiating purchase:', pkg.id);
-    console.log('📦 Package:', pkg.title);
-    console.log('⭐ Stars:', pkg.stars);
-    console.log('🪙 Coins:', pkg.coins);
+    console.log('🔗 Opening:', deepLink);
     
-    try {
-      // REPLACE WITH YOUR BOT USERNAME (without @)
-      const botUsername = 'VoidGiftsOfficialBot'; // ⚠️ CHANGE THIS TO YOUR BOT!
-      
-      // Create deep link that triggers /start invoice_[product_id]
-      const deepLink = `https://t.me/${botUsername}?start=invoice_${pkg.id}`;
-      
-      console.log('🔗 Opening deep link:', deepLink);
-      
-      // Show loading message
-      Utils.showToast('Opening payment...', 'success');
-      
-      // Method 1: Try openTelegramLink (best for mobile)
-      if (STATE.tg.openTelegramLink) {
-        console.log('✅ Using openTelegramLink (Mobile)');
-        STATE.tg.openTelegramLink(deepLink);
-        return;
-      }
-      
-      // Method 2: Try openLink (fallback)
-      if (STATE.tg.openLink) {
-        console.log('✅ Using openLink (Desktop)');
-        STATE.tg.openLink(deepLink);
-        return;
-      }
-      
-      // Method 3: Direct window.open (last resort)
+    // Show loading message
+    Utils.showToast('Opening invoice...', 'success');
+    
+    // Try multiple methods for best compatibility
+    if (STATE.tg.openTelegramLink) {
+      // Method 1: Best for mobile
+      console.log('✅ Using openTelegramLink (Mobile-optimized)');
+      STATE.tg.openTelegramLink(deepLink);
+    } else if (STATE.tg.openLink) {
+      // Method 2: Fallback
+      console.log('✅ Using openLink (Desktop)');
+      STATE.tg.openLink(deepLink);
+    } else {
+      // Method 3: Last resort
       console.log('⚠️ Using window.open (Fallback)');
       window.open(deepLink, '_blank');
-      
-    } catch (error) {
-      console.error('❌ Error initiating purchase:', error);
-      Utils.showToast('Error opening payment. Please try again.', 'error');
     }
-  },
+    
+  } catch (error) {
+    console.error('❌ Error initiating purchase:', error);
+    Utils.showToast('Error opening payment. Please try again.', 'error');
+  }
+},
   
   initIcons() {
     setTimeout(() => {
