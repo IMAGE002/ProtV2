@@ -25,32 +25,22 @@ const CONFIG = {
   BALANCE_SYNC_INTERVAL: 30000
 };
 
+// REMOVED: PRIZE_COIN_VALUES - No longer needed
+// Stars are now the main currency
 
 const RARE_GIFTS = ['Ring', 'Trophy', 'Diamond', 'Calendar'];
 const NFT_GIFTS = ['Calendar'];
 
-const PRIZE_COIN_VALUES = {
-  'Heart': 50,
-  'Bear': 75,
-  'Rose': 100,
-  'Gift': 125,
-  'Cake': 150,
-  'Rose Bouquet': 200,
-  'Ring': 300,
-  'Trophy': 500,
-  'Diamond': 750,
-  'Calendar': 1000
-};
-
+// UPDATED: Star prizes instead of coins
 const SPIN_PRIZES = [
-  { id: 'coin1', type: 'coin', value: 1, chance: 32.14, icon: 'coin' },
-  { id: 'coin5', type: 'coin', value: 5, chance: 18.40, icon: 'coin' },
-  { id: 'coin10', type: 'coin', value: 10, chance: 12.30, icon: 'coin' },
-  { id: 'coin25', type: 'coin', value: 25, chance: 9.80, icon: 'coin' },
-  { id: 'coin50', type: 'coin', value: 50, chance: 6.10, icon: 'coin' },
-  { id: 'coin100', type: 'coin', value: 100, chance: 4.90, icon: 'coin' },
-  { id: 'coin250', type: 'coin', value: 250, chance: 2.50, icon: 'coin' },
-  { id: 'coin500', type: 'coin', value: 500, chance: 1.20, icon: 'coin' },
+  { id: 'star1', type: 'star', value: 1, chance: 32.14, icon: 'star' },
+  { id: 'star5', type: 'star', value: 5, chance: 18.40, icon: 'star' },
+  { id: 'star10', type: 'star', value: 10, chance: 12.30, icon: 'star' },
+  { id: 'star25', type: 'star', value: 25, chance: 9.80, icon: 'star' },
+  { id: 'star50', type: 'star', value: 50, chance: 6.10, icon: 'star' },
+  { id: 'star100', type: 'star', value: 100, chance: 4.90, icon: 'star' },
+  { id: 'star250', type: 'star', value: 250, chance: 2.50, icon: 'star' },
+  { id: 'star500', type: 'star', value: 500, chance: 1.20, icon: 'star' },
   { id: 'giftHeart', type: 'gift', value: 'Heart', chance: 2.50, lottie: 'assets/giftHeart.json' },
   { id: 'giftBear', type: 'gift', value: 'Bear', chance: 2.50, lottie: 'assets/giftBear.json' },
   { id: 'giftRose', type: 'gift', value: 'Rose', chance: 1.80, lottie: 'assets/giftRose.json' },
@@ -77,38 +67,21 @@ const VALID_PROMOCODES = {
 
 const DEPOSIT_PACKAGES = {
   stars: [
-    { id: 'package_tiny', amount: 1, coins: 10, popular: false },
-    { id: 'package_mini', amount: 25, coins: 250, popular: false },
-    { id: 'package_small', amount: 50, coins: 500, popular: false },
-    { id: 'package_bit', amount: 75, coins: 750, popular: true },
-    { id: 'package_medium', amount: 100, coins: 1000, popular: false },
-    { id: 'package_biggermedium', amount: 250, coins: 2500, popular: false },
-    { id: 'package_moderate', amount: 500, coins: 5000, popular: false },
-    { id: 'package_large', amount: 750, coins: 7500, popular: false },
-    { id: 'package_superlarge', amount: 1000, coins: 10000, popular: false },
-    { id: 'package_huge', amount: 2500, coins: 25000, popular: false },
-    { id: 'package_xlsize', amount: 5000, coins: 50000, popular: true },
-    { id: 'package_mega', amount: 7500, coins: 75000, popular: false },
-    { id: 'package_giant', amount: 10000, coins: 100000, popular: false }
-  ],
-  ton: [
-    { id: 'ton_tiny', amount: 0.5, coins: 50, popular: false },
-    { id: 'ton_mini', amount: 1, coins: 100, popular: false },
-    { id: 'ton_small', amount: 2, coins: 200, popular: false },
-    { id: 'ton_medium', amount: 5, coins: 500, popular: true },
-    { id: 'ton_large', amount: 10, coins: 1000, popular: false },
-    { id: 'ton_xlarge', amount: 25, coins: 2500, popular: false },
-    { id: 'ton_huge', amount: 50, coins: 5000, popular: false },
-    { id: 'ton_mega', amount: 100, coins: 10000, popular: true },
-    { id: 'ton_giant', amount: 250, coins: 25000, popular: false },
-    { id: 'ton_super', amount: 500, coins: 50000, popular: false },
-    { id: 'ton_ultra', amount: 1000, coins: 100000, popular: false }
+    { id: 'package_tiny', amount: 1, stars: 1, popular: false },
+    { id: 'package_mini', amount: 25, stars: 25, popular: false },
+    { id: 'package_small', amount: 50, stars: 50, popular: false },
+    { id: 'package_bit', amount: 75, stars: 75, popular: true },
+    { id: 'package_medium', amount: 100, stars: 100, popular: false },
+    { id: 'package_biggermedium', amount: 250, stars: 250, popular: false },
+    { id: 'package_moderate', amount: 500, stars: 500, popular: false },
+    { id: 'package_large', amount: 750, stars: 750, popular: false },
+    { id: 'package_superlarge', amount: 1000, stars: 1000, popular: false },
+    { id: 'package_huge', amount: 2500, stars: 2500, popular: false },
+    { id: 'package_xlsize', amount: 5000, stars: 5000, popular: true },
+    { id: 'package_mega', amount: 7500, stars: 7500, popular: false },
+    { id: 'package_giant', amount: 10000, stars: 10000, popular: false }
   ]
 };
-
-const STAR_TO_COIN_RATE = 10; // 1 Star = 10 Coins
-const TON_TO_COIN_RATE = 100; // 1 TON = 100 Coins
-
 // ============================================
 // GLOBAL STATE
 // ============================================
@@ -120,7 +93,7 @@ const STATE = {
   
   // Game
   currentPage: 'home',
-  virtualCurrency: 0,
+  userStars: 0,
   inventoryItems: [],
   
   // Notifications
@@ -137,17 +110,17 @@ const STATE = {
   lastScaleUpdate: 0,
   
   // Leaderboard
-  currentLeaderboardTab: 'coins',
+  currentLeaderboardTab: 'stars',
   leaderboardData: {
-    coins: [
-      { id: 1, name: 'CryptoKing', username: 'cryptoking', coins: 15420, avatar: null },
-      { id: 2, name: 'MoonWalker', username: 'moonwalker', coins: 12850, avatar: null },
-      { id: 3, name: 'DiamondHands', username: 'diamondhands', coins: 10370, avatar: null },
-      { id: 4, name: 'TokenMaster', username: 'tokenmaster', coins: 8920, avatar: null },
-      { id: 5, name: 'BlockChainer', username: 'blockchainer', coins: 7540, avatar: null },
-      { id: 6, name: 'NFT Hunter', username: 'nfthunter', coins: 6230, avatar: null },
-      { id: 7, name: 'Satoshi Fan', username: 'satoshifan', coins: 5180, avatar: null },
-      { id: 8, name: 'Whale Watcher', username: 'whalewatcher', coins: 4560, avatar: null },
+    stars: [
+      { id: 1, name: 'CryptoKing', username: 'cryptoking', stars: 15420, avatar: null },
+      { id: 2, name: 'MoonWalker', username: 'moonwalker', stars: 12850, avatar: null },
+      { id: 3, name: 'DiamondHands', username: 'diamondhands', stars: 10370, avatar: null },
+      { id: 4, name: 'TokenMaster', username: 'tokenmaster', stars: 8920, avatar: null },
+      { id: 5, name: 'BlockChainer', username: 'blockchainer', stars: 7540, avatar: null },
+      { id: 6, name: 'NFT Hunter', username: 'nfthunter', stars: 6230, avatar: null },
+      { id: 7, name: 'Satoshi Fan', username: 'satoshifan', stars: 5180, avatar: null },
+      { id: 8, name: 'Whale Watcher', username: 'whalewatcher', stars: 4560, avatar: null },
     ],
     gifts: [
       { id: 1, name: 'GiftCollector', username: 'giftcollector', gifts: 87, avatar: null },
@@ -160,8 +133,6 @@ const STATE = {
       { id: 8, name: 'Prize Collector', username: 'prizecollector', gifts: 19, avatar: null },
     ]
   },
-  
-  // Settings
   settings: {
     language: 'en',
     pushNotifications: true,
@@ -172,23 +143,15 @@ const STATE = {
     showInLeaderboard: true,
     shareStats: true
   },
-  
-  // Deposit
   currentDepositTab: 'stars',
-  // REMOVED: userStars (security issue)
-  
-  // Modals
   currentModalPrize: null,
   currentFilter: 'all',
-  
-  // Promocodes
   redeemedCodes: [],
-  
-  // Backend sync
   isSyncing: false,
   lastBalanceSync: null,
   syncIntervalId: null
 };
+
 // ============================================
 // TRANSLATIONS
 // ============================================
@@ -392,7 +355,6 @@ function showPaymentUnsupportedError() {
 }
 
 const BackendAPI = {
-  // Check if CloudStorage is available
   isCloudStorageAvailable() {
     return STATE.tg && 
            STATE.tg.CloudStorage && 
@@ -400,51 +362,47 @@ const BackendAPI = {
   },
 
   async getUserBalance() {
-    // Try CloudStorage first
     if (this.isCloudStorageAvailable()) {
       return new Promise((resolve) => {
-        STATE.tg.CloudStorage.getItem('userBalance', (error, value) => {
+        STATE.tg.CloudStorage.getItem('userStars', (error, value) => {
           if (error) {
             console.warn('⚠️ CloudStorage error, using localStorage:', error);
-            const fallback = localStorage.getItem('userBalance');
-            resolve(fallback ? parseInt(fallback) : STATE.virtualCurrency);
+            const fallback = localStorage.getItem('userStars');
+            resolve(fallback ? parseInt(fallback) : STATE.userStars);
           } else {
-            const balance = value ? parseInt(value) : STATE.virtualCurrency;
-            console.log('📖 Balance from CloudStorage:', balance);
+            const balance = value ? parseInt(value) : STATE.userStars;
+            console.log('📖 Stars from CloudStorage:', balance);
             resolve(balance);
           }
         });
       });
     }
     
-    // Fallback to localStorage
     console.log('📖 Using localStorage (CloudStorage unavailable)');
-    const saved = localStorage.getItem('userBalance');
-    return saved ? parseInt(saved) : STATE.virtualCurrency;
+    const saved = localStorage.getItem('userStars');
+    return saved ? parseInt(saved) : STATE.userStars;
   },
   
   async saveUserBalance(balance) {
     let cloudSaved = false;
     
-    // Try CloudStorage first
     if (this.isCloudStorageAvailable()) {
       cloudSaved = await new Promise((resolve) => {
-        STATE.tg.CloudStorage.setItem('userBalance', balance.toString(), (error, success) => {
+        STATE.tg.CloudStorage.setItem('userStars', balance.toString(), (error, success) => {
           if (error) {
             console.warn('⚠️ CloudStorage save failed:', error);
             resolve(false);
           } else {
-            console.log('💾 Balance saved to CloudStorage:', balance);
+            console.log('💾 Stars saved to CloudStorage:', balance);
             resolve(true);
           }
         });
       });
     }
     
-    // Always save to localStorage as backup
     try {
-      localStorage.setItem('userBalance', balance.toString());
-      console.log('💾 Balance saved to localStorage:', balance);
+      localStorage.setItem('userStars', balance.toString());
+      console.log('💾 Stars saved to localStorage:', balance);
       return true;
     } catch (error) {
       console.error('❌ localStorage save failed:', error);
@@ -458,11 +416,11 @@ const BackendAPI = {
     STATE.isSyncing = true;
     const balance = await this.getUserBalance();
     
-    if (balance !== STATE.virtualCurrency) {
-      const oldBalance = STATE.virtualCurrency;
-      STATE.virtualCurrency = balance;
+    if (balance !== STATE.userStars) {
+      const oldBalance = STATE.userStars;
+      STATE.userStars = balance;
       Currency.update();
-      console.log(`💰 Balance synced: ${oldBalance} → ${balance}`);
+      console.log(`⭐ Balance synced: ${oldBalance} → ${balance}`);
     }
     
     STATE.lastBalanceSync = Date.now();
@@ -470,22 +428,18 @@ const BackendAPI = {
   },
   
   startPeriodicSync() {
-    // Sync immediately
     this.syncBalance();
     
-    // Log storage method
     if (this.isCloudStorageAvailable()) {
       console.log('✅ Using Telegram CloudStorage');
     } else {
       console.log('✅ Using localStorage (CloudStorage not available)');
     }
     
-    // Stop existing interval
     if (STATE.syncIntervalId) {
       clearInterval(STATE.syncIntervalId);
     }
     
-    // Sync every 30 seconds
     STATE.syncIntervalId = setInterval(() => {
       this.syncBalance();
     }, CONFIG.BALANCE_SYNC_INTERVAL);
@@ -501,6 +455,7 @@ const BackendAPI = {
     }
   }
 };
+
 // ============================================
 // TELEGRAM WEB APP INITIALIZATION
 // ============================================
@@ -724,11 +679,11 @@ const LoadingScreen = {
 
 const Currency = {
   add(amount) {
-    const oldValue = STATE.virtualCurrency;
-    const newValue = STATE.virtualCurrency + amount;
+    const oldValue = STATE.userStars;
+    const newValue = STATE.userStars + amount;
     this.animateChange(oldValue, newValue);
     
-    // ADDED: Save to cloud storage
+    // Save to cloud storage
     BackendAPI.saveUserBalance(newValue);
   },
   
@@ -750,7 +705,7 @@ const Currency = {
       if (progress < 1) {
         requestAnimationFrame(update);
       } else {
-        STATE.virtualCurrency = newValue;
+        STATE.userStars = newValue;
         currencyAmount.textContent = newValue.toLocaleString();
         Leaderboard.updateData();
       }
@@ -762,7 +717,7 @@ const Currency = {
   update() {
     const currencyAmount = document.getElementById('currencyAmount');
     if (currencyAmount) {
-      currencyAmount.textContent = STATE.virtualCurrency.toLocaleString();
+      currencyAmount.textContent = STATE.userStars.toLocaleString();
     }
   }
 };
@@ -1409,12 +1364,12 @@ const Leaderboard = {
       });
     });
     
-    this.render('coins');
+    this.render('stars');
   },
 
   render(type) {
-    const data = type === 'coins' ? 
-      STATE.leaderboardData.coins : 
+    const data = type === 'stars' ? 
+      STATE.leaderboardData.stars : 
       STATE.leaderboardData.gifts;
     
     const container = document.getElementById(`leaderboard-${type}`);
@@ -1426,14 +1381,12 @@ const Leaderboard = {
     if (podiumContainer) podiumContainer.innerHTML = '';
     if (ranksList) ranksList.innerHTML = '';
     
-    // Top 3
     data.slice(0, 3).forEach((player, index) => {
       const rank = index + 1;
       const card = this.createPodiumCard(player, rank, type);
       if (podiumContainer) podiumContainer.appendChild(card);
     });
     
-    // Rest
     data.slice(3).forEach((player, index) => {
       const rank = index + 4;
       const card = this.createRankCard(player, rank, type);
@@ -1444,6 +1397,7 @@ const Leaderboard = {
   },
 
   createPodiumCard(player, rank, type) {
+    // ... (unchanged except score display)
     const card = document.createElement('div');
     card.className = 'podium-card';
     card.setAttribute('data-rank', rank);
@@ -1468,8 +1422,8 @@ const Leaderboard = {
     
     const score = document.createElement('div');
     score.className = 'podium-score';
-    score.textContent = type === 'coins' ? 
-      player.coins.toLocaleString() : 
+    score.textContent = type === 'stars' ? 
+      player.stars.toLocaleString() : 
       `${player.gifts} gifts`;
     
     card.appendChild(rankBadge);
@@ -1481,6 +1435,7 @@ const Leaderboard = {
   },
 
   createRankCard(player, rank, type) {
+    // ... (similar update for score display)
     const card = document.createElement('div');
     card.className = 'rank-card';
     
@@ -1507,8 +1462,8 @@ const Leaderboard = {
     
     const score = document.createElement('div');
     score.className = 'rank-score';
-    score.textContent = type === 'coins' ? 
-      `${player.coins.toLocaleString()} coins` : 
+    score.textContent = type === 'stars' ? 
+      `${player.stars.toLocaleString()} stars` : 
       `${player.gifts} gifts`;
     
     info.appendChild(name);
@@ -1535,11 +1490,11 @@ const Leaderboard = {
     
     yourRankName.textContent = userName;
     
-    if (type === 'coins') {
-      const data = STATE.leaderboardData.coins;
-      let rank = data.filter(p => p.coins > STATE.virtualCurrency).length + 1;
+    if (type === 'stars') {
+      const data = STATE.leaderboardData.stars;
+      let rank = data.filter(p => p.stars > STATE.userStars).length + 1;
       yourRank.textContent = rank;
-      yourRankScore.textContent = `${STATE.virtualCurrency.toLocaleString()} coins`;
+      yourRankScore.textContent = `${STATE.userStars.toLocaleString()} stars`;
     } else {
       const giftCount = STATE.inventoryItems.length;
       const data = STATE.leaderboardData.gifts;
@@ -1555,36 +1510,26 @@ const Leaderboard = {
     }
   }
 };
-
 // ============================================
 // DEPOSIT SYSTEM
 // ============================================
 
 const Deposit = {
   init() {
-    console.log('✅ Deposit initialized (Mobile-Optimized)');
+    console.log('✅ Deposit initialized (Stars Only)');
     this.renderPackages('stars');
-    this.renderPackages('ton');
     this.initIcons();
     
-    // Setup tab switching
-    const tabs = document.querySelectorAll('.deposit-tab');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        
-        const tabType = tab.dataset.tab;
-        STATE.currentDepositTab = tabType;
-        
-        document.querySelectorAll('.deposit-list').forEach(list => {
-          list.classList.remove('active');
-        });
-        
-        const list = document.getElementById(`deposit-${tabType}`);
-        if (list) list.classList.add('active');
-      });
-    });
+    // No tab switching needed - stars only
+    const tab = document.querySelector('.deposit-tab[data-tab="stars"]');
+    if (tab) {
+      tab.classList.add('active');
+    }
+    
+    const list = document.getElementById('deposit-stars');
+    if (list) {
+      list.classList.add('active');
+    }
   },
 
   renderPackages(type) {
@@ -1624,20 +1569,20 @@ const Deposit = {
 
     const currency = document.createElement('div');
     currency.className = 'package-currency';
-    currency.textContent = type === 'stars' ? 'Stars' : 'TON';
+    currency.textContent = 'Stars';
     card.appendChild(currency);
 
     const divider = document.createElement('div');
     divider.className = 'package-divider';
     card.appendChild(divider);
 
-    const coins = document.createElement('div');
-    coins.className = 'package-coins';
-    coins.innerHTML = `
-      <img src="assets/Coin.svg" alt="Coin">
-      <span>${pkg.coins.toLocaleString()} Coins</span>
+    const stars = document.createElement('div');
+    stars.className = 'package-coins';
+    stars.innerHTML = `
+      <img src="assets/TStars.svg" alt="Star">
+      <span>${pkg.stars.toLocaleString()} Stars</span>
     `;
-    card.appendChild(coins);
+    card.appendChild(stars);
 
     const buyBtn = document.createElement('button');
     buyBtn.className = 'package-buy-btn';
@@ -1648,118 +1593,101 @@ const Deposit = {
     return card;
   },
 
-  // FIXED: Now properly sends pkg.id to bot
-async purchasePackage(pkg, type) {
-  if (type === 'ton') {
-    Utils.showToast('TON payments coming soon!', 'error');
-    return;
-  }
-  
-  if (!STATE.tg) {
-    Utils.showToast('❌ Telegram WebApp not available', 'error');
-    console.error('Telegram WebApp not available');
-    return;
-  }
-  
-  console.log('💳 Initiating purchase:', pkg.id);
-  console.log('📦 Package:', pkg.title || `${pkg.coins} Coins`);
-  console.log('⭐ Stars:', pkg.amount);
-  console.log('🪙 Coins:', pkg.coins);
-  
-  try {
-    // Show loading
-    Utils.showToast('Creating invoice...', 'success');
-    
-    // Get user ID from Telegram
-    const userId = STATE.tg.initDataUnsafe?.user?.id;
-    
-    if (!userId) {
-      throw new Error('User ID not available');
+  async purchasePackage(pkg, type) {
+    if (!STATE.tg) {
+      Utils.showToast('❌ Telegram WebApp not available', 'error');
+      console.error('Telegram WebApp not available');
+      return;
     }
     
-    console.log('👤 User ID:', userId);
+    console.log('⭐ Initiating purchase:', pkg.id);
+    console.log('📦 Package:', pkg.title || `${pkg.stars} Stars`);
+    console.log('⭐ Stars:', pkg.amount);
     
-    // ⚠️ REPLACE THIS URL WITH YOUR BOT SERVER URL!
-    const botServerUrl = 'https://vgservers-production.up.railway.app'; // e.g., 'https://your-app.herokuapp.com'
-    
-    // Request invoice link from bot
-    console.log('📡 Requesting invoice from server...');
-    
-    const response = await fetch(`${botServerUrl}/create-invoice`, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        userId: userId,
-        productId: pkg.id
-      })
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to create invoice');
-    }
-    
-    const data = await response.json();
-    
-    if (!data.invoiceLink) {
-      throw new Error('No invoice link received from server');
-    }
-    
-    console.log('✅ Invoice link received!');
-    console.log('🔗 Opening invoice popup...');
-    
-    // Open invoice directly in Mini App (NO chat redirect!)
-    STATE.tg.openInvoice(data.invoiceLink, async (status) => {
-      console.log('💳 Payment status:', status);
+    try {
+      Utils.showToast('Creating invoice...', 'success');
       
-      if (status === 'paid') {
-        console.log('🎉 Payment successful!');
-        
-        // Show success message
-        Utils.showToast(`🎉 Payment successful! Adding ${pkg.coins} coins...`, 'success');
-        
-        // Sync balance from cloud storage
-        setTimeout(async () => {
-          await BackendAPI.syncBalance();
-          
-          // Show final success
-          Utils.showToast(`✅ ${pkg.coins} coins added to your account!`, 'success');
-          
-          // Optional: Show confetti
-          if (STATE.settings.confettiEffects && window.showConfetti) {
-            window.showConfetti();
-          }
-        }, 1500);
-        
-      } else if (status === 'cancelled') {
-        console.log('❌ Payment cancelled by user');
-        Utils.showToast('Payment cancelled', 'error');
-        
-      } else if (status === 'failed') {
-        console.log('❌ Payment failed');
-        Utils.showToast('Payment failed. Please try again.', 'error');
-        
-      } else {
-        console.log('⚠️ Unknown payment status:', status);
+      const userId = STATE.tg.initDataUnsafe?.user?.id;
+      
+      if (!userId) {
+        throw new Error('User ID not available');
       }
-    });
-    
-  } catch (error) {
-    console.error('❌ Error initiating purchase:', error);
-    Utils.showToast(`Error: ${error.message}`, 'error');
-    
-    // If openInvoice is not available, show helpful error
-    if (error.message.includes('openInvoice')) {
-      Utils.showToast('Please update your Telegram app to use payments', 'error');
+      
+      console.log('👤 User ID:', userId);
+      
+      // REPLACE THIS URL WITH YOUR BOT SERVER URL!
+      const botServerUrl = 'https://vgservers-production.up.railway.app';
+      
+      console.log('📡 Requesting invoice from server...');
+      
+      const response = await fetch(`${botServerUrl}/create-invoice`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: userId,
+          productId: pkg.id
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create invoice');
+      }
+      
+      const data = await response.json();
+      
+      if (!data.invoiceLink) {
+        throw new Error('No invoice link received from server');
+      }
+      
+      console.log('✅ Invoice link received!');
+      console.log('🔗 Opening invoice popup...');
+      
+      STATE.tg.openInvoice(data.invoiceLink, async (status) => {
+        console.log('💳 Payment status:', status);
+        
+        if (status === 'paid') {
+          console.log('🎉 Payment successful!');
+          
+          Utils.showToast(`🎉 Payment successful! Adding ${pkg.stars} stars...`, 'success');
+          
+          setTimeout(async () => {
+            await BackendAPI.syncBalance();
+            
+            Utils.showToast(`✅ ${pkg.stars} stars added to your account!`, 'success');
+            
+            if (STATE.settings.confettiEffects && window.showConfetti) {
+              window.showConfetti();
+            }
+          }, 1500);
+          
+        } else if (status === 'cancelled') {
+          console.log('❌ Payment cancelled by user');
+          Utils.showToast('Payment cancelled', 'error');
+          
+        } else if (status === 'failed') {
+          console.log('❌ Payment failed');
+          Utils.showToast('Payment failed. Please try again.', 'error');
+          
+        } else {
+          console.log('⚠️ Unknown payment status:', status);
+        }
+      });
+      
+    } catch (error) {
+      console.error('❌ Error initiating purchase:', error);
+      Utils.showToast(`Error: ${error.message}`, 'error');
+      
+      if (error.message.includes('openInvoice')) {
+        Utils.showToast('Please update your Telegram app to use payments', 'error');
+      }
     }
-  }
-},
+  },
   
   initIcons() {
     setTimeout(() => {
-      // Header icon
       const headerIcon = document.getElementById('depositStarIcon');
       if (headerIcon && headerIcon.children.length === 0) {
         lottie.loadAnimation({
@@ -1771,31 +1699,6 @@ async purchasePackage(pkg, type) {
         });
       }
       
-      // Balance icon
-      const balanceIcon = document.getElementById('balanceStarIcon');
-      if (balanceIcon && balanceIcon.children.length === 0) {
-        lottie.loadAnimation({
-          container: balanceIcon,
-          renderer: 'svg',
-          loop: true,
-          autoplay: true,
-          path: 'assets/TStars.json'
-        });
-      }
-      
-      // Converter icon
-      const converterIcon = document.getElementById('converterStarIcon');
-      if (converterIcon && converterIcon.children.length === 0) {
-        lottie.loadAnimation({
-          container: converterIcon,
-          renderer: 'svg',
-          loop: true,
-          autoplay: true,
-          path: 'assets/TStars.json'
-        });
-      }
-      
-      // Stars tab icon
       const starsTabIcon = document.getElementById('starsTabIcon');
       if (starsTabIcon && starsTabIcon.children.length === 0) {
         lottie.loadAnimation({
@@ -1807,22 +1710,8 @@ async purchasePackage(pkg, type) {
         });
       }
       
-      // Initialize all package icons
       DEPOSIT_PACKAGES.stars.forEach((pkg, index) => {
         const pkgIcon = document.getElementById(`pkg-stars-${index}`);
-        if (pkgIcon && pkgIcon.children.length === 0) {
-          lottie.loadAnimation({
-            container: pkgIcon,
-            renderer: 'svg',
-            loop: true,
-            autoplay: true,
-            path: 'assets/TStars.json'
-          });
-        }
-      });
-      
-      DEPOSIT_PACKAGES.ton.forEach((pkg, index) => {
-        const pkgIcon = document.getElementById(`pkg-ton-${index}`);
         if (pkgIcon && pkgIcon.children.length === 0) {
           lottie.loadAnimation({
             container: pkgIcon,
@@ -1881,10 +1770,10 @@ const SpinWheel = {
     
     cube.innerHTML = '';
     
-    if (prize.type === 'coin') {
+    if (prize.type === 'star') {
       const img = document.createElement('img');
-      img.src = 'assets/Coin.svg';
-      img.alt = 'Coin';
+      img.src = 'assets/TStars.svg';
+      img.alt = 'Star';
       img.style.width = '70px';
       img.style.height = '70px';
       img.style.objectFit = 'contain';
@@ -2140,10 +2029,10 @@ const SpinWheel = {
     
     icon.innerHTML = '';
     
-    if (prize.type === 'coin') {
+    if (prize.type === 'star') {
       const img = document.createElement('img');
-      img.src = 'assets/Coin.svg';
-      img.alt = 'Coin';
+      img.src = 'assets/TStars.svg';
+      img.alt = 'Star';
       icon.appendChild(img);
       
       const valueText = document.createElement('div');
@@ -2151,7 +2040,7 @@ const SpinWheel = {
       valueText.textContent = prize.value;
       icon.appendChild(valueText);
       
-      name.textContent = `${prize.value} Coins`;
+      name.textContent = `${prize.value} Stars`;
     } else {
       const container = document.createElement('div');
       container.style.width = '100%';
@@ -2171,18 +2060,7 @@ const SpinWheel = {
     
     modal.classList.add('show');
   },
-
-  hideWin() {
-    const modal = document.getElementById('winModal');
-    if (modal) {
-      modal.classList.remove('show');
-      setTimeout(() => {
-        const icon = document.getElementById('modalPrizeIcon');
-        if (icon) icon.innerHTML = '';
-      }, 300);
-    }
-  },
-
+  
   claimWin() {
     if (!STATE.currentWinningPrize) {
       console.error('❌ No winning prize to claim');
@@ -2191,27 +2069,20 @@ const SpinWheel = {
     
     const prize = STATE.currentWinningPrize;
     
-    if (prize.type === 'coin') {
-      // Add coins - NO gift notification for coins
-      const coinValue = parseInt(prize.value);
-      Currency.add(coinValue);
-      console.log(`💰 Claimed ${coinValue} coins`);
-      
-      // Show regular notification for coins (optional - can remove if you don't want any notification)
-      // Notifications.add();
+    if (prize.type === 'star') {
+      const starValue = parseInt(prize.value);
+      Currency.add(starValue);
+      console.log(`⭐ Claimed ${starValue} stars`);
     } else {
-      // Add gift to inventory
       const addedPrize = Inventory.add(prize);
       console.log(`🎁 Claimed gift: ${prize.value} (ID: ${addedPrize.prizeId})`);
       
-      // FIXED: Only show live gift notification for actual GIFTS, not coins
       LiveGiftNotifications.add(addedPrize);
     }
     
     this.hideWin();
     STATE.currentWinningPrize = null;
     
-    // Clean up and reset
     const cubes = document.querySelectorAll('.cube');
     cubes.forEach(cube => this.cleanupCubeLottie(cube));
     this.populateCubes();
@@ -2224,15 +2095,15 @@ const SpinWheel = {
     
     console.log('✅ Prize claimed! Ready for next spin');
   },
-
+  
   loadIcons() {
-    const coinIds = ['coin1', 'coin5', 'coin10', 'coin25', 'coin50', 'coin100', 'coin250', 'coin500'];
-    coinIds.forEach(id => {
+    const starIds = ['star1', 'star5', 'star10', 'star25', 'star50', 'star100', 'star250', 'star500'];
+    starIds.forEach(id => {
       const container = document.getElementById(id);
       if (container) {
         const img = document.createElement('img');
-        img.src = 'assets/Coin.svg';
-        img.alt = 'Coin';
+        img.src = 'assets/TStars.svg';
+        img.alt = 'Star';
         container.appendChild(img);
       }
     });
@@ -2914,60 +2785,51 @@ function initializeApp() {
 // PAYMENT SUCCESS DETECTION FUNCTION
 // ============================================
 function checkForPaymentSuccess() {
-  // Check URL parameters for payment confirmation
   const urlParams = new URLSearchParams(window.location.search);
-  const coinsToAdd = urlParams.get('coins');
+  const starsToAdd = urlParams.get('stars');
   const userId = urlParams.get('uid');
   const timestamp = urlParams.get('t');
   
-  if (coinsToAdd) {
-    const amount = parseInt(coinsToAdd);
+  if (starsToAdd) {
+    const amount = parseInt(starsToAdd);
     
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log('💰 PAYMENT SUCCESS DETECTED!');
+    console.log('⭐ PAYMENT SUCCESS DETECTED!');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log(`🪙 Coins to add: ${amount}`);
+    console.log(`⭐ Stars to add: ${amount}`);
     console.log(`👤 User ID: ${userId || 'Not provided'}`);
     console.log(`🕐 Timestamp: ${timestamp ? new Date(parseInt(timestamp)).toLocaleString() : 'Not provided'}`);
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     
-    // Validate amount
     if (isNaN(amount) || amount <= 0) {
-      console.error('❌ Invalid coin amount:', coinsToAdd);
+      console.error('❌ Invalid star amount:', starsToAdd);
       cleanupURLParams();
       return;
     }
     
-    // Show immediate feedback
-    Utils.showToast(`🎉 Payment successful! Adding ${amount} coins...`, 'success');
+    Utils.showToast(`🎉 Payment successful! Adding ${amount} stars...`, 'success');
     
-    // Add coins with animation delay
     setTimeout(async () => {
       try {
-        // Sync balance from cloud first
         await BackendAPI.syncBalance();
         
-        // Then show success
-        Utils.showToast(`✅ ${amount} coins added to your account!`, 'success');
+        Utils.showToast(`✅ ${amount} stars added to your account!`, 'success');
         
-        // Optional: Play success sound if enabled
         if (STATE.settings.soundEffects && window.playSuccessSound) {
           window.playSuccessSound();
         }
         
-        // Optional: Show confetti if enabled
         if (STATE.settings.confettiEffects && window.showConfetti) {
           window.showConfetti();
         }
         
         console.log('✅ Payment processed successfully!');
-        console.log(`💰 New balance: ${STATE.virtualCurrency}`);
+        console.log(`⭐ New balance: ${STATE.userStars}`);
         
       } catch (error) {
         console.error('❌ Error processing payment:', error);
         Utils.showToast('⚠️ Error syncing balance. Please refresh.', 'error');
       } finally {
-        // Clean up URL parameters
         cleanupURLParams();
       }
     }, 2000);
