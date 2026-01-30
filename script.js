@@ -304,7 +304,7 @@ const Utils = {
     const lang = STATE.settings.language;
     return TRANSLATIONS[lang]?.[key] || TRANSLATIONS['en'][key] || key;
   },
-  
+
   // Create error icon SVG
   createErrorIcon() {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -373,6 +373,23 @@ const Utils = {
     }, 2000);
   }
 };
+
+// Standalone helpers (outside Utils)
+function isOpenInvoiceSupported() {
+  return STATE.tg && typeof STATE.tg.openInvoice === 'function';
+}
+
+function showPaymentUnsupportedError() {
+  if (STATE.tg && STATE.tg.showPopup) {
+    STATE.tg.showPopup({
+      title: '⚠️ Update Required',
+      message: 'Please update your Telegram app to the latest version to use in-app payments.',
+      buttons: [{ type: 'close' }]
+    });
+  } else {
+    alert('Please update your Telegram app to use payments.');
+  }
+}
 
 const BackendAPI = {
   // Check if CloudStorage is available
@@ -520,14 +537,19 @@ const TelegramApp = {
   if (!STATE.tg) return;
   
   console.log('✅ Payment handlers initialized');
-  console.log('📱 Using WebAppData for instant invoice creation');
-  console.log('🔗 Invoice will appear directly in chat - NO /start needed!');
+  console.log('📱 Using openInvoice() for direct invoice popup');
+  console.log('🔗 Invoice will open IN Mini App - NO chat redirect!');
   
-  // Listen for when user returns from payment
+  // Check if openInvoice is available
+  if (typeof STATE.tg.openInvoice !== 'function') {
+    console.warn('⚠️ openInvoice() not available in this Telegram version');
+    console.warn('⚠️ User may need to update their Telegram app');
+  } else {
+    console.log('✅ openInvoice() is available and ready!');
+  }
+  
+  // Listen for when user returns to app (after payment)
   STATE.tg.onEvent('viewportChanged', (event) => {
-    console.log('📱 Viewport changed:', event);
-    
-    // Check if user just returned from payment
     if (event.isStateStable) {
       console.log('✅ User returned to app - syncing balance...');
       setTimeout(() => {
@@ -536,9 +558,9 @@ const TelegramApp = {
     }
   });
   
-  // Listen for theme changes (happens when returning from payment)
+  // Listen for theme changes
   STATE.tg.onEvent('themeChanged', () => {
-    console.log('🎨 Theme changed - user may have returned from payment');
+    console.log('🎨 Theme changed - may indicate payment completion');
     setTimeout(() => {
       BackendAPI.syncBalance();
     }, 1000);
@@ -1627,7 +1649,7 @@ const Deposit = {
   },
 
   // FIXED: Now properly sends pkg.id to bot
-purchasePackage(pkg, type) {
+async purchasePackage(pkg, type) {
   if (type === 'ton') {
     Utils.showToast('TON payments coming soon!', 'error');
     return;
@@ -1645,35 +1667,93 @@ purchasePackage(pkg, type) {
   console.log('🪙 Coins:', pkg.coins);
   
   try {
-    // REPLACE WITH YOUR BOT USERNAME (without @)
-    const botUsername = 'VoidGiftsOfficialBot'; // ⚠️ CHANGE THIS!
+    // Show loading
+    Utils.showToast('Creating invoice...', 'success');
     
-    // Create deep link
-    const deepLink = `https://t.me/${botUsername}?start=buy_${pkg.id}`;
+    // Get user ID from Telegram
+    const userId = STATE.tg.initDataUnsafe?.user?.id;
     
-    console.log('🔗 Opening:', deepLink);
-    
-    // Show loading message
-    Utils.showToast('Opening invoice...', 'success');
-    
-    // Try multiple methods for best compatibility
-    if (STATE.tg.openTelegramLink) {
-      // Method 1: Best for mobile
-      console.log('✅ Using openTelegramLink (Mobile-optimized)');
-      STATE.tg.openTelegramLink(deepLink);
-    } else if (STATE.tg.openLink) {
-      // Method 2: Fallback
-      console.log('✅ Using openLink (Desktop)');
-      STATE.tg.openLink(deepLink);
-    } else {
-      // Method 3: Last resort
-      console.log('⚠️ Using window.open (Fallback)');
-      window.open(deepLink, '_blank');
+    if (!userId) {
+      throw new Error('User ID not available');
     }
+    
+    console.log('👤 User ID:', userId);
+    
+    // ⚠️ REPLACE THIS URL WITH YOUR BOT SERVER URL!
+    const botServerUrl = 'YOUR-BOT-SERVER-URL'; // e.g., 'https://your-app.herokuapp.com'
+    
+    // Request invoice link from bot
+    console.log('📡 Requesting invoice from server...');
+    
+    const response = await fetch(`${botServerUrl}/create-invoice`, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId: userId,
+        productId: pkg.id
+      })
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to create invoice');
+    }
+    
+    const data = await response.json();
+    
+    if (!data.invoiceLink) {
+      throw new Error('No invoice link received from server');
+    }
+    
+    console.log('✅ Invoice link received!');
+    console.log('🔗 Opening invoice popup...');
+    
+    // Open invoice directly in Mini App (NO chat redirect!)
+    STATE.tg.openInvoice(data.invoiceLink, async (status) => {
+      console.log('💳 Payment status:', status);
+      
+      if (status === 'paid') {
+        console.log('🎉 Payment successful!');
+        
+        // Show success message
+        Utils.showToast(`🎉 Payment successful! Adding ${pkg.coins} coins...`, 'success');
+        
+        // Sync balance from cloud storage
+        setTimeout(async () => {
+          await BackendAPI.syncBalance();
+          
+          // Show final success
+          Utils.showToast(`✅ ${pkg.coins} coins added to your account!`, 'success');
+          
+          // Optional: Show confetti
+          if (STATE.settings.confettiEffects && window.showConfetti) {
+            window.showConfetti();
+          }
+        }, 1500);
+        
+      } else if (status === 'cancelled') {
+        console.log('❌ Payment cancelled by user');
+        Utils.showToast('Payment cancelled', 'error');
+        
+      } else if (status === 'failed') {
+        console.log('❌ Payment failed');
+        Utils.showToast('Payment failed. Please try again.', 'error');
+        
+      } else {
+        console.log('⚠️ Unknown payment status:', status);
+      }
+    });
     
   } catch (error) {
     console.error('❌ Error initiating purchase:', error);
-    Utils.showToast('Error opening payment. Please try again.', 'error');
+    Utils.showToast(`Error: ${error.message}`, 'error');
+    
+    // If openInvoice is not available, show helpful error
+    if (error.message.includes('openInvoice')) {
+      Utils.showToast('Please update your Telegram app to use payments', 'error');
+    }
   }
 },
   
