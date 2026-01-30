@@ -47,15 +47,8 @@
     <img src="assets/TStars.svg" alt="Stars">
   </div>
   <div class="currency-amount" id="currencyAmount">0</div>
-  
-  <!-- Star Balance -->
-  <div class="currency-divider"></div>
-  <div class="currency-icon-small">
-    <img src="assets/TStars.svg" alt="Stars">
-  </div>
-  <div class="currency-amount-small" id="currencyStars">0</div>
 </div>
-
+  
 <!-- Hamburger Menu Button -->
 <div class="hamburger" id="hamburger">
   <span></span>
@@ -227,104 +220,61 @@
 
   <!-- LEADERBOARD PAGE -->
   <div class="page-content" id="page-leaderboard">
-    <div class="leaderboard-page">
-      <div class="leaderboard-header">
-        <div class="trophy-icon" id="leaderboardTrophyIcon"></div>
-        <h1 class="leaderboard-title" data-i18n="topPlayers">Leaderboard</h1>
-        <p class="leaderboard-subtitle">Updates every 24 hours!</p>
+  <div class="leaderboard-page">
+    <div class="leaderboard-header">
+      <div class="trophy-icon" id="leaderboardTrophyIcon"></div>
+      <h1 class="leaderboard-title" data-i18n="topPlayers">Leaderboard</h1>
+      <p class="leaderboard-subtitle">Updates every 24 hours!</p>
+    </div>
+
+    <div class="leaderboard-tabs">
+      <button class="leaderboard-tab active" data-tab="stars">
+        <img src="assets/TStars.svg" alt="Star">
+        <span class="tab-label" data-i18n="stars">Star Leaders</span>
+      </button>
+      <button class="leaderboard-tab" data-tab="gifts">
+        <div class="gift-tab-icon" id="giftTabIcon"></div>
+        <span class="tab-label" data-i18n="gifts">Gift Leaders</span>
+      </button>
+    </div>
+
+    <div class="leaderboard-content">
+      <!-- Star Leaderboard (renamed from coins) -->
+      <div class="leaderboard-list active" id="leaderboard-stars">
+        <div class="podium-container"></div>
+        <div class="ranks-list"></div>
       </div>
 
-      <div class="leaderboard-tabs">
-        <button class="leaderboard-tab active" data-tab="coins">
-          <img src="assets/TStars.svg" alt="Star">
-          <span class="tab-label" data-i18n="stars">Coin Leaders</span>
-        </button>
-        <button class="leaderboard-tab" data-tab="gifts">
-          <div class="gift-tab-icon" id="giftTabIcon"></div>
-          <span class="tab-label" data-i18n="gifts">Gift Leaders</span>
-        </button>
+      <!-- Gift Leaderboard (unchanged) -->
+      <div class="leaderboard-list" id="leaderboard-gifts">
+        <div class="podium-container"></div>
+        <div class="ranks-list"></div>
       </div>
+    </div>
 
-      <div class="leaderboard-content">
-        <!-- Coin Leaderboard -->
-        <div class="leaderboard-list active" id="leaderboard-coins">
-          <div class="podium-container"></div>
-          <div class="ranks-list"></div>
-        </div>
-
-        <!-- Gift Leaderboard -->
-        <div class="leaderboard-list" id="leaderboard-gifts">
-          <div class="podium-container"></div>
-          <div class="ranks-list"></div>
-        </div>
-      </div>
-
-      <div class="your-rank-card">
-        <div class="your-rank-label" data-i18n="yourRank">Your Rank</div>
-        <div class="your-rank-content">
-          <div class="your-rank-position">#<span id="yourRank">--</span></div>
-          <div class="your-rank-info">
-            <div class="your-rank-name" id="yourRankName">Loading...</div>
-            <div class="your-rank-score" id="yourRankScore">0</div>
-          </div>
+    <div class="your-rank-card">
+      <div class="your-rank-label" data-i18n="yourRank">Your Rank</div>
+      <div class="your-rank-content">
+        <div class="your-rank-position">#<span id="yourRank">--</span></div>
+        <div class="your-rank-info">
+          <div class="your-rank-name" id="yourRankName">Loading...</div>
+          <div class="your-rank-score" id="yourRankScore">0</div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
   <!-- DEPOSIT PAGE -->
 <div class="page-content" id="page-deposit">
   <div class="deposit-page">
-    <!-- Deposit Header with Balance -->
+    <!-- Deposit Header -->
     <div class="deposit-header">
       <div class="deposit-icon" id="depositStarIcon"></div>
       <h1 class="deposit-title">Deposit</h1>
-      <p class="deposit-subtitle">Purchase Void Coins with Stars or TON</p>
-      
-      <!-- Current Star Balance -->
-      <div class="star-balance-display">
-        <div class="balance-icon" id="balanceStarIcon"></div>
-        <div class="balance-info">
-          <div class="balance-label">Your Star Balance</div>
-          <div class="balance-amount" id="userStarBalance">0</div>
-        </div>
-      </div>
-      
-      <!-- Star to Coin Converter -->
-      <div class="star-converter">
-        <div class="converter-header">
-          <svg class="converter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M12 6v12M6 12h12"/>
-          </svg>
-          <span>Convert Stars to Void Coins</span>
-        </div>
-        <div class="converter-input-wrapper">
-          <div class="converter-input-group">
-            <div class="input-icon" id="converterStarIcon"></div>
-            <input 
-              type="number" 
-              id="starConvertInput" 
-              class="converter-input" 
-              placeholder="Enter stars..."
-              min="1"
-            >
-          </div>
-          <div class="converter-arrow">→</div>
-          <div class="converter-result">
-            <img src="assets/Coin.svg" alt="Coin">
-            <span id="convertedCoins">0</span>
-          </div>
-        </div>
-        <button class="converter-btn" id="convertStarsBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M7 16V4M7 4L3 8M7 4l4 4M17 8v12M17 20l4-4M17 20l-4-4"/>
-          </svg>
-          Convert Now
-        </button>
-        <div class="converter-rate">Exchange Rate: 1 Star = 10 Void Coins</div>
-      </div>
+      <p class="deposit-subtitle">Purchase Stars with Telegram Stars</p>
     </div>
+    
 
     <!-- Deposit Tabs -->
     <div class="deposit-tabs">
@@ -338,15 +288,15 @@
       </button>
     </div>
 
-    <!-- Deposit Content -->
+    <!-- Single Deposit Content (Stars Only) -->
     <div class="deposit-content">
-      <!-- Stars Packages -->
       <div class="deposit-list active" id="deposit-stars">
         <div class="packages-grid">
           <!-- Packages will be dynamically generated -->
         </div>
       </div>
-
+    </div>
+    
       <!-- TON Packages -->
       <div class="deposit-list" id="deposit-ton">
         <div class="packages-grid">
@@ -363,7 +313,7 @@
       </svg>
       <div class="info-content">
         <h3>Secure Payment</h3>
-        <p>All transactions are processed securely through Telegram. Stars can be converted to Void Coins instantly, while TON purchases are converted automatically.</p>
+        <p>All transactions are processed securely through Telegram. Stars are delivered instantly to your account via Cloud Storage.</p>
       </div>
     </div>
   </div>
@@ -658,48 +608,48 @@
 
       <div class="rewards-section">
         <div class="rewards-header">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="15" y1="9" x2="9" y2="15"/>
-            <line x1="9" y1="9" x2="15" y2="15"/>
-          </svg>
-          <h2 class="rewards-title">What can I <span class="get-text">get?</span></h2>
-        </div>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="15" y1="9" x2="9" y2="15"/>
+          <line x1="9" y1="9" x2="15" y2="15"/>
+        </svg>
+        <h2 class="rewards-title">What can I <span class="get-text">get?</span></h2>
+      </div>
 
         <div class="reward-grid">
-          <div class="reward-item">
-            <div class="reward-amount">1</div>
-            <div class="reward-icon" id="coin1"></div>
-          </div>
-          <div class="reward-item">
-            <div class="reward-amount">5</div>
-            <div class="reward-icon" id="coin5"></div>
-          </div>
-          <div class="reward-item">
-            <div class="reward-amount">10</div>
-            <div class="reward-icon" id="coin10"></div>
-          </div>
-          <div class="reward-item">
-            <div class="reward-amount">25</div>
-            <div class="reward-icon" id="coin25"></div>
-          </div>
-          <div class="reward-item">
-            <div class="reward-amount">50</div>
-            <div class="reward-icon" id="coin50"></div>
-          </div>
-          <div class="reward-item">
-            <div class="reward-amount">100</div>
-            <div class="reward-icon" id="coin100"></div>
-          </div>
-          <div class="reward-item">
-            <div class="reward-amount">250</div>
-            <div class="reward-icon" id="coin250"></div>
-          </div>
-          <div class="reward-item">
-            <div class="reward-amount">500</div>
-            <div class="reward-icon" id="coin500"></div>
-          </div>
+        <div class="reward-item">
+          <div class="reward-amount">1</div>
+          <div class="reward-icon" id="star1"></div>
         </div>
+        <div class="reward-item">
+          <div class="reward-amount">5</div>
+          <div class="reward-icon" id="star5"></div>
+        </div>
+        <div class="reward-item">
+          <div class="reward-amount">10</div>
+          <div class="reward-icon" id="star10"></div>
+        </div>
+        <div class="reward-item">
+          <div class="reward-amount">25</div>
+          <div class="reward-icon" id="star25"></div>
+        </div>
+        <div class="reward-item">
+          <div class="reward-amount">50</div>
+          <div class="reward-icon" id="star50"></div>
+        </div>
+        <div class="reward-item">
+          <div class="reward-amount">100</div>
+          <div class="reward-icon" id="star100"></div>
+        </div>
+        <div class="reward-item">
+          <div class="reward-amount">250</div>
+          <div class="reward-icon" id="star250"></div>
+        </div>
+        <div class="reward-item">
+          <div class="reward-amount">500</div>
+          <div class="reward-icon" id="star500"></div>
+        </div>
+      </div>
 
         <div class="gift-grid">
           <div class="gift-item">
