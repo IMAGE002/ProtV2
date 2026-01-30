@@ -1680,7 +1680,7 @@ async purchasePackage(pkg, type) {
     console.log('👤 User ID:', userId);
     
     // ⚠️ REPLACE THIS URL WITH YOUR BOT SERVER URL!
-    const botServerUrl = 'https://vgservers-production.up.railway.app/'; // e.g., 'https://your-app.herokuapp.com'
+    const botServerUrl = 'https://vgservers-production.up.railway.app'; // e.g., 'https://your-app.herokuapp.com'
     
     // Request invoice link from bot
     console.log('📡 Requesting invoice from server...');
