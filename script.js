@@ -25,8 +25,18 @@ const CONFIG = {
   BALANCE_SYNC_INTERVAL: 30000
 };
 
-// REMOVED: PRIZE_COIN_VALUES - No longer needed
-// Stars are now the main currency
+const PRIZE_COIN_VALUES = {
+  'Heart': 50,
+  'Bear': 75,
+  'Rose': 100,
+  'Gift': 125,
+  'Cake': 150,
+  'Rose Bouquet': 200,
+  'Ring': 300,
+  'Trophy': 500,
+  'Diamond': 750,
+  'Calendar': 1000
+};
 
 const RARE_GIFTS = ['Ring', 'Trophy', 'Diamond', 'Calendar'];
 const NFT_GIFTS = ['Calendar'];
