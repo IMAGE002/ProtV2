@@ -2201,7 +2201,7 @@ const SpinWheel = {
       
       // 2. Register in the prize database
       // ⚠️ REPLACE THIS URL WITH YOUR PRIZE STORE URL
-      const PRIZE_STORE_URL = 'https://your-prize-store.up.railway.app';
+      const PRIZE_STORE_URL = 'https://vgdatastorage-production.up.railway.app';
       
       try {
         const userId = STATE.tg?.initDataUnsafe?.user?.id || 'unknown';
