@@ -26,7 +26,7 @@ const CONFIG = {
 };
 
 const PRIZE_COIN_VALUES = {
-  'Heart': 50,
+  'Heart': 15,
   'Bear': 75,
   'Rose': 100,
   'Gift': 125,
@@ -874,7 +874,7 @@ const PrizeModal = {
     
     const value = PRIZE_COIN_VALUES[prize.value] || 50;
     coinValue.innerHTML = `
-      <img src="assets/Coin.svg" alt="Coin">
+      <img src="assets/TStars.svg" alt="Stars">
       <span>${value.toLocaleString()} Coins</span>
     `;
     
