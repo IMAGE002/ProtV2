@@ -2620,23 +2620,30 @@ const ContentBoxes = {
       dailyBag.addEventListener('click', () => Navigation.navigateTo('dailyspin'));
     }
 
-    // FIXED: "View All Items" button opens full inventory modal
     const viewAllBtn = document.querySelector('.view-all-btn');
     if (viewAllBtn) {
       viewAllBtn.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent parent click
+        e.stopPropagation();
         FullInventoryModal.open();
       });
     }
 
+    // Projects box - add your own functionality here if needed
     const projects = document.querySelector('.content-box-bottom-1');
     if (projects) {
-      projects.addEventListener('click', () => alert('Projects clicked!'));
+      projects.addEventListener('click', () => {
+        // Add your navigation or action here
+        console.log('📦 Projects clicked');
+      });
     }
 
+    // Contact box - add your own functionality here if needed
     const contact = document.querySelector('.content-box-bottom-2');
     if (contact) {
-      contact.addEventListener('click', () => alert('Contact clicked!'));
+      contact.addEventListener('click', () => {
+        // Add your navigation or action here
+        console.log('📞 Contact clicked');
+      });
     }
   }
 };
