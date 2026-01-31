@@ -383,6 +383,46 @@ gap: 1.25rem;
 padding: 1rem 2rem;
 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 position: relative;
+overflow: hidden;
+}
+
+.nav-menu a::before {
+  content: '';
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  opacity: 0.12;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.nav-menu a:hover::before {
+  opacity: 0.22;
+}
+
+.nav-menu li:nth-child(1) a::before {
+  background: #a78bfa; /* Home - purple */
+  top: -20px;
+  right: -25px;
+}
+
+.nav-menu li:nth-child(2) a::before {
+  background: #fbbf24; /* Leaderboard - gold */
+  bottom: -30px;
+  left: -20px;
+}
+
+.nav-menu li:nth-child(3) a::before {
+  background: #60a5fa; /* Deposit - blue */
+  top: -15px;
+  left: -30px;
+}
+
+.nav-menu li:nth-child(4) a::before {
+  background: #34d399; /* Settings - green */
+  bottom: -25px;
+  right: -20px;
 }
 
 .nav-menu a:hover {
@@ -713,6 +753,14 @@ pointer-events: none;
 border-radius: 16px;
 }
 
+.content-box-left-1::after {
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, #a78bfa, #e879f9);
+  top: -40px;
+  right: -20px;
+}
+
 .daily-gift-content {
 display: flex;
 align-items: center;
@@ -815,6 +863,14 @@ pointer-events: none;
 border-radius: 16px;
 }
 
+.content-box-left-2::after {
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, #3BB6FF, #60a5fa);
+  bottom: -60px;
+  left: -50px;
+}
+
 .content-box-left-2 svg {
 width: 140%;
 height: auto;
@@ -896,6 +952,27 @@ pointer-events: none;
 animation: float 6s ease-in-out infinite;
 }
 
+.content-box-left-1::after,
+.content-box-left-2::after,
+.content-box-right::after,
+.content-box-bottom-1::after,
+.content-box-bottom-2::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.08;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.content-box-left-1:hover::after,
+.content-box-left-2:hover::after,
+.content-box-right:hover::after,
+.content-box-bottom-1:hover::after,
+.content-box-bottom-2:hover::after {
+  opacity: 0.15;
+}
+
 @keyframes float {
 0%, 100% {
 transform: translateY(0) rotate(0deg);
@@ -938,6 +1015,14 @@ cursor: pointer;
 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 display: flex;
 flex-direction: column;
+}
+
+.content-box-right::after {
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, #F5C26B, #fbbf24);
+  top: -70px;
+  right: -70px;
 }
 
 .content-box-right:hover {
