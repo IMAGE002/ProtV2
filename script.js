@@ -2179,7 +2179,7 @@ const SpinWheel = {
   }
 },
   
-  claimWin() {
+  async claimWin() {
     if (!STATE.currentWinningPrize) {
       console.error('❌ No winning prize to claim');
       return;
@@ -2187,49 +2187,52 @@ const SpinWheel = {
     
     const prize = STATE.currentWinningPrize;
     
+    // Stars prizes
     if (prize.type === 'star') {
       const starValue = parseInt(prize.value);
       Currency.add(starValue);
       console.log(`⭐ Claimed ${starValue} stars`);
-    } else {
-  // 1️⃣ Add to local inventory first (instant feedback)
-  const addedPrize = Inventory.add(prize);
-  console.log(`🎁 Claimed gift: ${prize.value} (ID: ${addedPrize.prizeId})`);
-  
-  // 2️⃣ Register in the prize database
-  // ⚠️ REPLACE THIS URL WITH YOUR PRIZE STORE URL
-  const PRIZE_STORE_URL = 'https://vgdatastorage-production.up.railway.app';
-  
-  try {
-    const userId = STATE.tg?.initDataUnsafe?.user?.id || 'unknown';
-    const username = STATE.tg?.initDataUnsafe?.user?.username || null;
-    
-    const res = await fetch(`${PRIZE_STORE_URL}/prizes`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        prize_id: addedPrize.prizeId,
-        gift_name: prize.value,
-        user_id: userId,
-        username: username
-      })
-    });
-    
-    if (res.ok) {
-      console.log('✅ Prize registered in database');
-    } else {
-      const err = await res.json();
-      console.error('⚠️ Prize DB registration failed:', err.error);
-      // Prize is still in local inventory, user can still see it.
-      // But claiming it later will fail at the transactor verification step.
+    } 
+    // Gift prizes
+    else {
+      // 1. Add to local inventory first (instant feedback)
+      const addedPrize = Inventory.add(prize);
+      console.log(`🎁 Claimed gift: ${prize.value} (ID: ${addedPrize.prizeId})`);
+      
+      // 2. Register in the prize database
+      // ⚠️ REPLACE THIS URL WITH YOUR PRIZE STORE URL
+      const PRIZE_STORE_URL = 'https://your-prize-store.up.railway.app';
+      
+      try {
+        const userId = STATE.tg?.initDataUnsafe?.user?.id || 'unknown';
+        const username = STATE.tg?.initDataUnsafe?.user?.username || null;
+        
+        // ✅ CORRECT: Use parentheses () and await
+        const res = await fetch(`${PRIZE_STORE_URL}/prizes`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prize_id: addedPrize.prizeId,
+            gift_name: prize.value,
+            user_id: userId,
+            username: username
+          })
+        });
+        
+        if (res.ok) {
+          console.log('✅ Prize registered in database');
+        } else {
+          const err = await res.json();
+          console.error('⚠️ Prize DB registration failed:', err.error);
+        }
+      } catch (err) {
+        console.error('⚠️ Prize DB registration failed (network):', err.message);
+      }
+      
+      // 3. Show live notification
+      LiveGiftNotifications.add(addedPrize);
     }
-  } catch (err) {
-    console.error('⚠️ Prize DB registration failed (network):', err.message);
-  }
-  
-  // 3️⃣ Show live notification
-  LiveGiftNotifications.add(addedPrize);
-}
+    
     this.hideWin();
     STATE.currentWinningPrize = null;
     
