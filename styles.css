@@ -519,11 +519,11 @@ margin-bottom: 0.5rem;
 position: relative;
 z-index: 1;
 width: 100%;
-min-height: 100vh;
+min-height: 10vh;
 display: flex;
 align-items: flex-start;
 justify-content: center;
-padding: 2rem;
+padding: 10rem;
 padding-top: 6rem;
 }
 
@@ -1834,10 +1834,11 @@ color: rgba(167, 139, 250, 0.8);
   ============================================ */
 
 .daily-spin-container {
-width: 100%;
-display: flex;
-flex-direction: column;
-align-items: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 0rem;/* REMOVED - was causing gap */
 }
 
 .spin-section {
@@ -1852,12 +1853,12 @@ align-items: center;
 .wheel-container {
 position: relative;
 width: 100%;
-height: 200px;
+height: 250px;
 margin-bottom: 2rem;
 display: flex;
 align-items: center;
 justify-content: center;
-overflow: hidden;
+overflow: visible;
 mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
 -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
 }
