@@ -2060,6 +2060,17 @@ const SpinWheel = {
     
     modal.classList.add('show');
   },
+
+  hideWin() {
+  const modal = document.getElementById('winModal');
+  if (modal) {
+    modal.classList.remove('show');
+    setTimeout(() => {
+      const icon = document.getElementById('modalPrizeIcon');
+      if (icon) icon.innerHTML = '';
+    }, 300);
+  }
+},
   
   claimWin() {
     if (!STATE.currentWinningPrize) {
