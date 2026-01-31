@@ -2536,6 +2536,80 @@ const Promocode = {
 };
 
 // ============================================
+// PROMOCODE BOX - DECORATIVE ANIMATION & NAVIGATION
+// ============================================
+
+const PromoCodeBox = {
+  init() {
+    const promoBox = document.getElementById('promoCodeBox');
+    const promoInput = document.getElementById('promoInput');
+    const promoNumberAnim = document.getElementById('promoNumberAnim');
+    
+    if (!promoBox || !promoInput || !promoNumberAnim) {
+      console.warn('⚠️ Promo code box elements not found');
+      return;
+    }
+    
+    // Click handler - navigates to settings page
+    promoBox.addEventListener('click', () => {
+      console.log('🎯 Promo box clicked - navigating to settings');
+      
+      // Trigger animation first
+      this.playAnimation(promoInput, promoNumberAnim);
+      
+      // Navigate to settings page after animation starts
+      setTimeout(() => {
+        Navigation.navigateTo('settings');
+      }, 500);
+    });
+    
+    // Auto-play animation on page load (after delay)
+    setTimeout(() => {
+      this.playAnimation(promoInput, promoNumberAnim);
+      
+      // Loop animation every 10 seconds
+      setInterval(() => {
+        this.playAnimation(promoInput, promoNumberAnim);
+      }, 10000);
+    }, 3000); // Start 3 seconds after page load
+    
+    console.log('✅ Promo code box initialized');
+  },
+  
+  playAnimation(inputElement, numberElement) {
+    if (!inputElement || !numberElement) return;
+    
+    // Hide placeholder text
+    inputElement.classList.add('hide-placeholder');
+    
+    // Show and animate number
+    numberElement.classList.remove('active');
+    void numberElement.offsetWidth; // Force reflow
+    numberElement.classList.add('active');
+    
+    // Show placeholder again after animation
+    setTimeout(() => {
+      inputElement.classList.remove('hide-placeholder');
+      numberElement.classList.remove('active');
+    }, 4000); // Match animation duration
+  }
+};
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  PromoCodeBox.init();
+});
+
+// Alternative initialization if already loaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => PromoCodeBox.init());
+} else {
+  PromoCodeBox.init();
+}
+
+console.log('✨ Promo Code Box Script Loaded');
+
+// ============================================
 // CONTENT BOX HANDLERS
 // ============================================
 
