@@ -1839,7 +1839,6 @@ color: rgba(167, 139, 250, 0.8);
   flex-direction: column;
   align-items: center;
   padding-top: 0rem;/* REMOVED - was causing gap */
-  margin-top: -50rem;
 }
 
 .spin-section {
@@ -2619,7 +2618,6 @@ display: flex;
 flex-direction: column;
 gap: 1.5rem;
 padding-bottom: 2rem;
-margin-top: -50rem;
 }
 
 .settings-header {
