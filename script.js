@@ -212,7 +212,7 @@ const TRANSLATIONS = {
     congratulations: 'Congratulations!',
     youWon: 'You won',
     claimPrize: 'Claim Prize',
-    convertToCoins: 'Convert to Coins',
+    convertToStars: 'Convert To Stars',
     claim: 'Claim',
     termsOfService: 'Terms of Service',
     privacyPolicy: 'Privacy Policy',
@@ -875,7 +875,7 @@ const PrizeModal = {
     const value = PRIZE_COIN_VALUES[prize.value] || 50;
     coinValue.innerHTML = `
       <img src="assets/TStars.svg" alt="Stars">
-      <span>${value.toLocaleString()} Coins</span>
+      <span>${value.toLocaleString()} Stars</span>
     `;
     
     modal.classList.add('show');
@@ -901,7 +901,7 @@ const PrizeModal = {
     Inventory.remove(STATE.currentModalPrize.prizeId);
     this.close();
     
-    console.log(`💰 Converted ${STATE.currentModalPrize.value} to ${coinValue} coins`);
+    console.log(`⭐ Converted ${STATE.currentModalPrize.value} to ${coinValue} stars`);
   },
   
   claim() {
