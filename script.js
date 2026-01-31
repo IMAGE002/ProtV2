@@ -1791,18 +1791,18 @@ const SpinWheel = {
       cube.appendChild(img);
       
       const valueText = document.createElement('div');
+      valueText.className = 'win-modal-value';
       valueText.textContent = prize.value;
       valueText.style.cssText = `
-        position: absolute;
-        top: 15%;
-        left: 25%;
-        transform: translate(-50%, -50%);
-        font-size: 1.5rem;
-        font-weight: 700;
         color: #ffffff;
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
-        pointer-events: none;
+        font-weight: 800;
+        font-size: 1.4rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+        position: relative;
+        z-index: 1;
+        margin-top: -10px;
       `;
+      
       cube.appendChild(valueText);
     } else {
       const container = document.createElement('div');
@@ -2048,7 +2048,6 @@ const SpinWheel = {
       const valueText = document.createElement('div');
       valueText.className = 'win-modal-value';
       valueText.textContent = prize.value;
-      valueText.style.color = '#AA6E0D';
       icon.appendChild(valueText);
       
       name.textContent = `${prize.value} Stars`;
