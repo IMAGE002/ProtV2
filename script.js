@@ -904,39 +904,127 @@ const PrizeModal = {
     console.log(`⭐ Converted ${STATE.currentModalPrize.value} to ${coinValue} stars`);
   },
   
-  claim() {
+  async claim() {
     if (!STATE.currentModalPrize) {
       console.error('❌ No prize selected');
+      Utils.showToast('No prize selected', 'error');
       return;
     }
     
-    const prizeId = STATE.currentModalPrize.prizeId;
-    const prizeName = STATE.currentModalPrize.value;
+    const prize = STATE.currentModalPrize;
+    const prizeId = prize.prizeId;
+    const giftName = prize.value;
     
-    console.log('🎁 Claiming prize:', prizeId, prizeName);
+    console.log('');
+    console.log('═══════════════════════════════════════════');
+    console.log('🎁 CLAIMING PRIZE');
+    console.log('═══════════════════════════════════════════');
+    console.log(`  Prize ID: ${prizeId}`);
+    console.log(`  Gift Name: ${giftName}`);
     
-    const claimData = {
-      action: 'claim_prize',
-      prizeId: prizeId,
-      prizeName: prizeName,
-      timestamp: Date.now()
-    };
-    
-    if (!STATE.tg) {
-      alert(`Prize Claimed!\n\nPrize: ${prizeName}\nID: ${prizeId}\n\n(Browser mode - would send to bot)`);
-      Inventory.remove(prizeId);
-      this.close();
+    // Validate Telegram WebApp
+    if (!STATE.tg || !STATE.tg.initDataUnsafe?.user?.id) {
+      console.error('❌ Telegram WebApp not available');
+      Utils.showToast('❌ Cannot claim: Telegram unavailable', 'error');
       return;
     }
     
-    const success = TelegramApp.sendData(claimData);
+    const userId = STATE.tg.initDataUnsafe.user.id;
+    console.log(`  User ID: ${userId}`);
     
-    if (success) {
-      alert(`Prize sent to bot!\n\nPrize: ${prizeName}\nID: ${prizeId}`);
+    // Show loading state
+    Utils.showToast('🎁 Claiming your gift...', 'success');
+    
+    const claimBtn = document.getElementById('claimPrizeBtn');
+    if (claimBtn) {
+      claimBtn.disabled = true;
+      claimBtn.textContent = 'Claiming...';
+    }
+    
+    try {
+      console.log('📤 Sending claim request to gift transactor...');
+      
+      // REPLACE THIS URL WITH YOUR GIFT TRANSACTOR URL!
+      const giftBotUrl = 'https://vgtserver-production.up.railway.app';
+      
+      console.log(`🔗 Gift Bot URL: ${giftBotUrl}`);
+      
+      // Send claim request DIRECTLY to gift transactor
+      const response = await fetch(`${giftBotUrl}/claim-gift`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: userId,
+          prizeId: prizeId,
+          giftName: giftName
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to claim gift');
+      }
+      
+      const result = await response.json();
+      
+      console.log('✅ Gift claim successful!');
+      console.log('   Result:', result);
+      console.log('═══════════════════════════════════════════');
+      console.log('');
+      
+      // Remove from inventory
       Inventory.remove(prizeId);
+      
+      // Close modal
       this.close();
-    } else {
-      alert('Error sending to bot. Please try again.');
+      
+      // Show success message
+      Utils.showToast(`✅ ${giftName} sent to your Telegram!`, 'success');
+      
+      // Show confetti if enabled
+      if (STATE.settings.confettiEffects && window.showConfetti) {
+        window.showConfetti();
+      }
+      
+      // Show Telegram popup
+      if (STATE.tg.showPopup) {
+        STATE.tg.showPopup({
+          title: '🎁 Gift Sent!',
+          message: `Your ${giftName} gift has been sent to your Telegram account! Check your Telegram gifts to view it.`,
+          buttons: [
+            { type: 'close' }
+          ]
+        });
+      }
+      
+    } catch (error) {
+      console.error('❌ Error claiming gift:', error);
+      console.log('═══════════════════════════════════════════');
+      console.log('');
+      
+      Utils.showToast(`❌ Failed to claim: ${error.message}`, 'error');
+      
+      // Show error popup
+      if (STATE.tg && STATE.tg.showPopup) {
+        STATE.tg.showPopup({
+          title: '⚠️ Claim Failed',
+          message: `Error: ${error.message}\n\nPlease try again or contact support with Prize ID: ${prizeId}`,
+          buttons: [
+            { type: 'close' }
+          ]
+        });
+      } else {
+        alert(`Failed to claim gift:\n\n${error.message}\n\nPrize ID: ${prizeId}\n\nPlease contact support.`);
+      }
+      
+    } finally {
+      // Reset button state
+      if (claimBtn) {
+        claimBtn.disabled = false;
+        claimBtn.textContent = 'Claim Prize';
+      }
     }
   }
 };
