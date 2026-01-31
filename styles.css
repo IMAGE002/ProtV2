@@ -1206,37 +1206,245 @@ bottom: 25%;
 animation-delay: 2.2s;
 }
 
-.content-box-bottom-1, .content-box-bottom-2 {
-background: rgba(26, 35, 50, 0.4);
-backdrop-filter: blur(10px);
-border: 1px solid rgba(255, 255, 255, 0.05);
-border-radius: 12px;
-padding: 2.5rem 3rem;
-text-align: center;
-opacity: 0;
-transform: translateY(30px);
-cursor: pointer;
-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+/* ============================================
+   BOTTOM ROW BOXES - UPDATED AND UNLINKED
+   ============================================ */
 
+/* Bottom-Left Box - Promocode (Decorative Button to Settings) */
 .content-box-bottom-1 {
-animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-animation-delay: 0.8s;
+  background: radial-gradient(circle, #171717, #2f2e2d);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgb(155 155 155 / 100%);
+  border-radius: 12px;
+  padding: 2.5rem 3rem;
+  text-align: left;
+  opacity: 0;
+  transform: translateY(30px);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: 0.8s;
+  position: relative;
+  overflow: hidden;
 }
 
+.content-box-bottom-1::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  border-radius: 12px;
+}
+
+.content-box-bottom-1::after {
+  content: '';
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgb(255 255 255 / 8%), transparent);
+  bottom: -80px;
+  right: -50px;
+  border-radius: 50%;
+  opacity: 0.08;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.content-box-bottom-1:hover {
+  transform: translateY(-4px);
+  border-color: rgb(255 255 255 / 15%);
+  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.1);
+}
+
+.content-box-bottom-1:hover::after {
+  opacity: 0.15;
+}
+
+.content-box-bottom-1:active {
+  transform: translateY(-2px);
+}
+
+/* Promocode Decorative Content */
+.promocode-decorative-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+  position: relative;
+  z-index: 2;
+}
+
+.promocode-decorative-input-wrapper {
+  position: relative;
+  margin-bottom: 1.5rem;
+  z-index: 2;
+}
+
+.promocode-decorative-input {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgb(245 245 245 / 10%);
+  border-radius: 12px;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.promocode-decorative-subtitle {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 600;
+  font-style: italic;
+  color: #ffffff;
+  text-align: right;
+  position: relative;
+  z-index: 2;
+  letter-spacing: -0.01em;
+}
+
+/* Number Animation Container */
+.promo-number-animation {
+  position: absolute;
+  top: 50%;
+  left: 1.5rem;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.1em;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.promo-number-animation.active {
+  animation: promoCodeSequence 4s ease-in-out;
+}
+
+@keyframes promoCodeSequence {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.8);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+  60% {
+    opacity: 1;
+    color: #ffffff;
+    transform: translateY(-50%) scale(1);
+  }
+  70% {
+    color: #ef4444;
+    transform: translateY(-50%) scale(1.05);
+  }
+  85% {
+    opacity: 1;
+    color: #ef4444;
+    transform: translateY(-80%) scale(0.9);
+  }
+  100% {
+    opacity: 0;
+    color: #ef4444;
+    transform: translateY(-120%) scale(0.7);
+  }
+}
+
+/* Hide placeholder when animation is active */
+.promocode-decorative-input.hide-placeholder {
+  color: transparent;
+}
+
+/* Bottom-Right Box - Contact/Projects (Unchanged from original) */
 .content-box-bottom-2 {
-animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-animation-delay: 1s;
+  background: rgba(26, 35, 50, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 2.5rem 3rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(30px);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: 1s;
+  position: relative;
+  overflow: hidden;
 }
 
-.content-box-bottom-1:hover, .content-box-bottom-2:hover {
-transform: translateY(-4px);
-border-color: rgba(255, 255, 255, 0.15);
-box-shadow: 0 8px 30px rgba(255, 255, 255, 0.1);
+.content-box-bottom-2::after {
+  content: '';
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(96, 165, 250, 0.15), transparent);
+  top: -60px;
+  left: -60px;
+  border-radius: 50%;
+  opacity: 0.08;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
-.content-box-bottom-1:active, .content-box-bottom-2:active {
-transform: translateY(-2px);
+.content-box-bottom-2:hover {
+  transform: translateY(-4px);
+  border-color: rgb(255 255 255 / 15%);
+  box-shadow: 0 8px 30px rgb(255 255 255 / 10%);
+}
+
+.content-box-bottom-2:hover::after {
+  opacity: 0.15;
+}
+
+.content-box-bottom-2:active {
+  transform: translateY(-2px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .promocode-decorative-title {
+    font-size: 1.75rem;
+  }
+  
+  .promocode-decorative-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .promocode-decorative-input {
+    padding: 0.875rem 1.25rem;
+    font-size: 0.95rem;
+  }
+  
+  .promo-number-animation {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .promocode-decorative-title {
+    font-size: 1.5rem;
+  }
+  
+  .promocode-decorative-subtitle {
+    font-size: 1rem;
+  }
+  
+  .promocode-decorative-input {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .promo-number-animation {
+    font-size: 0.9rem;
+    left: 1rem;
+  }
 }
 
 @keyframes fadeInUp {
