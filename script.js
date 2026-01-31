@@ -2048,6 +2048,7 @@ const SpinWheel = {
       const valueText = document.createElement('div');
       valueText.className = 'win-modal-value';
       valueText.textContent = prize.value;
+      valueText.style.color = '#AA6E0D';
       icon.appendChild(valueText);
       
       name.textContent = `${prize.value} Stars`;
