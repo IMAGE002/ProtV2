@@ -71,6 +71,19 @@ const VALID_PROMOCODES = {
   'SPIN2WIN': { coins: 150, message: 'Spin bonus unlocked!' }
 };
 
+const TELEGRAM_GIFT_IDS = {
+  'Heart': 'd01a849b9ef17642d8f4',
+  'Bear': 'd01a849bfc7f7938aa86',
+  'Rose': 'd01a849b9e2c54fb0cf1',
+  'Gift': 'd01a849ba490ee9e6308',
+  'Cake': 'd01a849bb0e2c9f42a0a',
+  'Rose Bouquet': 'd01a849b8c2f0cd6de99',
+  'Ring': 'd01a849b9c4de7d48c4e',
+  'Trophy': 'd01a849b8de88d0e703d',
+  'Diamond': 'd01a849b92670e79adce',
+  'Calendar': 'd01a849b95b3da4d0acb'
+};
+
 // ============================================
 // DEPOSIT CONFIGURATION
 // ============================================
@@ -2180,58 +2193,67 @@ const SpinWheel = {
 },
   
   async claimWin() {
-    if (!STATE.currentWinningPrize) {
-      console.error('❌ No winning prize to claim');
+  if (!STATE.currentWinningPrize) {
+    console.error('❌ No winning prize to claim');
+    return;
+  }
+  
+  const prize = STATE.currentWinningPrize;
+  
+  // Stars prizes
+  if (prize.type === 'star') {
+    const starValue = parseInt(prize.value);
+    Currency.add(starValue);
+    console.log(`⭐ Claimed ${starValue} stars`);
+  } 
+  // Gift prizes
+  else {
+    // 1. Add to local inventory first (instant feedback)
+    const addedPrize = Inventory.add(prize);
+    console.log(`🎁 Claimed gift: ${prize.value} (ID: ${addedPrize.prizeId})`);
+    
+    // 2. Get the correct Telegram gift ID
+    const telegramGiftId = TELEGRAM_GIFT_IDS[prize.value];
+    
+    if (!telegramGiftId) {
+      console.error(`❌ No Telegram gift ID found for: ${prize.value}`);
+      Utils.showToast('❌ Gift mapping error', 'error');
       return;
     }
     
-    const prize = STATE.currentWinningPrize;
+    console.log(`🎁 Telegram Gift ID: ${telegramGiftId}`);
     
-    // Stars prizes
-    if (prize.type === 'star') {
-      const starValue = parseInt(prize.value);
-      Currency.add(starValue);
-      console.log(`⭐ Claimed ${starValue} stars`);
-    } 
-    // Gift prizes
-    else {
-      // 1. Add to local inventory first (instant feedback)
-      const addedPrize = Inventory.add(prize);
-      console.log(`🎁 Claimed gift: ${prize.value} (ID: ${addedPrize.prizeId})`);
+    // 3. Register in the prize database with Telegram gift ID
+    const PRIZE_STORE_URL = 'https://vgdatastorage-production.up.railway.app';
+    
+    try {
+      const userId = STATE.tg?.initDataUnsafe?.user?.id || 'unknown';
+      const username = STATE.tg?.initDataUnsafe?.user?.username || null;
       
-      // 2. Register in the prize database
-      // ⚠️ REPLACE THIS URL WITH YOUR PRIZE STORE URL
-      const PRIZE_STORE_URL = 'https://vgdatastorage-production.up.railway.app';
+      const res = await fetch(`${PRIZE_STORE_URL}/prizes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prize_id: addedPrize.prizeId,
+          gift_name: telegramGiftId,  // ✅ Use Telegram gift ID, not friendly name
+          user_id: userId,
+          username: username
+        })
+      });
       
-      try {
-        const userId = STATE.tg?.initDataUnsafe?.user?.id || 'unknown';
-        const username = STATE.tg?.initDataUnsafe?.user?.username || null;
-        
-        // ✅ CORRECT: Use parentheses () and await
-        const res = await fetch(`${PRIZE_STORE_URL}/prizes`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            prize_id: addedPrize.prizeId,
-            gift_name: prize.value,
-            user_id: userId,
-            username: username
-          })
-        });
-        
-        if (res.ok) {
-          console.log('✅ Prize registered in database');
-        } else {
-          const err = await res.json();
-          console.error('⚠️ Prize DB registration failed:', err.error);
-        }
-      } catch (err) {
-        console.error('⚠️ Prize DB registration failed (network):', err.message);
+      if (res.ok) {
+        console.log('✅ Prize registered in database');
+      } else {
+        const err = await res.json();
+        console.error('⚠️ Prize DB registration failed:', err.error);
       }
-      
-      // 3. Show live notification
-      LiveGiftNotifications.add(addedPrize);
+    } catch (err) {
+      console.error('⚠️ Prize DB registration failed (network):', err.message);
     }
+    
+    // 4. Show live notification
+    LiveGiftNotifications.add(addedPrize);
+  }
     
     this.hideWin();
     STATE.currentWinningPrize = null;
