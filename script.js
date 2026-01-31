@@ -2192,12 +2192,44 @@ const SpinWheel = {
       Currency.add(starValue);
       console.log(`⭐ Claimed ${starValue} stars`);
     } else {
-      const addedPrize = Inventory.add(prize);
-      console.log(`🎁 Claimed gift: ${prize.value} (ID: ${addedPrize.prizeId})`);
-      
-      LiveGiftNotifications.add(addedPrize);
-    }
+  // 1️⃣ Add to local inventory first (instant feedback)
+  const addedPrize = Inventory.add(prize);
+  console.log(`🎁 Claimed gift: ${prize.value} (ID: ${addedPrize.prizeId})`);
+  
+  // 2️⃣ Register in the prize database
+  // ⚠️ REPLACE THIS URL WITH YOUR PRIZE STORE URL
+  const PRIZE_STORE_URL = 'https://vgdatastorage-production.up.railway.app';
+  
+  try {
+    const userId = STATE.tg?.initDataUnsafe?.user?.id || 'unknown';
+    const username = STATE.tg?.initDataUnsafe?.user?.username || null;
     
+    const res = await fetch(`${PRIZE_STORE_URL}/prizes`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prize_id: addedPrize.prizeId,
+        gift_name: prize.value,
+        user_id: userId,
+        username: username
+      })
+    });
+    
+    if (res.ok) {
+      console.log('✅ Prize registered in database');
+    } else {
+      const err = await res.json();
+      console.error('⚠️ Prize DB registration failed:', err.error);
+      // Prize is still in local inventory, user can still see it.
+      // But claiming it later will fail at the transactor verification step.
+    }
+  } catch (err) {
+    console.error('⚠️ Prize DB registration failed (network):', err.message);
+  }
+  
+  // 3️⃣ Show live notification
+  LiveGiftNotifications.add(addedPrize);
+}
     this.hideWin();
     STATE.currentWinningPrize = null;
     
