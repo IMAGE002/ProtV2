@@ -2202,30 +2202,20 @@ const SpinWheel = {
     const addedPrize = Inventory.add(prize);
     console.log(`🎁 Claimed gift: ${prize.value} (ID: ${addedPrize.prizeId})`);
     
-    // 2. Get the correct Telegram gift ID
-    const telegramGiftId = TELEGRAM_GIFT_IDS[prize.value];
-    
-    if (!telegramGiftId) {
-      console.error(`❌ No Telegram gift ID found for: ${prize.value}`);
-      Utils.showToast('❌ Gift mapping error', 'error');
-      return;
-    }
-    
-    console.log(`🎁 Telegram Gift ID: ${telegramGiftId}`);
-    
-    // 3. Register in the prize database with Telegram gift ID
+    // 2. Register in the prize database with FRIENDLY NAME (not Telegram ID)
     const PRIZE_STORE_URL = 'https://vgdatastorage-production.up.railway.app';
     
     try {
       const userId = STATE.tg?.initDataUnsafe?.user?.id || 'unknown';
       const username = STATE.tg?.initDataUnsafe?.user?.username || null;
       
+      // ✅ Send friendly name to prize store
       const res = await fetch(`${PRIZE_STORE_URL}/prizes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           prize_id: addedPrize.prizeId,
-          gift_name: telegramGiftId,  // ✅ Use Telegram gift ID, not friendly name
+          gift_name: prize.value,  // ✅ Use friendly name (Heart, Bear, etc.)
           user_id: userId,
           username: username
         })
@@ -2241,25 +2231,25 @@ const SpinWheel = {
       console.error('⚠️ Prize DB registration failed (network):', err.message);
     }
     
-    // 4. Show live notification
+    // 3. Show live notification
     LiveGiftNotifications.add(addedPrize);
   }
-    
-    this.hideWin();
-    STATE.currentWinningPrize = null;
-    
-    const cubes = document.querySelectorAll('.cube');
-    cubes.forEach(cube => this.cleanupCubeLottie(cube));
-    this.populateCubes();
-    
-    STATE.scrollSpeed = 1;
-    STATE.isSpinning = false;
-    
-    const spinButton = document.getElementById('spinButton');
-    if (spinButton) spinButton.disabled = false;
-    
-    console.log('✅ Prize claimed! Ready for next spin');
-  },
+  
+  this.hideWin();
+  STATE.currentWinningPrize = null;
+  
+  const cubes = document.querySelectorAll('.cube');
+  cubes.forEach(cube => this.cleanupCubeLottie(cube));
+  this.populateCubes();
+  
+  STATE.scrollSpeed = 1;
+  STATE.isSpinning = false;
+  
+  const spinButton = document.getElementById('spinButton');
+  if (spinButton) spinButton.disabled = false;
+  
+  console.log('✅ Prize claimed! Ready for next spin');
+}
   
   loadIcons() {
     const starIds = ['star1', 'star5', 'star10', 'star25', 'star50', 'star100', 'star250', 'star500'];
