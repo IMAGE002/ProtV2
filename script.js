@@ -2264,7 +2264,7 @@ const SpinWheel = {
   if (spinButton) spinButton.disabled = false;
   
   console.log('✅ Prize claimed! Ready for next spin');
-}
+},
   
   loadIcons() {
     const starIds = ['star1', 'star5', 'star10', 'star25', 'star50', 'star100', 'star250', 'star500'];
