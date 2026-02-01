@@ -2218,20 +2218,21 @@ const SpinWheel = {
     const PRIZE_STORE_URL = 'https://vgdatastorage-production.up.railway.app';
     
     try {
-      const userId = STATE.tg?.initDataUnsafe?.user?.id || 'unknown';
-      const username = STATE.tg?.initDataUnsafe?.user?.username || null;
-      
-      // ✅ Store BOTH friendly name and Telegram ID for reference
-      const res = await fetch(`${PRIZE_STORE_URL}/prizes`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          prize_id: addedPrize.prizeId,
-          gift_name: telegramGiftId,  // ✅ Store Telegram gift ID in database
-          user_id: userId,
-          username: username
-        })
-      });
+  const userId = STATE.tg?.initDataUnsafe?.user?.id || 'unknown';
+  const username = STATE.tg?.initDataUnsafe?.user?.username || null;
+  
+  // ✅ Store BOTH friendly name AND Telegram ID
+  const res = await fetch(`${PRIZE_STORE_URL}/prizes`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      prize_id: addedPrize.prizeId,
+      gift_name: prize.value,        // ✅ Store friendly name ("Diamond")
+      telegram_gift_id: telegramGiftId, // ✅ NEW: Also store Telegram ID
+      user_id: userId,
+      username: username
+    })
+  });
       
       if (res.ok) {
         console.log('✅ Prize registered in database');
