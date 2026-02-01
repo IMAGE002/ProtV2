@@ -2202,20 +2202,32 @@ const SpinWheel = {
     const addedPrize = Inventory.add(prize);
     console.log(`🎁 Claimed gift: ${prize.value} (ID: ${addedPrize.prizeId})`);
     
-    // 2. Register in the prize database with FRIENDLY NAME (not Telegram ID)
+    // 2. Get the Telegram gift ID
+    const telegramGiftId = TELEGRAM_GIFT_IDS[prize.value];
+    
+    if (!telegramGiftId) {
+      console.error(`❌ No Telegram gift ID found for: ${prize.value}`);
+      Utils.showToast('❌ Gift mapping error', 'error');
+      return;
+    }
+    
+    console.log(`🎁 Friendly Name: ${prize.value}`);
+    console.log(`🎁 Telegram Gift ID: ${telegramGiftId}`);
+    
+    // 3. Register in the prize database with TELEGRAM GIFT ID
     const PRIZE_STORE_URL = 'https://vgdatastorage-production.up.railway.app';
     
     try {
       const userId = STATE.tg?.initDataUnsafe?.user?.id || 'unknown';
       const username = STATE.tg?.initDataUnsafe?.user?.username || null;
       
-      // ✅ Send friendly name to prize store
+      // ✅ Store BOTH friendly name and Telegram ID for reference
       const res = await fetch(`${PRIZE_STORE_URL}/prizes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           prize_id: addedPrize.prizeId,
-          gift_name: prize.value,  // ✅ Use friendly name (Heart, Bear, etc.)
+          gift_name: telegramGiftId,  // ✅ Store Telegram gift ID in database
           user_id: userId,
           username: username
         })
@@ -2223,6 +2235,9 @@ const SpinWheel = {
       
       if (res.ok) {
         console.log('✅ Prize registered in database');
+        console.log(`   Prize ID: ${addedPrize.prizeId}`);
+        console.log(`   Friendly Name: ${prize.value}`);
+        console.log(`   Telegram ID: ${telegramGiftId}`);
       } else {
         const err = await res.json();
         console.error('⚠️ Prize DB registration failed:', err.error);
@@ -2231,7 +2246,7 @@ const SpinWheel = {
       console.error('⚠️ Prize DB registration failed (network):', err.message);
     }
     
-    // 3. Show live notification
+    // 4. Show live notification
     LiveGiftNotifications.add(addedPrize);
   }
   
