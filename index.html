@@ -41,14 +41,14 @@
   </svg>
 </div>
 
-<!-- Currency Bar -->
+<!-- Currency Bar — COINS (restored from old version) -->
 <div class="currency-bar">
   <div class="currency-icon">
-    <img src="assets/TStars.svg" alt="Stars">
+    <img src="assets/Coin.svg" alt="Currency">
   </div>
   <div class="currency-amount" id="currencyAmount">0</div>
 </div>
-  
+
 <!-- Hamburger Menu Button -->
 <div class="hamburger" id="hamburger">
   <span></span>
@@ -59,7 +59,7 @@
 <!-- Navigation Menu -->
 <nav class="nav-menu" id="navMenu">
   <button class="nav-close" id="navClose">×</button>
-  
+
   <div class="nav-account">
     <div class="account-avatar"></div>
     <div class="account-info">
@@ -67,7 +67,7 @@
       <div class="account-username">@loading</div>
     </div>
   </div>
-  
+
   <ul>
     <li>
       <a href="#home" class="nav-link active" data-page="home">
@@ -121,9 +121,11 @@
 
 <!-- Main Container with Page Content -->
 <div class="container">
+
   <!-- HOME PAGE -->
   <div class="page-content active" id="page-home">
     <div class="grid-layout">
+
       <!-- Top Box - Notifications Only -->
       <div class="content-box-top" id="notificationContainer">
         <!-- Notification cubes will be added here -->
@@ -147,17 +149,17 @@
         </div>
       </div>
 
-      <!-- Right Column - Tall Box (spans 2 rows) - REDESIGNED INVENTORY -->
+      <!-- Right Column - Tall Box (spans 2 rows) - INVENTORY -->
       <div class="content-box-right">
         <div class="inventory-header">
           <div class="inventory-icon" id="inventoryLottieAnimation"></div>
           <h1 class="inventory-title" data-i18n="inventory">Inventory</h1>
         </div>
         <p class="inventory-subtitle" data-i18n="yourCollectedItems">Your collected items</p>
-        
+
         <!-- Item Grid -->
         <div class="inventory-grid">
-          <!-- Items will be populated dynamically by JavaScript -->
+          <!-- Items populated dynamically by JavaScript -->
         </div>
 
         <button class="view-all-btn" data-i18n="viewAllItems">View All Items</button>
@@ -170,23 +172,14 @@
         <div class="floating-star"><img src="assets/Star.png" alt="star"></div>
       </div>
 
-      <!-- Left Column - Second Box - UPDATED WITH SKILLS CHANNEL -->
+      <!-- Left Column - Second Box - Channel -->
       <div class="content-box-left-2">
         <svg viewBox="0 0 1200 400" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-          <path class="animated-path" opacity="0.35" 
-            d="M682.95 15.5C722.95 55.5 722.95 135.5 642.95 155.5C572.95 175.5 542.95 115.5 582.95 85.5C632.95 45.5 682.95 85.5 632.95 135.5C592.95 175.5 522.95 195.5 507.95 260.5C492.95 325.5 477.95 390.5 462.95 455.5" 
+          <path class="animated-path" opacity="0.35"
+            d="M682.95 15.5C722.95 55.5 722.95 135.5 642.95 155.5C572.95 175.5 542.95 115.5 582.95 85.5C632.95 45.5 682.95 85.5 632.95 135.5C592.95 175.5 522.95 195.5 507.95 260.5C492.95 325.5 477.95 390.5 462.95 455.5"
             stroke="#2A8FA0" stroke-width="5" stroke-linecap="round" stroke-dasharray="10 18">
-            <animate
-              attributeName="stroke-dashoffset"
-              from="-140"
-              to="0"
-              dur="4s"
-              repeatCount="indefinite" />
-            <animate
-              attributeName="opacity"
-              values="0.35;0.65;0.35"
-              dur="3s"
-              repeatCount="indefinite" />
+            <animate attributeName="stroke-dashoffset" from="-140" to="0" dur="4s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.35;0.65;0.35" dur="3s" repeatCount="indefinite" />
           </path>
         </svg>
 
@@ -202,35 +195,33 @@
         <img src="assets/BigPLPIcon.svg" alt="Big Icon" class="big-icon">
       </div>
 
-      <!-- Bottom Row - First Box -->
+      <!-- Bottom Row - First Box (Promo Card — restored to proper grid position) -->
       <div class="promo-card" onclick="this.style.opacity='0.85'; setTimeout(()=>this.style.opacity='1',120)">
-  <div class="bg-grid"></div>
-  <div class="glow-orb"></div>
+        <div class="bg-grid"></div>
+        <div class="glow-orb"></div>
 
-  <img class="asset-left"
-    src="https://raw.githubusercontent.com/IMAGE002/ProtV2/main/assets/Diamond.svg"
-    alt=""
-    onerror="this.style.cssText='position:absolute;left:-28px;top:50%;transform:translateY(-52%) rotate(-12deg);width:130px;height:130px;display:flex;align-items:center;justify-content:center;font-size:72px;z-index:1'"
-  />
+        <img class="asset-left"
+          src="https://raw.githubusercontent.com/IMAGE002/ProtV2/main/assets/Diamond.svg"
+          alt=""
+        />
 
-  <div class="promo-body">
-    <div class="promo-headline">
-      Enter promocodes<br>for <span class="highlight">prize!</span>
-    </div>
-    <div class="promo-sub">
-      You can find some in our <a class="tg-link" href="#">telegram</a> channel…
-    </div>
-    <button class="enter-btn">Enter</button>
-  </div>
+        <div class="promo-body">
+          <div class="promo-headline">
+            Enter promocodes<br>for <span class="highlight">prize!</span>
+          </div>
+          <div class="promo-sub">
+            You can find some in our <a class="tg-link" href="#">telegram</a> channel…
+          </div>
+          <button class="enter-btn">Enter</button>
+        </div>
 
-  <span class="sparkle">✦</span>
+        <span class="sparkle">✦</span>
 
-  <img class="asset-right"
-    src="https://raw.githubusercontent.com/IMAGE002/ProtV2/main/assets/Calender.svg"
-    alt=""
-    onerror="this.style.cssText='position:absolute;right:-20px;bottom:-20px;width:140px;height:140px;font-size:80px;display:flex;align-items:flex-end;justify-content:flex-end;z-index:1'"
-  />
-</div>
+        <img class="asset-right"
+          src="https://raw.githubusercontent.com/IMAGE002/ProtV2/main/assets/Calender.svg"
+          alt=""
+        />
+      </div>
 
       <!-- Bottom Row - Second Box -->
       <div class="content-box-bottom-2">
@@ -238,112 +229,102 @@
         <div class="decorative-line"></div>
         <p>Bottom row second box content.</p>
       </div>
-    </div>
-  </div>
+
+    </div><!-- end .grid-layout -->
+  </div><!-- end #page-home -->
 
   <!-- LEADERBOARD PAGE -->
   <div class="page-content" id="page-leaderboard">
-  <div class="leaderboard-page">
-    <div class="leaderboard-header">
-      <div class="trophy-icon" id="leaderboardTrophyIcon"></div>
-      <h1 class="leaderboard-title" data-i18n="topPlayers">Leaderboard</h1>
-      <p class="leaderboard-subtitle">Updates every 24 hours!</p>
-    </div>
-
-    <div class="leaderboard-tabs">
-      <button class="leaderboard-tab active" data-tab="stars">
-        <img src="assets/TStars.svg" alt="Star">
-        <span class="tab-label" data-i18n="stars">Star Leaders</span>
-      </button>
-      <button class="leaderboard-tab" data-tab="gifts">
-        <span class="gift-tab-icon" id="giftTabIcon"></div>
-        <span class="tab-label" data-i18n="gifts">Gift Leaders</span>
-      </button>
-    </div>
-
-    <div class="leaderboard-content">
-      <!-- Star Leaderboard (renamed from coins) -->
-      <div class="leaderboard-list active" id="leaderboard-stars">
-        <div class="podium-container"></div>
-        <div class="ranks-list"></div>
+    <div class="leaderboard-page">
+      <div class="leaderboard-header">
+        <div class="trophy-icon" id="leaderboardTrophyIcon"></div>
+        <h1 class="leaderboard-title" data-i18n="topPlayers">Leaderboard</h1>
+        <p class="leaderboard-subtitle">Updates every 24 hours!</p>
       </div>
 
-      <!-- Gift Leaderboard (unchanged) -->
-      <div class="leaderboard-list" id="leaderboard-gifts">
-        <div class="podium-container"></div>
-        <div class="ranks-list"></div>
+      <div class="leaderboard-tabs">
+        <button class="leaderboard-tab active" data-tab="coins">
+          <img src="assets/Coin.svg" alt="Coin">
+          <span class="tab-label" data-i18n="coins">Coin Leaders</span>
+        </button>
+        <button class="leaderboard-tab" data-tab="gifts">
+          <span class="gift-tab-icon" id="giftTabIcon"></span>
+          <span class="tab-label" data-i18n="gifts">Gift Leaders</span>
+        </button>
       </div>
-    </div>
 
-    <div class="your-rank-card">
-      <div class="your-rank-label" data-i18n="yourRank">Your Rank</div>
-      <div class="your-rank-content">
-        <div class="your-rank-position">#<span id="yourRank">--</span></div>
-        <div class="your-rank-info">
-          <div class="your-rank-name" id="yourRankName">Loading...</div>
-          <div class="your-rank-score" id="yourRankScore">0</div>
+      <div class="leaderboard-content">
+        <!-- Coin Leaderboard -->
+        <div class="leaderboard-list active" id="leaderboard-coins">
+          <div class="podium-container"></div>
+          <div class="ranks-list"></div>
+        </div>
+
+        <!-- Gift Leaderboard -->
+        <div class="leaderboard-list" id="leaderboard-gifts">
+          <div class="podium-container"></div>
+          <div class="ranks-list"></div>
+        </div>
+      </div>
+
+      <div class="your-rank-card">
+        <div class="your-rank-label" data-i18n="yourRank">Your Rank</div>
+        <div class="your-rank-content">
+          <div class="your-rank-position">#<span id="yourRank">--</span></div>
+          <div class="your-rank-info">
+            <div class="your-rank-name" id="yourRankName">Loading...</div>
+            <div class="your-rank-score" id="yourRankScore">0</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
   <!-- DEPOSIT PAGE -->
-<div class="page-content" id="page-deposit">
-  <div class="deposit-page">
-    <!-- Deposit Header -->
-    <div class="deposit-header">
-      <div class="deposit-icon" id="depositStarIcon"></div>
-      <h1 class="deposit-title">Deposit</h1>
-      <p class="deposit-subtitle">Purchase Stars with Telegram Stars</p>
-    </div>
-    
+  <div class="page-content" id="page-deposit">
+    <div class="deposit-page">
+      <div class="deposit-header">
+        <div class="deposit-icon" id="depositCoinIcon"></div>
+        <h1 class="deposit-title">Deposit</h1>
+        <p class="deposit-subtitle">Purchase Coins with Telegram Stars</p>
+      </div>
 
-    <!-- Deposit Tabs -->
-    <div class="deposit-tabs">
-      <button class="deposit-tab active" data-tab="stars">
-        <div class="tab-icon" id="starsTabIcon"></div>
-        <span class="tab-label">Telegram Stars</span>
-      </button>
-      <button class="deposit-tab" data-tab="ton">
-        <img src="assets/TON.svg" alt="TON" class="tab-icon-img">
-        <span class="tab-label">TON Coin</span>
-      </button>
-    </div>
+      <div class="deposit-tabs">
+        <button class="deposit-tab active" data-tab="stars">
+          <div class="tab-icon" id="starsTabIcon"></div>
+          <span class="tab-label">Telegram Stars</span>
+        </button>
+        <button class="deposit-tab" data-tab="ton">
+          <img src="assets/TON.svg" alt="TON" class="tab-icon-img">
+          <span class="tab-label">TON Coin</span>
+        </button>
+      </div>
 
-    <!-- Single Deposit Content (Stars Only) -->
-    <div class="deposit-content">
-      <div class="deposit-list active" id="deposit-stars">
-        <div class="packages-grid">
-          <!-- Packages will be dynamically generated -->
+      <div class="deposit-content">
+        <div class="deposit-list active" id="deposit-stars">
+          <div class="packages-grid"></div>
+        </div>
+        <div class="deposit-list" id="deposit-ton">
+          <div class="packages-grid"></div>
+        </div>
+
+        <div class="deposit-info-card">
+          <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4M12 8h.01"/>
+          </svg>
+          <div class="info-content">
+            <h3>Secure Payment</h3>
+            <p>All transactions are processed securely through Telegram. Coins are delivered instantly to your account.</p>
+          </div>
         </div>
       </div>
-      
-      <!-- TON Packages -->
-      <div class="deposit-list" id="deposit-ton">
-        <div class="packages-grid">
-          <!-- Packages will be dynamically generated -->
-        </div>
-      </div>
-      
-      <div class="deposit-info-card">
-        <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/>
-          <path d="M12 16v-4M12 8h.01"/>
-        </svg>
-        <div class="info-content">
-          <h3>Secure Payment</h3>
-          <p>All transactions are processed securely through Telegram. Stars are delivered instantly to your account via Cloud Storage.</p>
-        </div>
-      </div>
-    </div>  
+    </div>
   </div>
-</div>
 
   <!-- SETTINGS PAGE -->
   <div class="page-content" id="page-settings">
     <div class="settings-page">
-      <!-- Settings Header -->
       <div class="settings-header">
         <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="3"/>
@@ -364,25 +345,16 @@
           </svg>
           <h2 data-i18n="promocode">Promocode</h2>
         </div>
-        
         <div class="promocode-input-wrapper">
-          <input 
-            type="text" 
-            id="promocodeInput" 
-            class="promocode-input" 
-            placeholder="Enter promocode..."
-            data-i18n-placeholder="enterPromocode"
-            maxlength="20"
-          >
+          <input type="text" id="promocodeInput" class="promocode-input"
+            placeholder="Enter promocode..." maxlength="20">
           <button class="promocode-submit-btn" id="promocodeSubmitBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
             </svg>
           </button>
         </div>
-        
         <div class="promocode-status" id="promocodeStatus"></div>
-        
         <div class="promocode-info">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"/>
@@ -401,7 +373,6 @@
           </svg>
           <h2 data-i18n="language">Language</h2>
         </div>
-        
         <div class="setting-item" id="languageSetting">
           <div class="setting-info">
             <div class="setting-label" data-i18n="appLanguage">App Language</div>
@@ -425,33 +396,30 @@
           </svg>
           <h2 data-i18n="notifications">Notifications</h2>
         </div>
-        
         <div class="setting-item toggle-item">
           <div class="setting-info">
-            <div class="setting-label" data-i18n="pushNotifications">Push Notifications</div>
-            <div class="setting-description" data-i18n="pushNotificationsDesc">Receive notifications about wins and updates</div>
+            <div class="setting-label">Push Notifications</div>
+            <div class="setting-description">Receive notifications about wins and updates</div>
           </div>
           <label class="toggle-switch">
             <input type="checkbox" id="pushNotifications" checked>
             <span class="toggle-slider"></span>
           </label>
         </div>
-
         <div class="setting-item toggle-item">
           <div class="setting-info">
-            <div class="setting-label" data-i18n="soundEffects">Sound Effects</div>
-            <div class="setting-description" data-i18n="soundEffectsDesc">Play sounds when spinning the wheel</div>
+            <div class="setting-label">Sound Effects</div>
+            <div class="setting-description">Play sounds when spinning the wheel</div>
           </div>
           <label class="toggle-switch">
             <input type="checkbox" id="soundEffects" checked>
             <span class="toggle-slider"></span>
           </label>
         </div>
-
         <div class="setting-item toggle-item">
           <div class="setting-info">
-            <div class="setting-label" data-i18n="prizeAlerts">Prize Alerts</div>
-            <div class="setting-description" data-i18n="prizeAlertsDesc">Get notified when you win rare prizes</div>
+            <div class="setting-label">Prize Alerts</div>
+            <div class="setting-description">Get notified when you win rare prizes</div>
           </div>
           <label class="toggle-switch">
             <input type="checkbox" id="prizeAlerts" checked>
@@ -469,22 +437,20 @@
           </svg>
           <h2 data-i18n="display">Display</h2>
         </div>
-        
         <div class="setting-item toggle-item">
           <div class="setting-info">
-            <div class="setting-label" data-i18n="animations">Animations</div>
-            <div class="setting-description" data-i18n="animationsDesc">Enable smooth animations and effects</div>
+            <div class="setting-label">Animations</div>
+            <div class="setting-description">Enable smooth animations and effects</div>
           </div>
           <label class="toggle-switch">
             <input type="checkbox" id="animationsEnabled" checked>
             <span class="toggle-slider"></span>
           </label>
         </div>
-
         <div class="setting-item toggle-item">
           <div class="setting-info">
-            <div class="setting-label" data-i18n="confettiEffects">Confetti Effects</div>
-            <div class="setting-description" data-i18n="confettiEffectsDesc">Show confetti when winning prizes</div>
+            <div class="setting-label">Confetti Effects</div>
+            <div class="setting-description">Show confetti when winning prizes</div>
           </div>
           <label class="toggle-switch">
             <input type="checkbox" id="confettiEffects" checked>
@@ -502,22 +468,20 @@
           </svg>
           <h2 data-i18n="privacy">Privacy</h2>
         </div>
-        
         <div class="setting-item toggle-item">
           <div class="setting-info">
-            <div class="setting-label" data-i18n="showInLeaderboard">Show in Leaderboard</div>
-            <div class="setting-description" data-i18n="showInLeaderboardDesc">Display your stats on the public leaderboard</div>
+            <div class="setting-label">Show in Leaderboard</div>
+            <div class="setting-description">Display your stats on the public leaderboard</div>
           </div>
           <label class="toggle-switch">
             <input type="checkbox" id="showInLeaderboard" checked>
             <span class="toggle-slider"></span>
           </label>
         </div>
-
         <div class="setting-item toggle-item">
           <div class="setting-info">
-            <div class="setting-label" data-i18n="shareStats">Share Statistics</div>
-            <div class="setting-description" data-i18n="shareStatsDesc">Allow sharing your game stats with friends</div>
+            <div class="setting-label">Share Statistics</div>
+            <div class="setting-description">Allow sharing your game stats with friends</div>
           </div>
           <label class="toggle-switch">
             <input type="checkbox" id="shareStats" checked>
@@ -535,27 +499,24 @@
           </svg>
           <h2>About</h2>
         </div>
-        
         <div class="setting-item clickable" id="termsBtn">
           <div class="setting-info">
-            <div class="setting-label" data-i18n="termsOfService">Terms of Service</div>
+            <div class="setting-label">Terms of Service</div>
             <div class="setting-description">Read our terms and conditions</div>
           </div>
           <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M9 18l6-6-6-6"/>
           </svg>
         </div>
-
         <div class="setting-item clickable" id="privacyBtn">
           <div class="setting-info">
-            <div class="setting-label" data-i18n="privacyPolicy">Privacy Policy</div>
+            <div class="setting-label">Privacy Policy</div>
             <div class="setting-description">How we handle your data</div>
           </div>
           <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M9 18l6-6-6-6"/>
           </svg>
         </div>
-
         <div class="setting-item">
           <div class="setting-info">
             <div class="setting-label">Version</div>
@@ -576,16 +537,14 @@
           </svg>
           <h2 data-i18n="dangerZone">Danger Zone</h2>
         </div>
-        
-        <button class="danger-btn" id="resetDataBtn" data-i18n="resetAllData">
+        <button class="danger-btn" id="resetDataBtn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="1 4 1 10 7 10"/>
             <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
           </svg>
           Reset All Data
         </button>
-
-        <button class="danger-btn" id="clearCacheBtn" data-i18n="clearCache">
+        <button class="danger-btn" id="clearCacheBtn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
           </svg>
@@ -602,26 +561,13 @@
         <div class="wheel-container">
           <div class="wheel-pointer"></div>
           <div class="wheel" id="wheel">
-            <div class="cube"></div>
-            <div class="cube"></div>
-            <div class="cube"></div>
-            <div class="cube"></div>
-            <div class="cube"></div>
-            <div class="cube"></div>
-            <div class="cube"></div>
-            <div class="cube"></div>
-            <div class="cube"></div>
-            <div class="cube"></div>
-            <div class="cube"></div>
-            <div class="cube"></div>
-            <div class="cube"></div>
-            <div class="cube"></div>
-            <div class="cube"></div>
-            <div class="cube"></div>
-            <div class="cube"></div>
-            <div class="cube"></div>
-            <div class="cube"></div>
-            <div class="cube"></div>
+            <div class="cube"></div><div class="cube"></div><div class="cube"></div>
+            <div class="cube"></div><div class="cube"></div><div class="cube"></div>
+            <div class="cube"></div><div class="cube"></div><div class="cube"></div>
+            <div class="cube"></div><div class="cube"></div><div class="cube"></div>
+            <div class="cube"></div><div class="cube"></div><div class="cube"></div>
+            <div class="cube"></div><div class="cube"></div><div class="cube"></div>
+            <div class="cube"></div><div class="cube"></div>
           </div>
         </div>
         <button class="spin-button" id="spinButton">SPIN!</button>
@@ -629,105 +575,52 @@
 
       <div class="rewards-section">
         <div class="rewards-header">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="15" y1="9" x2="9" y2="15"/>
-          <line x1="9" y1="9" x2="15" y2="15"/>
-        </svg>
-        <h2 class="rewards-title">What can I <span class="get-text">get?</span></h2>
-      </div>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+          <h2 class="rewards-title">What can I <span class="get-text">get?</span></h2>
+        </div>
 
         <div class="reward-grid">
-        <div class="reward-item">
-          <div class="reward-amount">1</div>
-          <div class="reward-icon" id="star1"></div>
+          <div class="reward-item"><div class="reward-amount">1</div><div class="reward-icon" id="coin1"></div></div>
+          <div class="reward-item"><div class="reward-amount">5</div><div class="reward-icon" id="coin5"></div></div>
+          <div class="reward-item"><div class="reward-amount">10</div><div class="reward-icon" id="coin10"></div></div>
+          <div class="reward-item"><div class="reward-amount">25</div><div class="reward-icon" id="coin25"></div></div>
+          <div class="reward-item"><div class="reward-amount">50</div><div class="reward-icon" id="coin50"></div></div>
+          <div class="reward-item"><div class="reward-amount">100</div><div class="reward-icon" id="coin100"></div></div>
+          <div class="reward-item"><div class="reward-amount">250</div><div class="reward-icon" id="coin250"></div></div>
+          <div class="reward-item"><div class="reward-amount">500</div><div class="reward-icon" id="coin500"></div></div>
         </div>
-        <div class="reward-item">
-          <div class="reward-amount">5</div>
-          <div class="reward-icon" id="star5"></div>
-        </div>
-        <div class="reward-item">
-          <div class="reward-amount">10</div>
-          <div class="reward-icon" id="star10"></div>
-        </div>
-        <div class="reward-item">
-          <div class="reward-amount">25</div>
-          <div class="reward-icon" id="star25"></div>
-        </div>
-        <div class="reward-item">
-          <div class="reward-amount">50</div>
-          <div class="reward-icon" id="star50"></div>
-        </div>
-        <div class="reward-item">
-          <div class="reward-amount">100</div>
-          <div class="reward-icon" id="star100"></div>
-        </div>
-        <div class="reward-item">
-          <div class="reward-amount">250</div>
-          <div class="reward-icon" id="star250"></div>
-        </div>
-        <div class="reward-item">
-          <div class="reward-amount">500</div>
-          <div class="reward-icon" id="star500"></div>
-        </div>
-      </div>
 
         <div class="gift-grid">
-          <div class="gift-item">
-            <div class="gift-icon" id="giftHeart"></div>
-            <div class="gift-label">Telegram Gift</div>
-          </div>
-          <div class="gift-item">
-            <div class="gift-icon" id="giftBear"></div>
-            <div class="gift-label">Telegram Gift</div>
-          </div>
-          <div class="gift-item">
-            <div class="gift-icon" id="giftGift"></div>
-            <div class="gift-label">Telegram Gift</div>
-          </div>
-          <div class="gift-item">
-            <div class="gift-icon" id="giftRose"></div>
-            <div class="gift-label">Telegram Gift</div>
-          </div>
-          <div class="gift-item">
-            <div class="gift-icon" id="giftCake"></div>
-            <div class="gift-label">Telegram Gift</div>
-          </div>
-          <div class="gift-item">
-            <div class="gift-icon" id="giftRoseBouquet"></div>
-            <div class="gift-label">Telegram Gift</div>
-          </div>
-          <div class="gift-item">
-            <div class="gift-icon" id="giftRing"></div>
-            <div class="gift-label">Telegram Gift</div>
-          </div>
-          <div class="gift-item">
-            <div class="gift-icon" id="giftTrophy"></div>
-            <div class="gift-label">Telegram Gift</div>
-          </div>
-          <div class="gift-item">
-            <div class="gift-icon" id="giftDiamond"></div>
-            <div class="gift-label">Telegram Gift</div>
-          </div>
-          <div class="gift-item">
-            <div class="gift-icon" id="giftCalendar"></div>
-            <div class="gift-label">Telegram NFT</div>
-          </div>
+          <div class="gift-item"><div class="gift-icon" id="giftHeart"></div><div class="gift-label">Telegram Gift</div></div>
+          <div class="gift-item"><div class="gift-icon" id="giftBear"></div><div class="gift-label">Telegram Gift</div></div>
+          <div class="gift-item"><div class="gift-icon" id="giftGift"></div><div class="gift-label">Telegram Gift</div></div>
+          <div class="gift-item"><div class="gift-icon" id="giftRose"></div><div class="gift-label">Telegram Gift</div></div>
+          <div class="gift-item"><div class="gift-icon" id="giftCake"></div><div class="gift-label">Telegram Gift</div></div>
+          <div class="gift-item"><div class="gift-icon" id="giftRoseBouquet"></div><div class="gift-label">Telegram Gift</div></div>
+          <div class="gift-item"><div class="gift-icon" id="giftRing"></div><div class="gift-label">Telegram Gift</div></div>
+          <div class="gift-item"><div class="gift-icon" id="giftTrophy"></div><div class="gift-label">Telegram Gift</div></div>
+          <div class="gift-item"><div class="gift-icon" id="giftDiamond"></div><div class="gift-label">Telegram Gift</div></div>
+          <div class="gift-item"><div class="gift-icon" id="giftCalendar"></div><div class="gift-label">Telegram NFT</div></div>
         </div>
       </div>
     </div>
   </div>
-</div>
+
+</div><!-- end .container -->
 
 <!-- Win Modal (Daily Spin) -->
 <div class="win-modal-overlay" id="winModal">
   <div class="win-modal">
-    <div class="win-modal-header" data-i18n="congratulations">You Won...</div>
+    <div class="win-modal-header">You Won...</div>
     <div class="win-modal-prize">
       <div class="win-modal-icon" id="modalPrizeIcon"></div>
     </div>
     <div class="win-modal-footer">...<span id="modalPrizeName"></span>!!!</div>
-    <button class="claim-button" id="claimButton" data-i18n="claimPrize">CLAIM!!</button>
+    <button class="claim-button" id="claimButton">CLAIM!!</button>
   </div>
 </div>
 
@@ -741,16 +634,16 @@
       <div class="prize-modal-name" id="prizeModalName">Prize Name</div>
       <div class="prize-modal-id" id="prizeModalId">ID: 0000-00-XXX</div>
       <div class="prize-modal-coin-value" id="prizeModalCoinValue">
-        <img src="assets/TStars.svg" alt="Stars">
-        <span>100 Stars</span>
+        <img src="assets/Coin.svg" alt="Coins">
+        <span>100 Coins</span>
       </div>
     </div>
     <div class="prize-modal-buttons">
-      <button class="prize-modal-btn convert-btn" id="convertBtn" data-i18n="convertToStars">
-        <img src="assets/TStars.svg" alt="Stars">
-        Convert To Stars
+      <button class="prize-modal-btn convert-btn" id="convertBtn">
+        <img src="assets/Coin.svg" alt="Coins">
+        Convert To Coins
       </button>
-      <button class="prize-modal-btn claim-prize-btn" id="claimPrizeBtn" data-i18n="claim">
+      <button class="prize-modal-btn claim-prize-btn" id="claimPrizeBtn">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M20 6L9 17l-5-5"/>
         </svg>
@@ -764,52 +657,16 @@
 <div class="language-modal-overlay" id="languageModal">
   <div class="language-modal">
     <div class="language-modal-header">
-      <h2 data-i18n="chooseLanguage">Select Language</h2>
+      <h2>Select Language</h2>
       <button class="language-modal-close" id="languageModalClose">×</button>
     </div>
     <div class="language-list">
-      <div class="language-option active" data-lang="en">
-        <span class="language-flag">🇺🇸</span>
-        <span class="language-name">English</span>
-        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-          <path d="M20 6L9 17l-5-5"/>
-        </svg>
-      </div>
-      <div class="language-option" data-lang="ru">
-        <span class="language-flag">🇷🇺</span>
-        <span class="language-name">Русский</span>
-        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-          <path d="M20 6L9 17l-5-5"/>
-        </svg>
-      </div>
-      <div class="language-option" data-lang="es">
-        <span class="language-flag">🇪🇸</span>
-        <span class="language-name">Español</span>
-        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-          <path d="M20 6L9 17l-5-5"/>
-        </svg>
-      </div>
-      <div class="language-option" data-lang="fr">
-        <span class="language-flag">🇫🇷</span>
-        <span class="language-name">Français</span>
-        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-          <path d="M20 6L9 17l-5-5"/>
-        </svg>
-      </div>
-      <div class="language-option" data-lang="de">
-        <span class="language-flag">🇩🇪</span>
-        <span class="language-name">Deutsch</span>
-        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-          <path d="M20 6L9 17l-5-5"/>
-        </svg>
-      </div>
-      <div class="language-option" data-lang="zh">
-        <span class="language-flag">🇨🇳</span>
-        <span class="language-name">中文</span>
-        <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-          <path d="M20 6L9 17l-5-5"/>
-        </svg>
-      </div>
+      <div class="language-option active" data-lang="en"><span class="language-flag">🇺🇸</span><span class="language-name">English</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <div class="language-option" data-lang="ru"><span class="language-flag">🇷🇺</span><span class="language-name">Русский</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <div class="language-option" data-lang="es"><span class="language-flag">🇪🇸</span><span class="language-name">Español</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <div class="language-option" data-lang="fr"><span class="language-flag">🇫🇷</span><span class="language-name">Français</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <div class="language-option" data-lang="de"><span class="language-flag">🇩🇪</span><span class="language-name">Deutsch</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <div class="language-option" data-lang="zh"><span class="language-flag">🇨🇳</span><span class="language-name">中文</span><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
     </div>
   </div>
 </div>
@@ -824,40 +681,18 @@
       </div>
       <button class="full-inventory-close" id="fullInventoryClose">×</button>
     </div>
-    
     <div class="inventory-stats">
-      <div class="stat-card">
-        <div class="stat-icon">🎁</div>
-        <div class="stat-content">
-          <div class="stat-value" id="totalGiftsCount">0</div>
-          <div class="stat-label">Total Gifts</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">💰</div>
-        <div class="stat-content">
-          <div class="stat-value" id="totalGiftValue">0</div>
-          <div class="stat-label">Total Value</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">⭐</div>
-        <div class="stat-content">
-          <div class="stat-value" id="rareGiftsCount">0</div>
-          <div class="stat-label">Rare Gifts</div>
-        </div>
-      </div>
+      <div class="stat-card"><div class="stat-icon">🎁</div><div class="stat-content"><div class="stat-value" id="totalGiftsCount">0</div><div class="stat-label">Total Gifts</div></div></div>
+      <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-content"><div class="stat-value" id="totalGiftValue">0</div><div class="stat-label">Total Value</div></div></div>
+      <div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-content"><div class="stat-value" id="rareGiftsCount">0</div><div class="stat-label">Rare Gifts</div></div></div>
     </div>
-
     <div class="inventory-filters">
       <button class="filter-btn active" data-filter="all">All Gifts</button>
       <button class="filter-btn" data-filter="telegram">Telegram Gifts</button>
       <button class="filter-btn" data-filter="nft">NFTs</button>
       <button class="filter-btn" data-filter="rare">Rare Only</button>
     </div>
-
     <div class="full-inventory-grid" id="fullInventoryGrid"></div>
-
     <div class="empty-inventory" id="emptyInventory" style="display: none;">
       <div class="empty-icon">📦</div>
       <h3>No Gifts Yet</h3>
@@ -866,16 +701,10 @@
   </div>
 </div>
 
-</div>
-<!-- End of Main Content -->
+</div><!-- end .main-content -->
 
-<!-- IMPORTANT: Load Telegram Web App SDK FIRST -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-<!-- Then load other libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
-
-<!-- Finally load your script -->
 <script src="script.js"></script>
 
 </body>
