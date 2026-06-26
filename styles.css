@@ -621,9 +621,9 @@ body.no-scroll {
   grid-column: 1;
   grid-row: 2;
   background:
-  linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px) 0 0 / 32px 32px,
-  linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px) 0 0 / 32px 32px,
-  linear-gradient(135deg, rgba(157,78,221,0.15) 0%, rgba(59,130,246,0.15) 100%);
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(90deg, rgb(255,255,255,0.025) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(180deg, #1e1e1e 0%, #141414 60%, #0d0d0d 100%);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(157,78,221,0.3);
   border-radius: 16px;
@@ -669,10 +669,10 @@ body.no-scroll {
   grid-row: 2 / 4;
   background:
     linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px) 0 0 / 32px 32px,
-    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px) 0 0 / 32px 32px,
-    linear-gradient(180deg, rgba(245,194,107,0.15) 0%, rgba(232,168,77,0.08) 100%);
+    linear-gradient(90deg, rgb(255,255,255,0.025) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(180deg, #1e1e1e 0%, #141414 60%, #0d0d0d 100%);
   backdrop-filter: blur(10px);
-  border: 2px solid #F5C26B;
+  border: 2px solid #f5c26b;
   border-radius: 12px;
   padding: 2rem 2.5rem;
   text-align: center;
@@ -691,14 +691,14 @@ body.no-scroll {
 .content-box-right::after {
   width: 200px;
   height: 200px;
-  background: radial-gradient(circle, #F5C26B, #fbbf24);
+  background: radial-gradient(circle, #f5c26b, #fbbf24);
   top: -70px;
   right: -70px;
 }
 
 .content-box-right:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(245,194,107,0.4);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
 }
 
 .content-box-right:active { transform: translateY(-2px); }
@@ -709,8 +709,8 @@ body.no-scroll {
   grid-row: 3;
   background:
     linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px) 0 0 / 32px 32px,
-    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px) 0 0 / 32px 32px,
-    linear-gradient(135deg, rgba(59,182,255,0.15) 0%, rgba(42,143,160,0.15) 100%);
+    linear-gradient(90deg, rgb(255,255,255,0.025) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(180deg, #1e1e1e 0%, #141414 60%, #0d0d0d 100%);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(59,182,255,0.3);
   border-radius: 16px;
