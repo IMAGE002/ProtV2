@@ -949,10 +949,10 @@ body.no-scroll {
 }
 
 .content-box-left-2 .animated-path-wrap svg {
-  width: 140%;
+  width: 200%;
   height: auto;
   position: absolute;
-  left: 5%;
+  left: -20%;
   top: 50%;
   transform: translateY(-50%);
 }
