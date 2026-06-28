@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Portfolio</title>
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles-redesigned.css">
 </head>
 <body class="no-scroll">
 
@@ -599,41 +599,65 @@
 <!-- Win Modal -->
 <div class="win-modal-overlay" id="winModal">
   <div class="win-modal">
-    <div class="win-modal-header">You Won...</div>
-    <div class="win-modal-prize">
+    <span class="win-modal-eyebrow">you won</span>
+
+    <div class="win-modal-prize-wrap">
       <div class="win-modal-icon" id="modalPrizeIcon"></div>
     </div>
-    <div class="win-modal-footer">...<span id="modalPrizeName"></span>!!!</div>
-    <button class="claim-button" id="claimButton">CLAIM!!</button>
+
+    <div class="win-modal-prize-name" id="modalPrizeName">Prize</div>
+
+    <div class="win-modal-value-row" id="modalValueRow">
+      <!-- filled by JS -->
+    </div>
+
+    <div class="win-modal-divider"></div>
+
+    <button class="claim-button" id="claimButton">Claim!</button>
   </div>
 </div>
 
 <!-- Prize Modal -->
 <div class="prize-modal-overlay" id="prizeModal">
   <div class="prize-modal">
-    <button class="prize-modal-close" id="prizeModalClose">×</button>
-    <div class="prize-modal-header">Your Prize</div>
-    <div class="prize-modal-content">
+
+    <!-- top bar: eyebrow + close -->
+    <div class="prize-modal-topbar">
+      <span class="prize-modal-eyebrow">your prize</span>
+      <button class="prize-modal-close" id="prizeModalClose">×</button>
+    </div>
+
+    <!-- hero: icon + name -->
+    <div class="prize-modal-hero">
       <div class="prize-modal-icon" id="prizeModalIcon"></div>
       <div class="prize-modal-name" id="prizeModalName">Prize Name</div>
+    </div>
+
+    <!-- info strip: id pill + value pill -->
+    <div class="prize-modal-info">
       <div class="prize-modal-id" id="prizeModalId">ID: 0000-00-XXX</div>
       <div class="prize-modal-coin-value" id="prizeModalCoinValue">
-        <img src="assets/Coin.svg" alt="Coins">
-        <span>100 Coins</span>
+        <img src="assets/TStars.svg" alt="Stars">
+        <span>100 Stars</span>
       </div>
     </div>
+
+    <div class="prize-modal-hr"></div>
+
+    <!-- action buttons -->
     <div class="prize-modal-buttons">
       <button class="prize-modal-btn convert-btn" id="convertBtn">
-        <img src="assets/Coin.svg" alt="Coins">
-        Convert To Coins
+        <img src="assets/TStars.svg" alt="Stars">
+        Convert to Stars
       </button>
       <button class="prize-modal-btn claim-prize-btn" id="claimPrizeBtn">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M20 6L9 17l-5-5"/>
         </svg>
-        Claim Prize!
+        Claim Prize
       </button>
     </div>
+
   </div>
 </div>
 
