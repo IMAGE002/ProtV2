@@ -1225,18 +1225,49 @@ body.no-scroll {
    WIN MODAL
    ============================================ */
 
-.win-modal-overlay {
+/* ============================================
+   SHARED MODAL OVERLAY
+   ============================================ */
+
+@keyframes fadeInModal { to { opacity: 1; } }
+@keyframes modalScale  { to { transform: scale(1); } }
+@keyframes prizeFloat  { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+/* Shared overlay backdrop */
+.modal-overlay-shared {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(10px);
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(12px);
   z-index: 2000;
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 1.5rem;
   opacity: 0;
   transition: opacity 0.3s ease;
+}
+
+.modal-overlay-shared.show {
+  display: flex;
+  animation: fadeInModal 0.3s ease forwards;
+}
+
+/* ============================================
+   WIN MODAL — "You Won" popup after spin
+   ============================================ */
+
+.win-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(12px);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
 }
 
 .win-modal-overlay.show {
@@ -1244,114 +1275,166 @@ body.no-scroll {
   animation: fadeInModal 0.3s ease forwards;
 }
 
-@keyframes fadeInModal { to { opacity: 1; } }
-
+/* Card uses the same dot-grid dark surface as home cards */
 .win-modal {
-  background: transparent;
-  border: none;
-  border-radius: 24px;
-  padding: 2.5rem 2rem;
-  max-width: 400px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  transform: scale(0.9);
-  animation: modalScale 0.3s ease forwards 0.1s;
-}
-
-@keyframes modalScale { to { transform: scale(1); } }
-
-.win-modal-header {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #fbbf24;
-  text-align: center;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.win-modal-prize {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: 2rem;
-  background: rgba(26,35,50,0.5);
-  border: 2px solid rgba(96,165,250,0.3);
-  border-radius: 16px;
   position: relative;
+  overflow: hidden;
+  max-width: 380px;
+  width: 100%;
+  border-radius: 20px;
+  border: 1px solid rgba(245,194,107,0.3);
+  background:
+    radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(180deg, #1c1c1e 0%, #131315 55%, #0d0d0e 100%);
+  padding: 2.25rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  transform: scale(0.88);
+  animation: modalScale 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards 0.05s;
 }
 
-.win-modal-icon {
-  width: 120px;
-  height: 120px;
+/* Warm glow behind the prize icon */
+.win-modal::before {
+  content: '';
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,194,107,0.12), transparent 70%);
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.win-modal-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  position: relative;
+  z-index: 1;
+}
+
+.win-modal-prize-wrap {
+  position: relative;
+  z-index: 1;
+  width: 140px;
+  height: 140px;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  z-index: 1;
+}
+
+.win-modal-icon {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .win-modal-icon img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  animation: prizeFloat 2s ease-in-out infinite;
+  animation: prizeFloat 2.5s ease-in-out infinite;
+  filter: drop-shadow(0 12px 32px rgba(245,194,107,0.4));
 }
 
-@keyframes prizeFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-.win-modal-footer {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #60a5fa;
+.win-modal-prize-name {
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  font-weight: 800;
+  color: #ffffff;
   text-align: center;
-  letter-spacing: 0.05em;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
 }
 
-.win-modal-footer span { color: #fbbf24; }
+.win-modal-prize-name .hl { color: #f5c26b; }
+
+.win-modal-value-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(245,194,107,0.08);
+  border: 1px solid rgba(245,194,107,0.2);
+  border-radius: 50px;
+  padding: 0.45rem 1.1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.win-modal-value-row img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.win-modal-value-row span {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f5c26b;
+}
+
+/* Divider */
+.win-modal-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  position: relative;
+  z-index: 1;
+}
 
 .claim-button {
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  background: #f5c26b;
   border: none;
   border-radius: 50px;
-  padding: 1rem 3rem;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #0f1a24;
+  padding: 0.9rem 2rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0d0d0e;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 20px rgba(251,191,36,0.4);
+  transition: filter 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 20px rgba(245,194,107,0.3);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-top: 1rem;
+  letter-spacing: 0.04em;
   font-family: 'Manrope', sans-serif;
 }
 
 .claim-button:hover {
+  filter: brightness(1.1);
   transform: translateY(-2px);
-  box-shadow: 0 6px 30px rgba(251,191,36,0.6);
+  box-shadow: 0 6px 28px rgba(245,194,107,0.5);
 }
 
+.claim-button:active { transform: translateY(0); filter: brightness(1); }
+
 /* ============================================
-   PRIZE MODAL
+   PRIZE MODAL — inventory item detail popup
    ============================================ */
 
 .prize-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(10px);
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(12px);
   z-index: 2001;
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 1.5rem;
   opacity: 0;
-  transition: opacity 0.3s ease;
 }
 
 .prize-modal-overlay.show {
@@ -1360,74 +1443,97 @@ body.no-scroll {
 }
 
 .prize-modal {
-  background: transparent;
-  border: none;
-  border-radius: 24px;
-  padding: 2.5rem 2rem;
-  max-width: 450px;
+  position: relative;
+  overflow: hidden;
+  max-width: 400px;
   width: 100%;
+  border-radius: 20px;
+  border: 1px solid rgba(245,194,107,0.3);
+  background:
+    radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(180deg, #1c1c1e 0%, #131315 55%, #0d0d0e 100%);
+  padding: 0;
   display: flex;
   flex-direction: column;
+  transform: scale(0.88);
+  animation: modalScale 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards 0.05s;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+}
+
+/* Glow behind icon */
+.prize-modal::before {
+  content: '';
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,194,107,0.1), transparent 70%);
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Top close bar ── */
+.prize-modal-topbar {
+  display: flex;
   align-items: center;
-  gap: 1.5rem;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-  transform: scale(0.9);
-  animation: modalScale 0.3s ease forwards 0.1s;
+  justify-content: space-between;
+  padding: 1.1rem 1.4rem 0;
   position: relative;
+  z-index: 2;
+}
+
+.prize-modal-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
 }
 
 .prize-modal-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 36px;
-  height: 36px;
-  background: rgba(255,255,255,0.1);
-  border: none;
+  width: 32px;
+  height: 32px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 50%;
-  color: rgba(255,255,255,0.7);
-  font-size: 1.5rem;
+  color: rgba(255,255,255,0.5);
+  font-size: 1.3rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  z-index: 10;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
 }
 
 .prize-modal-close:hover {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.12);
   color: #ffffff;
   transform: rotate(90deg);
 }
 
-.prize-modal-header {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #F5C26B;
-  text-align: center;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.prize-modal-content {
-  width: 100%;
+/* ── Icon hero area ── */
+.prize-modal-hero {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  padding: 2rem;
-  background: rgba(245,194,107,0.05);
-  border: 1px solid rgba(245,194,107,0.25);
-  border-radius: 16px;
+  padding: 1.5rem 2rem 1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .prize-modal-icon {
-  width: 120px;
-  height: 120px;
+  width: 130px;
+  height: 130px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 12px 32px rgba(245,194,107,0.35));
+  animation: prizeFloat 2.5s ease-in-out infinite;
 }
 
 .prize-modal-icon img,
@@ -1435,90 +1541,115 @@ body.no-scroll {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  animation: prizeFloat 2s ease-in-out infinite;
 }
 
 .prize-modal-name {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.6rem;
+  font-weight: 800;
   color: #ffffff;
   text-align: center;
-}
-
-.prize-modal-id {
-  font-size: 0.9rem;
-  color: rgba(255,255,255,0.5);
-  font-family: 'Courier New', monospace;
-  text-align: center;
-  letter-spacing: 0.1em;
-}
-
-.prize-modal-coin-value {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #a78bfa;
-  text-align: center;
-  margin-top: 0.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  justify-content: center;
-}
-
-.prize-modal-coin-value img { width: 28px; height: 28px; }
-
-.prize-modal-buttons {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-top: 0.5rem;
-}
-
-.prize-modal-btn {
-  width: 100%;
-  padding: 1rem 2rem;
-  border: none;
-  border-radius: 50px;
-  font-size: 1.125rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: -0.025em;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+
+/* ── Info strip (ID + value) ── */
+.prize-modal-info {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0 2rem 0.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.prize-modal-id {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.35);
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.08em;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  padding: 0.3rem 0.65rem;
+}
+
+.prize-modal-coin-value {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(167,139,250,0.1);
+  border: 1px solid rgba(167,139,250,0.25);
+  border-radius: 50px;
+  padding: 0.3rem 0.75rem;
+}
+
+.prize-modal-coin-value img { width: 18px; height: 18px; }
+
+.prize-modal-coin-value span {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #a78bfa;
+}
+
+/* ── Divider ── */
+.prize-modal-hr {
+  width: calc(100% - 3rem);
+  margin: 0 1.5rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Buttons ── */
+.prize-modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 1.1rem 1.5rem 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.prize-modal-btn {
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  border: none;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
   font-family: 'Manrope', sans-serif;
 }
 
+.prize-modal-btn:hover  { filter: brightness(1.1); transform: translateY(-2px); }
+.prize-modal-btn:active { transform: translateY(0); filter: brightness(1); }
+.prize-modal-btn img, .prize-modal-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+
 .convert-btn {
-  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
-  color: #ffffff;
-  box-shadow: 0 4px 20px rgba(139,92,246,0.4);
+  background: #a78bfa;
+  color: #0d0d0e;
+  box-shadow: 0 4px 18px rgba(167,139,250,0.3);
 }
 
-.convert-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 30px rgba(139,92,246,0.6);
-}
-
-.convert-btn img { width: 24px; height: 24px; }
+.convert-btn img { width: 20px; height: 20px; }
 
 .claim-prize-btn {
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  color: #0f1a24;
-  box-shadow: 0 4px 20px rgba(251,191,36,0.4);
+  background: #f5c26b;
+  color: #0d0d0e;
+  box-shadow: 0 4px 18px rgba(245,194,107,0.3);
 }
-
-.claim-prize-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 30px rgba(251,191,36,0.6);
-}
-
-.prize-modal-btn:active { transform: translateY(0); }
-.prize-modal-btn img, .prize-modal-btn svg { width: 24px; height: 24px; }
 
 /* ============================================
    FULL INVENTORY MODAL
