@@ -34,14 +34,14 @@ const RARE_GIFTS  = ['Ring', 'Trophy', 'Diamond', 'Calendar'];
 const NFT_GIFTS   = ['Calendar'];
 
 const SPIN_PRIZES = [
-  { id: 'star1',           type: 'star', value: 1,             chance: 32.14, icon: 'star' },
-  { id: 'star5',           type: 'star', value: 5,             chance: 18.40, icon: 'star' },
-  { id: 'star10',          type: 'star', value: 10,            chance: 12.30, icon: 'star' },
-  { id: 'star25',          type: 'star', value: 25,            chance: 9.80,  icon: 'star' },
-  { id: 'star50',          type: 'star', value: 50,            chance: 6.10,  icon: 'star' },
-  { id: 'star100',         type: 'star', value: 100,           chance: 4.90,  icon: 'star' },
-  { id: 'star250',         type: 'star', value: 250,           chance: 2.50,  icon: 'star' },
-  { id: 'star500',         type: 'star', value: 500,           chance: 1.20,  icon: 'star' },
+  { id: 'coin1',           type: 'coin', value: 1,             chance: 32.14, icon: 'coin' },
+  { id: 'coin5',           type: 'coin', value: 5,             chance: 18.40, icon: 'coin' },
+  { id: 'coin10',          type: 'coin', value: 10,            chance: 12.30, icon: 'coin' },
+  { id: 'coin25',          type: 'coin', value: 25,            chance: 9.80,  icon: 'coin' },
+  { id: 'coin50',          type: 'coin', value: 50,            chance: 6.10,  icon: 'coin' },
+  { id: 'coin100',         type: 'coin', value: 100,           chance: 4.90,  icon: 'coin' },
+  { id: 'coin250',         type: 'coin', value: 250,           chance: 2.50,  icon: 'coin' },
+  { id: 'coin500',         type: 'coin', value: 500,           chance: 1.20,  icon: 'coin' },
   { id: 'giftHeart',       type: 'gift', value: 'Heart',       chance: 2.50,  lottie: 'assets/giftHeart.json' },
   { id: 'giftBear',        type: 'gift', value: 'Bear',        chance: 2.50,  lottie: 'assets/giftBear.json' },
   { id: 'giftRose',        type: 'gift', value: 'Rose',        chance: 1.80,  lottie: 'assets/giftRose.json' },
@@ -105,7 +105,7 @@ const STATE = {
   tg: window.Telegram?.WebApp || null,
   userData: null,
   currentPage: 'home',
-  userStars: 0,
+  userCoins: 0,
   inventoryItems: [],
   notifications: [],
   liveGiftNotifications: [],
@@ -116,17 +116,17 @@ const STATE = {
   animationFrameId: null,
   lottieInstances: new Map(),
   lastScaleUpdate: 0,
-  currentLeaderboardTab: 'stars',
+  currentLeaderboardTab: 'coins',
   leaderboardData: {
-    stars: [
-      { id: 1, name: 'CryptoKing',    username: 'cryptoking',    stars: 15420, avatar: null },
-      { id: 2, name: 'MoonWalker',    username: 'moonwalker',    stars: 12850, avatar: null },
-      { id: 3, name: 'DiamondHands',  username: 'diamondhands',  stars: 10370, avatar: null },
-      { id: 4, name: 'TokenMaster',   username: 'tokenmaster',   stars: 8920,  avatar: null },
-      { id: 5, name: 'BlockChainer',  username: 'blockchainer',  stars: 7540,  avatar: null },
-      { id: 6, name: 'NFT Hunter',    username: 'nfthunter',     stars: 6230,  avatar: null },
-      { id: 7, name: 'Satoshi Fan',   username: 'satoshifan',    stars: 5180,  avatar: null },
-      { id: 8, name: 'Whale Watcher', username: 'whalewatcher',  stars: 4560,  avatar: null }
+    coins: [
+      { id: 1, name: 'CryptoKing',    username: 'cryptoking',    coins: 15420, avatar: null },
+      { id: 2, name: 'MoonWalker',    username: 'moonwalker',    coins: 12850, avatar: null },
+      { id: 3, name: 'DiamondHands',  username: 'diamondhands',  coins: 10370, avatar: null },
+      { id: 4, name: 'TokenMaster',   username: 'tokenmaster',   coins: 8920,  avatar: null },
+      { id: 5, name: 'BlockChainer',  username: 'blockchainer',  coins: 7540,  avatar: null },
+      { id: 6, name: 'NFT Hunter',    username: 'nfthunter',     coins: 6230,  avatar: null },
+      { id: 7, name: 'Satoshi Fan',   username: 'satoshifan',    coins: 5180,  avatar: null },
+      { id: 8, name: 'Whale Watcher', username: 'whalewatcher',  coins: 4560,  avatar: null }
     ],
     gifts: [
       { id: 1, name: 'GiftCollector',  username: 'giftcollector',  gifts: 87, avatar: null },
@@ -294,29 +294,29 @@ const BackendAPI = {
   async getUserBalance() {
     if (this.isCloudStorageAvailable()) {
       return new Promise((resolve) => {
-        STATE.tg.CloudStorage.getItem('userStars', (error, value) => {
+        STATE.tg.CloudStorage.getItem('userCoins', (error, value) => {
           if (error) {
-            const fb = localStorage.getItem('userStars');
-            resolve(fb ? parseInt(fb, 10) : STATE.userStars);
+            const fb = localStorage.getItem('userCoins');
+            resolve(fb ? parseInt(fb, 10) : STATE.userCoins);
           } else {
-            resolve(value ? parseInt(value, 10) : STATE.userStars);
+            resolve(value ? parseInt(value, 10) : STATE.userCoins);
           }
         });
       });
     }
-    const saved = localStorage.getItem('userStars');
-    return saved ? parseInt(saved, 10) : STATE.userStars;
+    const saved = localStorage.getItem('userCoins');
+    return saved ? parseInt(saved, 10) : STATE.userCoins;
   },
 
   async saveUserBalance(balance) {
     let cloudOk = false;
     if (this.isCloudStorageAvailable()) {
       cloudOk = await new Promise((resolve) => {
-        STATE.tg.CloudStorage.setItem('userStars', String(balance), (err, ok) => resolve(!err && ok));
+        STATE.tg.CloudStorage.setItem('userCoins', String(balance), (err, ok) => resolve(!err && ok));
       });
     }
     try {
-      localStorage.setItem('userStars', String(balance));
+      localStorage.setItem('userCoins', String(balance));
       return true;
     } catch {
       return cloudOk;
@@ -327,8 +327,8 @@ const BackendAPI = {
     if (STATE.isSyncing) return;
     STATE.isSyncing = true;
     const balance = await this.getUserBalance();
-    if (balance !== STATE.userStars) {
-      STATE.userStars = balance;
+    if (balance !== STATE.userCoins) {
+      STATE.userCoins = balance;
       Currency.update();
     }
     STATE.lastBalanceSync = Date.now();
@@ -484,7 +484,7 @@ const LoadingScreen = {
 
 const Currency = {
   add(amount) {
-    const oldValue = STATE.userStars;
+    const oldValue = STATE.userCoins;
     const newValue = oldValue + amount;
     this.animateChange(oldValue, newValue);
     BackendAPI.saveUserBalance(newValue);
@@ -502,7 +502,7 @@ const Currency = {
       if (t < 1) {
         requestAnimationFrame(tick);
       } else {
-        STATE.userStars = newValue;
+        STATE.userCoins = newValue;
         el.textContent  = newValue.toLocaleString();
         Leaderboard.updateData();
       }
@@ -512,7 +512,7 @@ const Currency = {
 
   update() {
     const el = document.getElementById('currencyAmount');
-    if (el) el.textContent = STATE.userStars.toLocaleString();
+    if (el) el.textContent = STATE.userCoins.toLocaleString();
   }
 };
 
@@ -603,9 +603,9 @@ const PrizeModal = {
       wrap.style.cssText = 'width:100%;height:100%';
       iconEl.appendChild(wrap);
       lottie.loadAnimation({ container: wrap, renderer: 'svg', loop: true, autoplay: true, path: prize.lottie });
-    } else if (prize.type === 'star') {
+    } else if (prize.type === 'coin') {
       const img = document.createElement('img');
-      img.src = 'assets/TStars.svg'; img.alt = 'Stars';
+      img.src = 'assets/Coin.svg'; img.alt = 'Coins';
       img.style.cssText = 'width:100%;height:100%;object-fit:contain';
       iconEl.appendChild(img);
     }
@@ -613,10 +613,10 @@ const PrizeModal = {
     nameEl.textContent = prize.value;
     idEl.textContent   = `ID: ${prize.prizeId}`;
 
-    const starsVal = PRIZE_COIN_VALUES[prize.value] ?? 50;
+    const coinsVal = PRIZE_COIN_VALUES[prize.value] ?? 50;
     valueEl.innerHTML = `
-      <img src="assets/TStars.svg" alt="Stars">
-      <span>${starsVal.toLocaleString()} Stars</span>
+      <img src="assets/Coin.svg" alt="Coins">
+      <span>${coinsVal.toLocaleString()} Coins</span>
     `;
 
     modal.classList.add('show');
@@ -959,11 +959,11 @@ const Leaderboard = {
       });
     });
 
-    this.render('stars');
+    this.render('coins');
   },
 
   render(type) {
-    const data = type === 'stars' ? STATE.leaderboardData.stars : STATE.leaderboardData.gifts;
+    const data = type === 'coins' ? STATE.leaderboardData.coins : STATE.leaderboardData.gifts;
     const container = document.getElementById(`leaderboard-${type}`);
     if (!container) return;
 
@@ -992,7 +992,7 @@ const Leaderboard = {
     const badge = document.createElement('div'); badge.className = 'podium-rank'; badge.textContent = rank;
     const name  = document.createElement('div'); name.className  = 'podium-name'; name.textContent  = player.name;
     const score = document.createElement('div'); score.className = 'podium-score';
-    score.textContent = type === 'stars' ? player.stars.toLocaleString() : `${player.gifts} gifts`;
+    score.textContent = type === 'coins' ? player.coins.toLocaleString() : `${player.gifts} gifts`;
     card.append(badge, this._avatar(player, 'podium'), name, score);
     return card;
   },
@@ -1003,7 +1003,7 @@ const Leaderboard = {
     const info = document.createElement('div'); info.className = 'rank-info';
     const name  = document.createElement('div'); name.className  = 'rank-name';  name.textContent  = player.name;
     const score = document.createElement('div'); score.className = 'rank-score';
-    score.textContent = type === 'stars' ? `${player.stars.toLocaleString()} stars` : `${player.gifts} gifts`;
+    score.textContent = type === 'coins' ? `${player.coins.toLocaleString()} coins` : `${player.gifts} gifts`;
     info.append(name, score);
     card.append(pos, this._avatar(player, 'rank'), info);
     return card;
@@ -1017,9 +1017,9 @@ const Leaderboard = {
     const scoreEl = document.getElementById('yourRankScore');
     if (!rankEl || !nameEl || !scoreEl) return;
     nameEl.textContent = uName;
-    if (type === 'stars') {
-      rankEl.textContent  = STATE.leaderboardData.stars.filter(p => p.stars > STATE.userStars).length + 1;
-      scoreEl.textContent = `${STATE.userStars.toLocaleString()} stars`;
+    if (type === 'coins') {
+      rankEl.textContent  = STATE.leaderboardData.coins.filter(p => p.coins > STATE.userCoins).length + 1;
+      scoreEl.textContent = `${STATE.userCoins.toLocaleString()} coins`;
     } else {
       const gifts = STATE.inventoryItems.length;
       rankEl.textContent  = STATE.leaderboardData.gifts.filter(p => p.gifts > gifts).length + 1;
@@ -1157,8 +1157,8 @@ const SpinWheel = {
     cube.innerHTML = '';
     cube.style.cssText = 'position:relative;display:flex;align-items:center;justify-content:center;';
 
-    if (prize.type === 'star') {
-      const img = Object.assign(document.createElement('img'), { src: 'assets/TStars.svg', alt: 'Star' });
+    if (prize.type === 'coin') {
+      const img = Object.assign(document.createElement('img'), { src: 'assets/Coin.svg', alt: 'Coin' });
       img.style.cssText = 'width:70px;height:70px;object-fit:contain;margin:auto';
       const txt = document.createElement('div');
       txt.textContent = prize.value;
@@ -1295,13 +1295,13 @@ const SpinWheel = {
 
     iconEl.innerHTML = '';
 
-    if (prize.type === 'star') {
-      const img = Object.assign(document.createElement('img'), { src: 'assets/TStars.svg', alt: 'Stars' });
+    if (prize.type === 'coin') {
+      const img = Object.assign(document.createElement('img'), { src: 'assets/Coin.svg', alt: 'Coins' });
       img.style.cssText = 'width:100%;height:100%;object-fit:contain;animation:prizeFloat 2.5s ease-in-out infinite;filter:drop-shadow(0 12px 32px rgba(245,194,107,.4))';
       iconEl.appendChild(img);
-      nameEl.innerHTML = `<span class="hl">${prize.value}</span> Stars`;
+      nameEl.innerHTML = `<span class="hl">${prize.value}</span> Coins`;
       if (valueRow) {
-        valueRow.innerHTML = `<img src="assets/TStars.svg" alt="Stars" style="width:22px;height:22px"><span>${prize.value} Stars</span>`;
+        valueRow.innerHTML = `<img src="assets/Coin.svg" alt="Coins" style="width:22px;height:22px"><span>${prize.value} Coins</span>`;
         valueRow.style.display = 'flex';
       }
     } else {
@@ -1312,7 +1312,7 @@ const SpinWheel = {
       nameEl.innerHTML = `the <span class="hl">${prize.value}</span>`;
       if (valueRow) {
         const val = PRIZE_COIN_VALUES[prize.value] ?? 50;
-        valueRow.innerHTML = `<img src="assets/TStars.svg" alt="Stars" style="width:22px;height:22px"><span>${val.toLocaleString()} Stars value</span>`;
+        valueRow.innerHTML = `<img src="assets/Coin.svg" alt="Coins" style="width:22px;height:22px"><span>${val.toLocaleString()} Coins value</span>`;
         valueRow.style.display = 'flex';
       }
     }
@@ -1334,7 +1334,7 @@ const SpinWheel = {
     if (!STATE.currentWinningPrize) return;
     const prize = STATE.currentWinningPrize;
 
-    if (prize.type === 'star') {
+    if (prize.type === 'coin') {
       Currency.add(parseInt(prize.value, 10));
     } else {
       const added = Inventory.add(prize);
@@ -1372,7 +1372,7 @@ const SpinWheel = {
   },
 
   loadIcons() {
-    ['star1','star5','star10','star25','star50','star100','star250','star500'].forEach(id => {
+    ['coin1','coin5','coin10','coin25','coin50','coin100','coin250','coin500'].forEach(id => {
       const el = document.getElementById(id);
       if (!el) return;
       const img = Object.assign(document.createElement('img'), { src: 'assets/TStars.svg', alt: 'Star' });
@@ -1471,7 +1471,7 @@ const Settings = {
     if (!confirm('⚠️ Delete ALL data? This cannot be undone.')) return;
     if (prompt('Type "RESET" to confirm:') !== 'RESET') { alert('Reset cancelled.'); return; }
     localStorage.clear();
-    STATE.userStars = 0; STATE.inventoryItems = [];
+    STATE.userCoins = 0; STATE.inventoryItems = [];
     Currency.update(); Inventory.updateDisplay();
     alert('All data reset!\nReloading…');
     setTimeout(() => window.location.reload(), 1000);
