@@ -106,6 +106,7 @@ const STATE = {
   userData: null,
   currentPage: 'home',
   userCoins: 0,
+  userStars: 0,
   inventoryItems: [],
   notifications: [],
   liveGiftNotifications: [],
@@ -137,6 +138,16 @@ const STATE = {
       { id: 6, name: 'Reward Hunter',  username: 'rewardhunter',   gifts: 31, avatar: null },
       { id: 7, name: 'Loot Lord',      username: 'lootlord',       gifts: 27, avatar: null },
       { id: 8, name: 'Prize Collector',username: 'prizecollector', gifts: 19, avatar: null }
+    ],
+    stars: [
+      { id: 1, name: 'StarBaron',     username: 'starbaron',     stars: 9800,  avatar: null },
+      { id: 2, name: 'GalaxyBrain',   username: 'galaxybrain',   stars: 7650,  avatar: null },
+      { id: 3, name: 'NebulaMike',    username: 'nebulamike',    stars: 5430,  avatar: null },
+      { id: 4, name: 'CosmosQueen',   username: 'cosmosqueen',   stars: 4210,  avatar: null },
+      { id: 5, name: 'AstroAlex',     username: 'astroalex',     stars: 3180,  avatar: null },
+      { id: 6, name: 'OrbitalJay',    username: 'orbitaljay',    stars: 2560,  avatar: null },
+      { id: 7, name: 'StarDrifter',   username: 'stardrifter',   stars: 1820,  avatar: null },
+      { id: 8, name: 'PulsarPete',    username: 'pulsarpete',    stars: 1100,  avatar: null }
     ]
   },
   settings: {
@@ -272,7 +283,6 @@ const Utils = {
       font-family:'Manrope',sans-serif;white-space:nowrap;
     `;
     document.body.appendChild(toast);
-    // Force reflow before starting transition
     void toast.offsetHeight;
     toast.style.opacity = '1';
     setTimeout(() => {
@@ -291,46 +301,54 @@ const BackendAPI = {
     return !!(STATE.tg?.CloudStorage?.getItem);
   },
 
-  async getUserBalance() {
+  // ── Generic helpers ──
+
+  async _cloudGet(key, fallback) {
     if (this.isCloudStorageAvailable()) {
       return new Promise((resolve) => {
-        STATE.tg.CloudStorage.getItem('userCoins', (error, value) => {
-          if (error) {
-            const fb = localStorage.getItem('userCoins');
-            resolve(fb ? parseInt(fb, 10) : STATE.userCoins);
-          } else {
-            resolve(value ? parseInt(value, 10) : STATE.userCoins);
-          }
+        STATE.tg.CloudStorage.getItem(key, (err, val) => {
+          if (err) { const fb = localStorage.getItem(key); resolve(fb ? parseInt(fb, 10) : fallback); }
+          else      { resolve(val ? parseInt(val, 10) : fallback); }
         });
       });
     }
-    const saved = localStorage.getItem('userCoins');
-    return saved ? parseInt(saved, 10) : STATE.userCoins;
+    const saved = localStorage.getItem(key);
+    return saved ? parseInt(saved, 10) : fallback;
   },
 
-  async saveUserBalance(balance) {
-    let cloudOk = false;
+  async _cloudSet(key, value) {
+    let ok = false;
     if (this.isCloudStorageAvailable()) {
-      cloudOk = await new Promise((resolve) => {
-        STATE.tg.CloudStorage.setItem('userCoins', String(balance), (err, ok) => resolve(!err && ok));
+      ok = await new Promise((resolve) => {
+        STATE.tg.CloudStorage.setItem(key, String(value), (err, success) => resolve(!err && success));
       });
     }
-    try {
-      localStorage.setItem('userCoins', String(balance));
-      return true;
-    } catch {
-      return cloudOk;
-    }
+    try { localStorage.setItem(key, String(value)); return true; } catch { return ok; }
   },
+
+  // ── Coins ──
+
+  async getUserCoins()   { return this._cloudGet('userCoins', STATE.userCoins); },
+  async saveUserCoins(v) { return this._cloudSet('userCoins', v); },
+
+  // ── Stars ──
+
+  async getUserStars()   { return this._cloudGet('userStars', STATE.userStars); },
+  async saveUserStars(v) { return this._cloudSet('userStars', v); },
+
+  // ── Sync both ──
 
   async syncBalance() {
     if (STATE.isSyncing) return;
     STATE.isSyncing = true;
-    const balance = await this.getUserBalance();
-    if (balance !== STATE.userCoins) {
-      STATE.userCoins = balance;
-      Currency.update();
-    }
+
+    const [coins, stars] = await Promise.all([this.getUserCoins(), this.getUserStars()]);
+
+    let changed = false;
+    if (coins !== STATE.userCoins) { STATE.userCoins = coins; changed = true; }
+    if (stars !== STATE.userStars) { STATE.userStars = stars; changed = true; }
+    if (changed) Currency.update();
+
     STATE.lastBalanceSync = Date.now();
     STATE.isSyncing = false;
   },
@@ -342,10 +360,7 @@ const BackendAPI = {
   },
 
   stopPeriodicSync() {
-    if (STATE.syncIntervalId) {
-      clearInterval(STATE.syncIntervalId);
-      STATE.syncIntervalId = null;
-    }
+    if (STATE.syncIntervalId) { clearInterval(STATE.syncIntervalId); STATE.syncIntervalId = null; }
   }
 };
 
@@ -365,7 +380,6 @@ const TelegramApp = {
       STATE.tg.expand();
       BackendAPI.startPeriodicSync();
 
-      // Sync when user returns to the app (e.g. after payment)
       STATE.tg.onEvent('viewportChanged', (e) => {
         if (e.isStateStable) setTimeout(() => BackendAPI.syncBalance(), 1000);
       });
@@ -483,11 +497,20 @@ const LoadingScreen = {
 // ============================================
 
 const Currency = {
+  // ── FIX 1: was BackendAPI.saveUserBalance (doesn't exist) → saveUserCoins ──
   add(amount) {
     const oldValue = STATE.userCoins;
     const newValue = oldValue + amount;
     this.animateChange(oldValue, newValue);
-    BackendAPI.saveUserBalance(newValue);
+    BackendAPI.saveUserCoins(newValue);
+  },
+
+  addStars(amount) {
+    const oldValue = STATE.userStars;
+    const newValue = oldValue + amount;
+    STATE.userStars = newValue;
+    BackendAPI.saveUserStars(newValue);
+    this.update();
   },
 
   animateChange(oldValue, newValue, duration = 1000) {
@@ -510,9 +533,12 @@ const Currency = {
     requestAnimationFrame(tick);
   },
 
+  // ── FIX 2: also refresh the stars display element ──
   update() {
-    const el = document.getElementById('currencyAmount');
-    if (el) el.textContent = STATE.userCoins.toLocaleString();
+    const coinsEl = document.getElementById('currencyAmount');
+    if (coinsEl) coinsEl.textContent = STATE.userCoins.toLocaleString();
+    const starsEl = document.getElementById('starsAmount');
+    if (starsEl) starsEl.textContent = STATE.userStars.toLocaleString();
   }
 };
 
@@ -566,7 +592,6 @@ const Inventory = {
       grid.appendChild(div);
     });
 
-    // Empty slots
     const empties = CONFIG.MAX_INVENTORY_DISPLAY - display.length;
     for (let i = 0; i < empties; i++) {
       const e = document.createElement('div');
@@ -576,12 +601,12 @@ const Inventory = {
     Leaderboard.updateData();
   },
 
-  getItems()         { return STATE.inventoryItems.map(i => ({ prizeId: i.prizeId, prizeName: i.value, prizeType: i.type, claimedAt: i.claimedAt })); },
-  verify(prizeId)    { return STATE.inventoryItems.some(i => i.prizeId === prizeId); }
+  getItems()      { return STATE.inventoryItems.map(i => ({ prizeId: i.prizeId, prizeName: i.value, prizeType: i.type, claimedAt: i.claimedAt })); },
+  verify(prizeId) { return STATE.inventoryItems.some(i => i.prizeId === prizeId); }
 };
 
 // ============================================
-// PRIZE MODAL  ← updated for new HTML structure
+// PRIZE MODAL
 // ============================================
 
 const PrizeModal = {
@@ -595,7 +620,6 @@ const PrizeModal = {
     const valueEl  = document.getElementById('prizeModalCoinValue');
     if (!modal || !iconEl || !nameEl || !idEl || !valueEl) return;
 
-    // Reset icon
     iconEl.innerHTML = '';
 
     if (prize.lottie) {
@@ -644,16 +668,16 @@ const PrizeModal = {
   async claim() {
     if (!STATE.currentModalPrize) { Utils.showToast('No prize selected', 'error'); return; }
 
-    const prize        = STATE.currentModalPrize;
-    const prizeId      = prize.prizeId;
-    const giftName     = prize.value;
+    const prize          = STATE.currentModalPrize;
+    const prizeId        = prize.prizeId;
+    const giftName       = prize.value;
     const telegramGiftId = TELEGRAM_GIFT_IDS[giftName];
 
     if (!telegramGiftId) { Utils.showToast(`Gift mapping error: ${giftName}`, 'error'); return; }
     if (!STATE.tg?.initDataUnsafe?.user?.id) { Utils.showToast('Telegram unavailable', 'error'); return; }
 
-    const userId    = STATE.tg.initDataUnsafe.user.id;
-    const claimBtn  = document.getElementById('claimPrizeBtn');
+    const userId   = STATE.tg.initDataUnsafe.user.id;
+    const claimBtn = document.getElementById('claimPrizeBtn');
 
     Utils.showToast('Claiming your gift…', 'success');
     if (claimBtn) { claimBtn.disabled = true; claimBtn.textContent = 'Claiming…'; }
@@ -963,7 +987,10 @@ const Leaderboard = {
   },
 
   render(type) {
-    const data = type === 'coins' ? STATE.leaderboardData.coins : STATE.leaderboardData.gifts;
+    const data =
+      type === 'coins' ? STATE.leaderboardData.coins :
+      type === 'stars' ? STATE.leaderboardData.stars :
+      STATE.leaderboardData.gifts;
     const container = document.getElementById(`leaderboard-${type}`);
     if (!container) return;
 
@@ -985,6 +1012,12 @@ const Leaderboard = {
     return el;
   },
 
+  _scoreText(player, type) {
+    if (type === 'coins') return player.coins.toLocaleString();
+    if (type === 'stars') return `${player.stars.toLocaleString()} ⭐`;
+    return `${player.gifts} gifts`;
+  },
+
   createPodiumCard(player, rank, type) {
     const card     = document.createElement('div');
     card.className = 'podium-card';
@@ -992,7 +1025,7 @@ const Leaderboard = {
     const badge = document.createElement('div'); badge.className = 'podium-rank'; badge.textContent = rank;
     const name  = document.createElement('div'); name.className  = 'podium-name'; name.textContent  = player.name;
     const score = document.createElement('div'); score.className = 'podium-score';
-    score.textContent = type === 'coins' ? player.coins.toLocaleString() : `${player.gifts} gifts`;
+    score.textContent = this._scoreText(player, type);
     card.append(badge, this._avatar(player, 'podium'), name, score);
     return card;
   },
@@ -1003,7 +1036,7 @@ const Leaderboard = {
     const info = document.createElement('div'); info.className = 'rank-info';
     const name  = document.createElement('div'); name.className  = 'rank-name';  name.textContent  = player.name;
     const score = document.createElement('div'); score.className = 'rank-score';
-    score.textContent = type === 'coins' ? `${player.coins.toLocaleString()} coins` : `${player.gifts} gifts`;
+    score.textContent = this._scoreText(player, type);
     info.append(name, score);
     card.append(pos, this._avatar(player, 'rank'), info);
     return card;
@@ -1020,6 +1053,9 @@ const Leaderboard = {
     if (type === 'coins') {
       rankEl.textContent  = STATE.leaderboardData.coins.filter(p => p.coins > STATE.userCoins).length + 1;
       scoreEl.textContent = `${STATE.userCoins.toLocaleString()} coins`;
+    } else if (type === 'stars') {
+      rankEl.textContent  = STATE.leaderboardData.stars.filter(p => p.stars > STATE.userStars).length + 1;
+      scoreEl.textContent = `${STATE.userStars.toLocaleString()} ⭐`;
     } else {
       const gifts = STATE.inventoryItems.length;
       rankEl.textContent  = STATE.leaderboardData.gifts.filter(p => p.gifts > gifts).length + 1;
@@ -1284,7 +1320,6 @@ const SpinWheel = {
     snap();
   },
 
-  // ── Updated showWin to match new modal HTML structure ──
   showWin(prize) {
     STATE.currentWinningPrize = prize;
     const modal    = document.getElementById('winModal');
@@ -1375,7 +1410,7 @@ const SpinWheel = {
     ['coin1','coin5','coin10','coin25','coin50','coin100','coin250','coin500'].forEach(id => {
       const el = document.getElementById(id);
       if (!el) return;
-      const img = Object.assign(document.createElement('img'), { src: 'assets/TStars.svg', alt: 'Star' });
+      const img = Object.assign(document.createElement('img'), { src: 'assets/Coin.svg', alt: 'Coin' });
       el.appendChild(img);
     });
     [
@@ -1471,7 +1506,8 @@ const Settings = {
     if (!confirm('⚠️ Delete ALL data? This cannot be undone.')) return;
     if (prompt('Type "RESET" to confirm:') !== 'RESET') { alert('Reset cancelled.'); return; }
     localStorage.clear();
-    STATE.userCoins = 0; STATE.inventoryItems = [];
+    // ── FIX 3: also zero out userStars ──
+    STATE.userCoins = 0; STATE.userStars = 0; STATE.inventoryItems = [];
     Currency.update(); Inventory.updateDisplay();
     alert('All data reset!\nReloading…');
     setTimeout(() => window.location.reload(), 1000);
@@ -1573,7 +1609,6 @@ const ContentBoxes = {
       FullInventoryModal.open();
     });
 
-    // Promo card → navigate to settings so user can enter code
     document.querySelector('.promo-card .card-btn')?.addEventListener('click', (e) => {
       e.stopPropagation();
       Navigation.navigateTo('settings');
