@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Portfolio</title>
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles-redesigned.css">
 </head>
 <body class="no-scroll">
 
@@ -43,10 +43,19 @@
 
 <!-- Currency Bar -->
 <div class="currency-bar">
-  <div class="currency-icon">
-    <img src="assets/Coin.svg" alt="Currency">
+  <div class="currency-row">
+    <div class="currency-icon">
+      <img src="assets/Coin.svg" alt="Coins">
+    </div>
+    <div class="currency-amount" id="currencyAmount">0</div>
   </div>
-  <div class="currency-amount" id="currencyAmount">0</div>
+  <div class="currency-divider"></div>
+  <div class="currency-row">
+    <div class="currency-icon">
+      <img src="assets/TStars.svg" alt="Stars">
+    </div>
+    <div class="currency-amount" id="starsAmount">0</div>
+  </div>
 </div>
 
 <!-- Hamburger -->
@@ -311,11 +320,15 @@
       <div class="leaderboard-tabs">
         <button class="leaderboard-tab active" data-tab="coins">
           <img src="assets/Coin.svg" alt="Coin">
-          <span class="tab-label" data-i18n="coins">Coin Leaders</span>
+          <span class="tab-label">Coin Leaders</span>
         </button>
         <button class="leaderboard-tab" data-tab="gifts">
           <span class="gift-tab-icon" id="giftTabIcon"></span>
-          <span class="tab-label" data-i18n="gifts">Gift Leaders</span>
+          <span class="tab-label">Gift Leaders</span>
+        </button>
+        <button class="leaderboard-tab" data-tab="stars">
+          <img src="assets/TStars.svg" alt="Stars">
+          <span class="tab-label">Star Leaders</span>
         </button>
       </div>
       <div class="leaderboard-content">
@@ -324,6 +337,10 @@
           <div class="ranks-list"></div>
         </div>
         <div class="leaderboard-list" id="leaderboard-gifts">
+          <div class="podium-container"></div>
+          <div class="ranks-list"></div>
+        </div>
+        <div class="leaderboard-list" id="leaderboard-stars">
           <div class="podium-container"></div>
           <div class="ranks-list"></div>
         </div>
