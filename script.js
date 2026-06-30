@@ -162,6 +162,7 @@ const STATE = {
   },
   currentDepositTab: 'stars',
   currentModalPrize: null,
+  isClaimingPrize: false,
   currentFilter: 'all',
   redeemedCodes: [],
   isSyncing: false,
@@ -658,15 +659,21 @@ const PrizeModal = {
   },
 
   convert() {
+    // Guard: grab it, then immediately clear it. A second click (or a
+    // double-fired event) sees currentModalPrize already null and bails
+    // at the top instead of converting the same prize twice.
     if (!STATE.currentModalPrize) return;
-    const val = PRIZE_COIN_VALUES[STATE.currentModalPrize.value] ?? 50;
+    const prize = STATE.currentModalPrize;
+    STATE.currentModalPrize = null;
+    const val = PRIZE_COIN_VALUES[prize.value] ?? 50;
     Currency.add(val);
-    Inventory.remove(STATE.currentModalPrize.prizeId);
+    Inventory.remove(prize.prizeId);
     this.close();
   },
 
   async claim() {
     if (!STATE.currentModalPrize) { Utils.showToast('No prize selected', 'error'); return; }
+    if (STATE.isClaimingPrize) return; // already mid-claim — ignore extra clicks
 
     const prize          = STATE.currentModalPrize;
     const prizeId        = prize.prizeId;
@@ -679,6 +686,7 @@ const PrizeModal = {
     const userId   = STATE.tg.initDataUnsafe.user.id;
     const claimBtn = document.getElementById('claimPrizeBtn');
 
+    STATE.isClaimingPrize = true;
     Utils.showToast('Claiming your gift…', 'success');
     if (claimBtn) { claimBtn.disabled = true; claimBtn.textContent = 'Claiming…'; }
 
@@ -707,6 +715,7 @@ const PrizeModal = {
         buttons: [{ type: 'close' }]
       });
     } finally {
+      STATE.isClaimingPrize = false;
       if (claimBtn) { claimBtn.disabled = false; claimBtn.textContent = 'Claim Prize'; }
     }
   }
@@ -1366,8 +1375,15 @@ const SpinWheel = {
   },
 
   async claimWin() {
+    // Guard: same pattern as convert(). Capture the prize, clear the shared
+    // state immediately — BEFORE the await below — so a click landing
+    // inside that network round-trip has nothing left to claim.
     if (!STATE.currentWinningPrize) return;
     const prize = STATE.currentWinningPrize;
+    STATE.currentWinningPrize = null;
+
+    const claimBtn = document.getElementById('claimButton');
+    if (claimBtn) claimBtn.disabled = true;
 
     if (prize.type === 'coin') {
       Currency.add(parseInt(prize.value, 10));
@@ -1396,14 +1412,14 @@ const SpinWheel = {
     }
 
     this.hideWin();
-    STATE.currentWinningPrize = null;
 
     document.querySelectorAll('.cube').forEach(c => this._cleanupLottie(c));
     this.populateCubes();
     STATE.scrollSpeed = 1;
     STATE.isSpinning  = false;
-    const btn = document.getElementById('spinButton');
-    if (btn) btn.disabled = false;
+    if (claimBtn) claimBtn.disabled = false;
+    const spinBtn = document.getElementById('spinButton');
+    if (spinBtn) spinBtn.disabled = false;
   },
 
   loadIcons() {
