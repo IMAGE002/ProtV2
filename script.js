@@ -1604,7 +1604,9 @@ const ContentBoxes = {
   init() {
     document.querySelector('.content-box-left-1')?.addEventListener('click', () => Navigation.navigateTo('dailyspin'));
 
-    document.querySelector('.view-all-btn')?.addEventListener('click', (e) => {
+    // ── FIX 4: '.view-all-btn' doesn't exist — the button uses the shared '.card-btn' class.
+    // Scoped to '.content-box-right', the inventory card's unique container (same pattern as promo-card below).
+    document.querySelector('.content-box-right .card-btn')?.addEventListener('click', (e) => {
       e.stopPropagation();
       FullInventoryModal.open();
     });
