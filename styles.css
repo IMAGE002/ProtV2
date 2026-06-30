@@ -2622,8 +2622,13 @@ body.no-scroll {
   width: 60px;
   height: 60px;
   margin: 0 auto 1rem;
-  color: #a78bfa;
+  position: relative;
+  z-index: 1;
   animation: settingsRotate 8s linear infinite;
+  background-image: url('assets/GearIcon.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 @keyframes settingsRotate {
