@@ -1248,25 +1248,38 @@ const SpinWheel = {
   },
 
   startAnimation() {
-    const animate = () => {
-      const wheel = document.getElementById('wheel');
-      const cubes = Array.from(document.querySelectorAll('.cube'));
-      if (wheel && cubes.length) {
-        STATE.scrollPosition += STATE.scrollSpeed;
-        const stride = CONFIG.CUBE_WIDTH + CONFIG.GAP_WIDTH;
-        if (STATE.scrollPosition >= stride) {
-          const first = cubes[0];
-          wheel.appendChild(first);
-          STATE.scrollPosition -= stride;
-          if (!STATE.isSpinning) this.renderCube(first, this.selectPrize());
-        }
-        wheel.style.transform = `translateX(-${STATE.scrollPosition}px)`;
-        this.updateScales(cubes);
+  let lastTime = performance.now();
+  const animate = (now) => {
+    // Clamp dt so a backgrounded tab / huge stall doesn't cause a
+    // giant catch-up teleport when it resumes.
+    const dt = Math.min(now - lastTime, 100);
+    lastTime = now;
+
+    const wheel = document.getElementById('wheel');
+    if (wheel) {
+      // scrollSpeed was tuned as "px per frame" at 60fps.
+      // Scale by real elapsed time so total distance traveled depends
+      // only on wall-clock duration, never on how many frames fired.
+      STATE.scrollPosition += STATE.scrollSpeed * (dt / (1000 / 60));
+      const stride = CONFIG.CUBE_WIDTH + CONFIG.GAP_WIDTH;
+
+      // while, not if — a lag spike can cross more than one cube-width
+      // in a single frame; recycle all of them so the reel never sticks.
+      while (STATE.scrollPosition >= stride) {
+        const first = document.querySelector('.cube');
+        if (!first) break;
+        wheel.appendChild(first);
+        STATE.scrollPosition -= stride;
+        if (!STATE.isSpinning) this.renderCube(first, this.selectPrize());
       }
-      STATE.animationFrameId = requestAnimationFrame(animate);
-    };
-    animate();
-  },
+
+      wheel.style.transform = `translateX(-${STATE.scrollPosition}px)`;
+      this.updateScales(Array.from(document.querySelectorAll('.cube')));
+    }
+    STATE.animationFrameId = requestAnimationFrame(animate);
+  };
+  STATE.animationFrameId = requestAnimationFrame(animate);
+},
 
   spin() {
     if (STATE.isSpinning) return;
