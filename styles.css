@@ -2407,6 +2407,10 @@ body.no-scroll {
 .rewards-divider::before { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15)); }
 .rewards-divider::after  { background: linear-gradient(90deg, rgba(255,255,255,0.15), transparent); }
 
+/* ============================================
+   COIN GRID (reward-grid) — glow + top-value highlight
+   ============================================ */
+
 .reward-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -2415,6 +2419,8 @@ body.no-scroll {
 }
 
 .reward-item {
+  position: relative;
+  overflow: hidden;
   background: rgba(18,22,32,0.6);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 12px;
@@ -2426,18 +2432,57 @@ body.no-scroll {
   transition: all 0.3s ease;
 }
 
+.reward-item::before {
+  content: '';
+  position: absolute;
+  top: -25%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,0.22), transparent 70%);
+  filter: blur(6px);
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.reward-item:hover::before { opacity: 1; }
+
 .reward-item:hover {
-  transform: translateY(-4px);
+  transform: translateY(-4px) scale(1.02);
   border-color: rgba(139,92,246,0.4);
 }
 
-.reward-amount { font-size: 1.25rem; font-weight: 700; color: #ffffff; }
-.reward-icon   { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; }
+.reward-amount { position: relative; z-index: 1; font-size: 1.25rem; font-weight: 700; color: #ffffff; }
+.reward-icon   { position: relative; z-index: 1; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; }
 .reward-icon img { width: 100%; height: 100%; object-fit: contain; }
+
+/* Highlight the top two coin values — 500 gets a gold gradient number, 250 gets solid gold */
+.reward-grid .reward-item:nth-child(1) .reward-amount {
+  background: linear-gradient(135deg, #FFD700, #f5c26b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.reward-grid .reward-item:nth-child(1)::before { background: radial-gradient(circle, rgba(255,215,0,0.4), transparent 70%); }
+.reward-grid .reward-item:nth-child(1):hover { border-color: rgba(255,215,0,0.45); }
+
+.reward-grid .reward-item:nth-child(2) .reward-amount { color: #f5c26b; }
+.reward-grid .reward-item:nth-child(2)::before { background: radial-gradient(circle, rgba(245,194,107,0.32), transparent 70%); }
+.reward-grid .reward-item:nth-child(2):hover { border-color: rgba(245,194,107,0.4); }
+
+/* ============================================
+   GIFT GRID — glow, shine sweep, rarity dots
+   ============================================ */
 
 .gift-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
 
 .gift-item {
+  position: relative;
+  overflow: hidden;
   background: rgba(18,22,32,0.6);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 12px;
@@ -2447,6 +2492,49 @@ body.no-scroll {
   align-items: center;
   gap: 0.5rem;
   transition: all 0.3s ease;
+  --glow: rgba(255,255,255,0.15);
+  --dot: transparent;
+}
+
+.gift-item::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--glow), transparent 70%);
+  filter: blur(8px);
+  pointer-events: none;
+  opacity: 0.6; 
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 0;
+}
+
+.gift-item:hover::before { opacity: 0.8; transform: translateX(-50%) scale(1.15); }
+
+/* diagonal shine sweep on hover, legendary + epic only */
+.gift-item.gift-legendary::after,
+.gift-item.gift-epic::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%);
+  background-size: 250% 250%;
+  background-repeat: no-repeat;
+  background-position: 120% 120%;
+  opacity: 0;
+  pointer-events: none;
+  transition: background-position 0.7s ease, opacity 0.4s ease;
+  z-index: 1;
+}
+
+.gift-item.gift-legendary:hover::after,
+.gift-item.gift-epic:hover::after {
+  background-position: -20% -20%;
+  opacity: 1;
 }
 
 .gift-item:hover {
@@ -2454,8 +2542,18 @@ body.no-scroll {
   border-color: rgba(245,194,107,0.4);
 }
 
-.gift-icon  { width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; }
-.gift-label { font-size: 0.72rem; color: rgba(255,255,255,0.5); text-align: center; }
+.gift-icon  { position: relative; z-index: 2; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; }
+
+.gift-label {
+  position: relative;
+  z-index: 2;
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 /* ============================================
    GIFT RARITY BACKGROUNDS
@@ -2467,33 +2565,44 @@ body.no-scroll {
   background: linear-gradient(150deg, rgba(167,139,250,0.28) 0%, rgba(236,72,153,0.14) 100%);
   border-color: rgba(167,139,250,0.55);
   box-shadow: 0 0 0 1px rgba(167,139,250,0.1) inset;
+  --glow: rgba(167,139,250,0.55);
+  --dot: #a78bfa;
 }
 .gift-item.gift-legendary:hover {
   border-color: rgba(167,139,250,0.8);
   box-shadow: 0 8px 24px rgba(167,139,250,0.35);
 }
+.gift-item.gift-legendary .gift-label { color: #c4b5fd; font-weight: 700; }
 
 .gift-item.gift-epic {
   background: linear-gradient(150deg, rgba(255,215,0,0.22) 0%, rgba(255,165,0,0.1) 100%);
   border-color: rgba(255,215,0,0.45);
+  --glow: rgba(255,215,0,0.5);
+  --dot: #FFD700;
 }
 .gift-item.gift-epic:hover {
   border-color: rgba(255,215,0,0.7);
   box-shadow: 0 8px 24px rgba(255,215,0,0.25);
 }
+.gift-item.gift-epic .gift-label { color: #ffd700; font-weight: 700; }
 
 .gift-item.gift-rare {
   background: linear-gradient(150deg, rgba(96,165,250,0.2) 0%, rgba(56,189,248,0.09) 100%);
   border-color: rgba(96,165,250,0.4);
+  --glow: rgba(96,165,250,0.45);
+  --dot: #60a5fa;
 }
 .gift-item.gift-rare:hover {
   border-color: rgba(96,165,250,0.65);
   box-shadow: 0 8px 24px rgba(96,165,250,0.22);
 }
+.gift-item.gift-rare .gift-label { color: #93c5fd; }
 
 .gift-item.gift-uncommon {
   background: linear-gradient(150deg, rgba(244,114,182,0.15) 0%, rgba(251,146,60,0.07) 100%);
   border-color: rgba(244,114,182,0.32);
+  --glow: rgba(244,114,182,0.4);
+  --dot: #f472b6;
 }
 .gift-item.gift-uncommon:hover {
   border-color: rgba(244,114,182,0.55);
@@ -2503,10 +2612,12 @@ body.no-scroll {
 .gift-item.gift-common {
   background: linear-gradient(150deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.02) 100%);
   border-color: rgba(255,255,255,0.1);
+  --glow: rgba(255,255,255,0.15);
 }
 .gift-item.gift-common:hover {
   border-color: rgba(255,255,255,0.25);
 }
+.gift-item.gift-common .gift-label::before { display: none; }
 
 /* ============================================
    DEPOSIT PAGE
