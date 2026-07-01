@@ -33,6 +33,25 @@ const PRIZE_COIN_VALUES = {
 const RARE_GIFTS  = ['Ring', 'Trophy', 'Diamond', 'Calendar'];
 const NFT_GIFTS   = ['Calendar'];
 
+// Static SVG icons used everywhere EXCEPT the spin wheel cubes/win-reveal
+// wheel animation, which keep the Lottie JSON (that's the one place the
+// motion actually matters). Every other Lottie instance — inventory grid,
+// prize modal, full inventory modal, live notifications, legend icons —
+// was adding up to real lag on phones, so those get lightweight static
+// SVGs instead.
+const GIFT_SVG_ICONS = {
+  'Heart':        'assets/Heart.svg',
+  'Bear':         'assets/Bear.svg',
+  'Rose':         'assets/Rose.svg',
+  'Gift':         'assets/Gift.svg',
+  'Cake':         'assets/Cake.svg',
+  'Rose Bouquet': 'assets/Flowers.svg',
+  'Ring':         'assets/Ring.svg',
+  'Trophy':       'assets/Trophy.svg',
+  'Diamond':      'assets/Diamond.svg',
+  'Calendar':     'assets/Calender.svg'
+};
+
 // ── REAL odds. These decide what the player actually wins. ──
 const SPIN_PRIZES = [
   { id: 'coin1',           type: 'coin', value: 1,             chance: 75.00, icon: 'coin' },
@@ -46,7 +65,7 @@ const SPIN_PRIZES = [
   { id: 'giftHeart',       type: 'gift', value: 'Heart',       chance: 0.92,  lottie: 'assets/giftHeart.json' },
   { id: 'giftBear',        type: 'gift', value: 'Bear',        chance: 0.92,  lottie: 'assets/giftBear.json' },
   { id: 'giftRose',        type: 'gift', value: 'Rose',        chance: 0.66,  lottie: 'assets/giftRose.json' },
-  { id: 'giftGift',        type: 'gift', value: 'Gift',        chance: 0.66,  lottie: 'assets/GiftGif.json' },
+  { id: 'giftGift',        type: 'gift', value: 'Gift',        chance: 0.66,  lottie: 'assets/giftGift.json' },
   { id: 'giftCake',        type: 'gift', value: 'Cake',        chance: 0.44,  lottie: 'assets/giftCake.json' },
   { id: 'giftRoseBouquet', type: 'gift', value: 'Rose Bouquet',chance: 0.44,  lottie: 'assets/giftRoseBouquet.json' },
   { id: 'giftRing',        type: 'gift', value: 'Ring',        chance: 0.22,  lottie: 'assets/giftRing.json' },
@@ -613,7 +632,12 @@ const Inventory = {
       const iconDiv = document.createElement('div');
       iconDiv.className  = 'item-icon-container';
       if (item.lottie) {
-        lottie.loadAnimation({ container: iconDiv, renderer: 'svg', loop: true, autoplay: true, path: item.lottie });
+        const img = Object.assign(document.createElement('img'), {
+          src: GIFT_SVG_ICONS[item.value] ?? '',
+          alt: item.value
+        });
+        img.style.cssText = 'width:100%;height:100%;object-fit:contain';
+        iconDiv.appendChild(img);
       }
       div.appendChild(iconDiv);
       div.addEventListener('click', () => PrizeModal.open(item));
@@ -651,10 +675,11 @@ const PrizeModal = {
     iconEl.innerHTML = '';
 
     if (prize.lottie) {
-      const wrap = document.createElement('div');
-      wrap.style.cssText = 'width:100%;height:100%';
-      iconEl.appendChild(wrap);
-      lottie.loadAnimation({ container: wrap, renderer: 'svg', loop: true, autoplay: true, path: prize.lottie });
+      const img = document.createElement('img');
+      img.src = GIFT_SVG_ICONS[prize.value] ?? '';
+      img.alt = prize.value;
+      img.style.cssText = 'width:100%;height:100%;object-fit:contain';
+      iconEl.appendChild(img);
     } else if (prize.type === 'coin') {
       const img = document.createElement('img');
       img.src = 'assets/Coin.svg'; img.alt = 'Coins';
@@ -887,7 +912,12 @@ const LiveGiftNotifications = {
 
     const lottieWrap = Object.assign(document.createElement('div'), { className: 'gift-notification-lottie' });
     if (prize.lottie) {
-      lottie.loadAnimation({ container: lottieWrap, renderer: 'svg', loop: true, autoplay: true, path: prize.lottie });
+      const img = Object.assign(document.createElement('img'), {
+        src: GIFT_SVG_ICONS[prize.value] ?? '',
+        alt: prize.value
+      });
+      img.style.cssText = 'width:100%;height:100%;object-fit:contain';
+      lottieWrap.appendChild(img);
     }
     cube.appendChild(lottieWrap);
 
@@ -974,7 +1004,14 @@ const FullInventoryModal = {
 
       const lottieWrap = document.createElement('div');
       lottieWrap.className = 'full-item-lottie';
-      if (item.lottie) lottie.loadAnimation({ container: lottieWrap, renderer: 'svg', loop: true, autoplay: true, path: item.lottie });
+      if (item.lottie) {
+        const img = Object.assign(document.createElement('img'), {
+          src: GIFT_SVG_ICONS[item.value] ?? '',
+          alt: item.value
+        });
+        img.style.cssText = 'width:100%;height:100%;object-fit:contain';
+        lottieWrap.appendChild(img);
+      }
       div.appendChild(lottieWrap);
 
       const name = Object.assign(document.createElement('div'), { className: 'full-item-name', textContent: item.value });
@@ -1406,10 +1443,11 @@ const SpinWheel = {
         valueRow.style.display = 'flex';
       }
     } else {
-      const wrap = document.createElement('div');
-      wrap.style.cssText = 'width:100%;height:100%';
-      iconEl.appendChild(wrap);
-      lottie.loadAnimation({ container: wrap, renderer: 'svg', loop: true, autoplay: true, path: prize.lottie });
+      const img = document.createElement('img');
+      img.src = GIFT_SVG_ICONS[prize.value] ?? '';
+      img.alt = prize.value;
+      img.style.cssText = 'width:100%;height:100%;object-fit:contain;animation:prizeFloat 2.5s ease-in-out infinite;filter:drop-shadow(0 12px 32px rgba(245,194,107,.4))';
+      iconEl.appendChild(img);
       nameEl.innerHTML = `the <span class="hl">${prize.value}</span>`;
       if (valueRow) {
         const val = PRIZE_COIN_VALUES[prize.value] ?? 50;
@@ -1487,14 +1525,21 @@ const SpinWheel = {
       el.appendChild(img);
     });
     [
-      ['giftHeart','assets/giftHeart.json'], ['giftBear','assets/giftBear.json'],
-      ['giftGift','assets/giftGift.json'],   ['giftRose','assets/giftRose.json'],
-      ['giftCake','assets/giftCake.json'],   ['giftRoseBouquet','assets/giftRoseBouquet.json'],
-      ['giftRing','assets/giftRing.json'],   ['giftTrophy','assets/giftTrophy.json'],
-      ['giftDiamond','assets/giftDiamond.json'], ['giftCalendar','assets/giftCalendar.json']
-    ].forEach(([id, path]) => {
+      ['giftHeart','Heart'], ['giftBear','Bear'],
+      ['giftGift','Gift'],   ['giftRose','Rose'],
+      ['giftCake','Cake'],   ['giftRoseBouquet','Rose Bouquet'],
+      ['giftRing','Ring'],   ['giftTrophy','Trophy'],
+      ['giftDiamond','Diamond'], ['giftCalendar','Calendar']
+    ].forEach(([id, giftName]) => {
       const el = document.getElementById(id);
-      if (el) lottie.loadAnimation({ container: el, renderer: 'svg', loop: true, autoplay: true, path });
+      if (el) {
+        const img = Object.assign(document.createElement('img'), {
+          src: GIFT_SVG_ICONS[giftName] ?? '',
+          alt: giftName
+        });
+        img.style.cssText = 'width:100%;height:100%;object-fit:contain';
+        el.appendChild(img);
+      }
     });
   }
 };
