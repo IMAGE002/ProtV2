@@ -33,25 +33,52 @@ const PRIZE_COIN_VALUES = {
 const RARE_GIFTS  = ['Ring', 'Trophy', 'Diamond', 'Calendar'];
 const NFT_GIFTS   = ['Calendar'];
 
+// ── REAL odds. These decide what the player actually wins. ──
 const SPIN_PRIZES = [
-  { id: 'coin1',           type: 'coin', value: 1,             chance: 32.14, icon: 'coin' },
-  { id: 'coin5',           type: 'coin', value: 5,             chance: 18.40, icon: 'coin' },
-  { id: 'coin10',          type: 'coin', value: 10,            chance: 12.30, icon: 'coin' },
-  { id: 'coin25',          type: 'coin', value: 25,            chance: 9.80,  icon: 'coin' },
-  { id: 'coin50',          type: 'coin', value: 50,            chance: 6.10,  icon: 'coin' },
-  { id: 'coin100',         type: 'coin', value: 100,           chance: 4.90,  icon: 'coin' },
-  { id: 'coin250',         type: 'coin', value: 250,           chance: 2.50,  icon: 'coin' },
-  { id: 'coin500',         type: 'coin', value: 500,           chance: 1.20,  icon: 'coin' },
-  { id: 'giftHeart',       type: 'gift', value: 'Heart',       chance: 2.50,  lottie: 'assets/giftHeart.json' },
-  { id: 'giftBear',        type: 'gift', value: 'Bear',        chance: 2.50,  lottie: 'assets/giftBear.json' },
-  { id: 'giftRose',        type: 'gift', value: 'Rose',        chance: 1.80,  lottie: 'assets/giftRose.json' },
-  { id: 'giftGift',        type: 'gift', value: 'Gift',        chance: 1.80,  lottie: 'assets/giftGift.json' },
-  { id: 'giftCake',        type: 'gift', value: 'Cake',        chance: 1.20,  lottie: 'assets/giftCake.json' },
-  { id: 'giftRoseBouquet', type: 'gift', value: 'Rose Bouquet',chance: 1.20,  lottie: 'assets/giftRoseBouquet.json' },
-  { id: 'giftRing',        type: 'gift', value: 'Ring',        chance: 0.60,  lottie: 'assets/giftRing.json' },
-  { id: 'giftTrophy',      type: 'gift', value: 'Trophy',      chance: 0.40,  lottie: 'assets/giftTrophy.json' },
+  { id: 'coin1',           type: 'coin', value: 1,             chance: 75.00, icon: 'coin' },
+  { id: 'coin5',           type: 'coin', value: 5,             chance: 6.79,  icon: 'coin' },
+  { id: 'coin10',          type: 'coin', value: 10,            chance: 4.53,  icon: 'coin' },
+  { id: 'coin25',          type: 'coin', value: 25,            chance: 3.61,  icon: 'coin' },
+  { id: 'coin50',          type: 'coin', value: 50,            chance: 2.25,  icon: 'coin' },
+  { id: 'coin100',         type: 'coin', value: 100,           chance: 1.81,  icon: 'coin' },
+  { id: 'coin250',         type: 'coin', value: 250,           chance: 0.92,  icon: 'coin' },
+  { id: 'coin500',         type: 'coin', value: 500,           chance: 0.44,  icon: 'coin' },
+  { id: 'giftHeart',       type: 'gift', value: 'Heart',       chance: 0.92,  lottie: 'assets/giftHeart.json' },
+  { id: 'giftBear',        type: 'gift', value: 'Bear',        chance: 0.92,  lottie: 'assets/giftBear.json' },
+  { id: 'giftRose',        type: 'gift', value: 'Rose',        chance: 0.66,  lottie: 'assets/giftRose.json' },
+  { id: 'giftGift',        type: 'gift', value: 'Gift',        chance: 0.66,  lottie: 'assets/giftGift.json' },
+  { id: 'giftCake',        type: 'gift', value: 'Cake',        chance: 0.44,  lottie: 'assets/giftCake.json' },
+  { id: 'giftRoseBouquet', type: 'gift', value: 'Rose Bouquet',chance: 0.44,  lottie: 'assets/giftRoseBouquet.json' },
+  { id: 'giftRing',        type: 'gift', value: 'Ring',        chance: 0.22,  lottie: 'assets/giftRing.json' },
+  { id: 'giftTrophy',      type: 'gift', value: 'Trophy',      chance: 0.15,  lottie: 'assets/giftTrophy.json' },
+  { id: 'giftDiamond',     type: 'gift', value: 'Diamond',     chance: 0.22,  lottie: 'assets/giftDiamond.json' },
+  { id: 'giftCalendar',    type: 'gift', value: 'Calendar',    chance: 0.02,  lottie: 'assets/giftCalendar.json' }
+];
+
+// ── DISPLAY-ONLY odds. Used for idle wheel + pre-reveal repaint so the
+// reel *looks* more generous than it actually is. Never touches the
+// real outcome — selectPrize() (using SPIN_PRIZES) still decides what
+// the player wins. Same ids/values/lottie paths as SPIN_PRIZES, just
+// different `chance` weighting. ──
+const PREVIEW_PRIZES = [
+  { id: 'coin1',           type: 'coin', value: 1,             chance: 20.00, icon: 'coin' },
+  { id: 'coin5',           type: 'coin', value: 5,             chance: 12.00, icon: 'coin' },
+  { id: 'coin10',          type: 'coin', value: 10,            chance: 10.00, icon: 'coin' },
+  { id: 'coin25',          type: 'coin', value: 25,            chance: 8.00,  icon: 'coin' },
+  { id: 'coin50',          type: 'coin', value: 50,            chance: 6.00,  icon: 'coin' },
+  { id: 'coin100',         type: 'coin', value: 100,           chance: 5.00,  icon: 'coin' },
+  { id: 'coin250',         type: 'coin', value: 250,           chance: 4.00,  icon: 'coin' },
+  { id: 'coin500',         type: 'coin', value: 500,           chance: 3.50,  icon: 'coin' },
+  { id: 'giftHeart',       type: 'gift', value: 'Heart',       chance: 6.00,  lottie: 'assets/giftHeart.json' },
+  { id: 'giftBear',        type: 'gift', value: 'Bear',        chance: 6.00,  lottie: 'assets/giftBear.json' },
+  { id: 'giftRose',        type: 'gift', value: 'Rose',        chance: 5.00,  lottie: 'assets/giftRose.json' },
+  { id: 'giftGift',        type: 'gift', value: 'Gift',        chance: 5.00,  lottie: 'assets/giftGift.json' },
+  { id: 'giftCake',        type: 'gift', value: 'Cake',        chance: 3.50,  lottie: 'assets/giftCake.json' },
+  { id: 'giftRoseBouquet', type: 'gift', value: 'Rose Bouquet',chance: 3.00,  lottie: 'assets/giftRoseBouquet.json' },
+  { id: 'giftRing',        type: 'gift', value: 'Ring',        chance: 1.50,  lottie: 'assets/giftRing.json' },
+  { id: 'giftTrophy',      type: 'gift', value: 'Trophy',      chance: 0.80,  lottie: 'assets/giftTrophy.json' },
   { id: 'giftDiamond',     type: 'gift', value: 'Diamond',     chance: 0.60,  lottie: 'assets/giftDiamond.json' },
-  { id: 'giftCalendar',    type: 'gift', value: 'Calendar',    chance: 0.06,  lottie: 'assets/giftCalendar.json' }
+  { id: 'giftCalendar',    type: 'gift', value: 'Calendar',    chance: 0.10,  lottie: 'assets/giftCalendar.json' }
 ];
 
 const VALID_PROMOCODES = {
@@ -1182,6 +1209,8 @@ const SpinWheel = {
     this.loadIcons();
   },
 
+  // Picks the REAL outcome. Only ever called from spin() to determine
+  // what the player actually wins.
   selectPrize() {
     const r = Math.random() * 100;
     let cum = 0;
@@ -1189,8 +1218,18 @@ const SpinWheel = {
     return SPIN_PRIZES[0];
   },
 
+  // Picks a DISPLAY-ONLY prize from PREVIEW_PRIZES. Used for the idle
+  // wheel and the pre-reveal repaint so the reel looks more generous
+  // than the true odds. Never used to decide what the player wins.
+  selectPreviewPrize() {
+    const r = Math.random() * 100;
+    let cum = 0;
+    for (const p of PREVIEW_PRIZES) { cum += p.chance; if (r <= cum) return p; }
+    return PREVIEW_PRIZES[0];
+  },
+
   populateCubes() {
-    document.querySelectorAll('.cube').forEach(c => this.renderCube(c, this.selectPrize()));
+    document.querySelectorAll('.cube').forEach(c => this.renderCube(c, this.selectPreviewPrize()));
   },
 
   renderCube(cube, prize) {
@@ -1270,7 +1309,7 @@ const SpinWheel = {
         if (!first) break;
         wheel.appendChild(first);
         STATE.scrollPosition -= stride;
-        if (!STATE.isSpinning) this.renderCube(first, this.selectPrize());
+        if (!STATE.isSpinning) this.renderCube(first, this.selectPreviewPrize());
       }
 
       wheel.style.transform = `translateX(-${STATE.scrollPosition}px)`;
@@ -1287,10 +1326,15 @@ const SpinWheel = {
     const btn = document.getElementById('spinButton');
     if (btn) btn.disabled = true;
 
+    // Real outcome — decided here, from SPIN_PRIZES only.
     const winning = this.selectPrize();
     const cubes   = Array.from(document.querySelectorAll('.cube'));
     if (!cubes.length) { STATE.isSpinning = false; if (btn) btn.disabled = false; return; }
 
+    // Repaint every cube for the spin visual — uses REAL odds so the
+    // reel you watch scroll actually reflects what you can win. Only
+    // the idle/resting wheel (populateCubes + the recycle branch below,
+    // gated by !isSpinning) uses the inflated preview odds.
     cubes.forEach(c => { this._cleanupLottie(c); this.renderCube(c, this.selectPrize()); });
 
     const stride   = CONFIG.CUBE_WIDTH + CONFIG.GAP_WIDTH;
