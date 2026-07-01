@@ -576,31 +576,37 @@
       <div class="rewards-section">
         <div class="rewards-header">
           <div class="rewards-header-icon">
-            <img src="assets/BoxQ.svg" alt="">
+            <div class="rewards-icon-mask"></div>
           </div>
           <h2 class="rewards-title">What can I <span class="get-text">get?</span></h2>
         </div>
-        <div class="reward-grid">
-          <div class="reward-item"><div class="reward-amount">1</div><div class="reward-icon" id="coin1"></div></div>
-          <div class="reward-item"><div class="reward-amount">5</div><div class="reward-icon" id="coin5"></div></div>
-          <div class="reward-item"><div class="reward-amount">10</div><div class="reward-icon" id="coin10"></div></div>
-          <div class="reward-item"><div class="reward-amount">25</div><div class="reward-icon" id="coin25"></div></div>
-          <div class="reward-item"><div class="reward-amount">50</div><div class="reward-icon" id="coin50"></div></div>
-          <div class="reward-item"><div class="reward-amount">100</div><div class="reward-icon" id="coin100"></div></div>
-          <div class="reward-item"><div class="reward-amount">250</div><div class="reward-icon" id="coin250"></div></div>
-          <div class="reward-item"><div class="reward-amount">500</div><div class="reward-icon" id="coin500"></div></div>
-        </div>
+
+        <!-- Gifts, sorted rarest → least common (matches SPIN_PRIZES chance weights) -->
         <div class="gift-grid">
-          <div class="gift-item"><div class="gift-icon" id="giftHeart"></div><div class="gift-label">Telegram Gift</div></div>
-          <div class="gift-item"><div class="gift-icon" id="giftBear"></div><div class="gift-label">Telegram Gift</div></div>
-          <div class="gift-item"><div class="gift-icon" id="giftGift"></div><div class="gift-label">Telegram Gift</div></div>
-          <div class="gift-item"><div class="gift-icon" id="giftRose"></div><div class="gift-label">Telegram Gift</div></div>
-          <div class="gift-item"><div class="gift-icon" id="giftCake"></div><div class="gift-label">Telegram Gift</div></div>
-          <div class="gift-item"><div class="gift-icon" id="giftRoseBouquet"></div><div class="gift-label">Telegram Gift</div></div>
-          <div class="gift-item"><div class="gift-icon" id="giftRing"></div><div class="gift-label">Telegram Gift</div></div>
-          <div class="gift-item"><div class="gift-icon" id="giftTrophy"></div><div class="gift-label">Telegram Gift</div></div>
-          <div class="gift-item"><div class="gift-icon" id="giftDiamond"></div><div class="gift-label">Telegram Gift</div></div>
-          <div class="gift-item"><div class="gift-icon" id="giftCalendar"></div><div class="gift-label">Telegram NFT</div></div>
+          <div class="gift-item gift-legendary"><div class="gift-icon" id="giftCalendar"></div><div class="gift-label">Telegram NFT</div></div>
+          <div class="gift-item gift-epic"><div class="gift-icon" id="giftTrophy"></div><div class="gift-label">Telegram Gift</div></div>
+          <div class="gift-item gift-rare"><div class="gift-icon" id="giftDiamond"></div><div class="gift-label">Telegram Gift</div></div>
+          <div class="gift-item gift-rare"><div class="gift-icon" id="giftRing"></div><div class="gift-label">Telegram Gift</div></div>
+          <div class="gift-item gift-uncommon"><div class="gift-icon" id="giftRoseBouquet"></div><div class="gift-label">Telegram Gift</div></div>
+          <div class="gift-item gift-uncommon"><div class="gift-icon" id="giftCake"></div><div class="gift-label">Telegram Gift</div></div>
+          <div class="gift-item gift-common"><div class="gift-icon" id="giftGift"></div><div class="gift-label">Telegram Gift</div></div>
+          <div class="gift-item gift-common"><div class="gift-icon" id="giftRose"></div><div class="gift-label">Telegram Gift</div></div>
+          <div class="gift-item gift-common"><div class="gift-icon" id="giftBear"></div><div class="gift-label">Telegram Gift</div></div>
+          <div class="gift-item gift-common"><div class="gift-icon" id="giftHeart"></div><div class="gift-label">Telegram Gift</div></div>
+        </div>
+
+        <div class="rewards-divider"><span>Coin Prizes</span></div>
+
+        <!-- Coins, sorted highest → lowest -->
+        <div class="reward-grid">
+          <div class="reward-item"><div class="reward-amount">500</div><div class="reward-icon" id="coin500"></div></div>
+          <div class="reward-item"><div class="reward-amount">250</div><div class="reward-icon" id="coin250"></div></div>
+          <div class="reward-item"><div class="reward-amount">100</div><div class="reward-icon" id="coin100"></div></div>
+          <div class="reward-item"><div class="reward-amount">50</div><div class="reward-icon" id="coin50"></div></div>
+          <div class="reward-item"><div class="reward-amount">25</div><div class="reward-icon" id="coin25"></div></div>
+          <div class="reward-item"><div class="reward-amount">10</div><div class="reward-icon" id="coin10"></div></div>
+          <div class="reward-item"><div class="reward-amount">5</div><div class="reward-icon" id="coin5"></div></div>
+          <div class="reward-item"><div class="reward-amount">1</div><div class="reward-icon" id="coin1"></div></div>
         </div>
       </div>
     </div>
