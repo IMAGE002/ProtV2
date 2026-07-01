@@ -2364,6 +2364,49 @@ body.no-scroll {
 .rewards-title { font-size: 1.5rem; font-weight: 700; color: #ffffff; }
 .rewards-title .get-text { color: #fbbf24; }
 
+/* ── Header icon — gradient-filled via CSS mask (works with any flat SVG) ── */
+.rewards-icon-mask {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #fbbf24 0%, #f472b6 60%, #a78bfa 100%);
+  -webkit-mask-image: url('assets/BoxQ.svg');
+  mask-image: url('assets/BoxQ.svg');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  filter: drop-shadow(0 4px 12px rgba(244,114,182,0.35));
+}
+
+/* ============================================
+   REWARDS DIVIDER — separates gifts from coins
+   ============================================ */
+
+.rewards-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0 1.5rem;
+  color: rgba(255,255,255,0.4);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.rewards-divider::before,
+.rewards-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+}
+
+.rewards-divider::before { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15)); }
+.rewards-divider::after  { background: linear-gradient(90deg, rgba(255,255,255,0.15), transparent); }
+
 .reward-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -2413,6 +2456,57 @@ body.no-scroll {
 
 .gift-icon  { width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; }
 .gift-label { font-size: 0.72rem; color: rgba(255,255,255,0.5); text-align: center; }
+
+/* ============================================
+   GIFT RARITY BACKGROUNDS
+   Legendary > Epic > Rare > Uncommon > Common
+   (mirrors the SPIN_PRIZES chance weights in script.js)
+   ============================================ */
+
+.gift-item.gift-legendary {
+  background: linear-gradient(150deg, rgba(167,139,250,0.28) 0%, rgba(236,72,153,0.14) 100%);
+  border-color: rgba(167,139,250,0.55);
+  box-shadow: 0 0 0 1px rgba(167,139,250,0.1) inset;
+}
+.gift-item.gift-legendary:hover {
+  border-color: rgba(167,139,250,0.8);
+  box-shadow: 0 8px 24px rgba(167,139,250,0.35);
+}
+
+.gift-item.gift-epic {
+  background: linear-gradient(150deg, rgba(255,215,0,0.22) 0%, rgba(255,165,0,0.1) 100%);
+  border-color: rgba(255,215,0,0.45);
+}
+.gift-item.gift-epic:hover {
+  border-color: rgba(255,215,0,0.7);
+  box-shadow: 0 8px 24px rgba(255,215,0,0.25);
+}
+
+.gift-item.gift-rare {
+  background: linear-gradient(150deg, rgba(96,165,250,0.2) 0%, rgba(56,189,248,0.09) 100%);
+  border-color: rgba(96,165,250,0.4);
+}
+.gift-item.gift-rare:hover {
+  border-color: rgba(96,165,250,0.65);
+  box-shadow: 0 8px 24px rgba(96,165,250,0.22);
+}
+
+.gift-item.gift-uncommon {
+  background: linear-gradient(150deg, rgba(244,114,182,0.15) 0%, rgba(251,146,60,0.07) 100%);
+  border-color: rgba(244,114,182,0.32);
+}
+.gift-item.gift-uncommon:hover {
+  border-color: rgba(244,114,182,0.55);
+  box-shadow: 0 8px 24px rgba(244,114,182,0.18);
+}
+
+.gift-item.gift-common {
+  background: linear-gradient(150deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.02) 100%);
+  border-color: rgba(255,255,255,0.1);
+}
+.gift-item.gift-common:hover {
+  border-color: rgba(255,255,255,0.25);
+}
 
 /* ============================================
    DEPOSIT PAGE
