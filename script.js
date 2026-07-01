@@ -46,7 +46,7 @@ const SPIN_PRIZES = [
   { id: 'giftHeart',       type: 'gift', value: 'Heart',       chance: 0.92,  lottie: 'assets/giftHeart.json' },
   { id: 'giftBear',        type: 'gift', value: 'Bear',        chance: 0.92,  lottie: 'assets/giftBear.json' },
   { id: 'giftRose',        type: 'gift', value: 'Rose',        chance: 0.66,  lottie: 'assets/giftRose.json' },
-  { id: 'giftGift',        type: 'gift', value: 'Gift',        chance: 0.66,  lottie: 'assets/giftGift.json' },
+  { id: 'giftGift',        type: 'gift', value: 'Gift',        chance: 0.66,  lottie: 'assets/GiftGif.json' },
   { id: 'giftCake',        type: 'gift', value: 'Cake',        chance: 0.44,  lottie: 'assets/giftCake.json' },
   { id: 'giftRoseBouquet', type: 'gift', value: 'Rose Bouquet',chance: 0.44,  lottie: 'assets/giftRoseBouquet.json' },
   { id: 'giftRing',        type: 'gift', value: 'Ring',        chance: 0.22,  lottie: 'assets/giftRing.json' },
