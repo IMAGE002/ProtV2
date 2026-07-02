@@ -430,9 +430,21 @@ const TelegramApp = {
       STATE.tg.onEvent('viewportChanged', (e) => {
         if (e.isStateStable) setTimeout(() => BackendAPI.syncBalance(), 1000);
       });
+
+      // Keep the bottom nav's safe-area padding in sync with Telegram's
+      // own inset reporting (covers half-expanded / fullscreen states
+      // and devices where env(safe-area-inset-bottom) alone isn't enough).
+      this._applySafeArea();
+      STATE.tg.onEvent('viewportChanged', () => this._applySafeArea());
+      STATE.tg.onEvent('safeAreaChanged', () => this._applySafeArea());
     } else {
       this.initFallbackMode();
     }
+  },
+
+  _applySafeArea() {
+    const bottom = STATE.tg?.safeAreaInset?.bottom ?? 0;
+    document.documentElement.style.setProperty('--tg-safe-bottom', `${bottom}px`);
   },
 
   initFallbackMode() {
@@ -798,8 +810,18 @@ const Navigation = {
     document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
     document.getElementById(`page-${pageName}`)?.classList.add('active');
 
+    // Desktop / website-ratio hamburger nav
     document.querySelectorAll('.nav-link').forEach(l => {
       l.classList.toggle('active', l.dataset.page === pageName);
+    });
+
+    // Mobile bottom nav — keep it in sync with whatever page is active,
+    // including pages reached from elsewhere (e.g. tapping the Daily
+    // Loot card jumps to "dailyspin", which has no bottom-nav icon of
+    // its own, so we fall back to leaving Home highlighted for it).
+    const bottomNavTarget = pageName === 'dailyspin' ? 'home' : pageName;
+    document.querySelectorAll('.bottom-nav-item[data-page]').forEach(b => {
+      b.classList.toggle('active', b.dataset.page === bottomNavTarget);
     });
 
     STATE.currentPage = pageName;
@@ -810,6 +832,27 @@ const Navigation = {
 
     const debugEl = document.getElementById('currentPageDebug');
     if (debugEl) debugEl.textContent = pageName;
+  }
+};
+
+// ============================================
+// BOTTOM NAV (mobile / mini-app)
+// ============================================
+
+const BottomNav = {
+  init() {
+    document.querySelectorAll('.bottom-nav-item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.action === 'inventory') {
+          // Items tab opens the full inventory modal directly — the
+          // home grid's Inventory card is hidden on mobile, so this
+          // is the only entry point there.
+          FullInventoryModal.open();
+          return;
+        }
+        if (btn.dataset.page) Navigation.navigateTo(btn.dataset.page);
+      });
+    });
   }
 };
 
@@ -1840,6 +1883,7 @@ function initializeApp() {
   LoadingScreen.init();
   Navigation.init();
   Menu.init();
+  BottomNav.init();
   Settings.init();
   LanguageModal.init();
   ContentBoxes.init();
@@ -1859,7 +1903,7 @@ window.TelegramGame = {
   state: STATE, config: CONFIG,
   Currency, Inventory, Navigation, Settings,
   SpinWheel, Leaderboard, Notifications,
-  PrizeModal, FullInventoryModal, Deposit
+  PrizeModal, FullInventoryModal, Deposit, BottomNav
 };
 
 if (document.readyState === 'loading') {
