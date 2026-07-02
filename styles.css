@@ -3084,21 +3084,23 @@ input:checked + .toggle-slider::before { transform: translateX(22px); }
    ============================================ */
 
 .bottom-nav {
-  display: none; /* shown only under the 768px breakpoint below */
+  display: none; /* keep this off by default, mobile media query turns it on */
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 1000;
-  justify-content: space-around;
-  align-items: center;
+  align-items: flex-end;       /* was center — flex-end reads better with the raised Home circle */
   padding: 0.55rem 0.5rem calc(0.55rem + env(safe-area-inset-bottom, 0px));
   background: rgba(16,20,28,0.92);
   backdrop-filter: blur(20px);
   border-top: 1px solid rgba(255,255,255,0.08);
+  /* remove justify-content: space-around */
 }
 
 .bottom-nav-item {
+  flex: 1 1 0;          /* <-- key change: every item claims equal width */
+  min-width: 0;         /* lets labels shrink instead of overflowing */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3106,7 +3108,7 @@ input:checked + .toggle-slider::before { transform: translateX(22px); }
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.35rem 0.55rem;
+  padding: 0.35rem 0.3rem;
   border-radius: 12px;
   transition: background 0.2s ease;
   position: relative;
@@ -3129,6 +3131,10 @@ input:checked + .toggle-slider::before { transform: translateX(22px); }
   color: rgba(255,255,255,0.4);
   letter-spacing: 0.02em;
   transition: color 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;         /* prevents "Settings" from clipping against the screen edge */
 }
 
 .bottom-nav-item.active .bn-icon { color: #a78bfa; transform: translateY(-2px); }
