@@ -59,12 +59,12 @@
   </div>
 </div>
 
-<!-- Hamburger -->
+<!-- Hamburger (desktop / website ratio only) -->
 <div class="hamburger" id="hamburger">
   <span></span><span></span><span></span>
 </div>
 
-<!-- Navigation Menu -->
+<!-- Navigation Menu (desktop / website ratio only) -->
 <nav class="nav-menu" id="navMenu">
   <button class="nav-close" id="navClose">×</button>
   <div class="nav-account">
@@ -170,6 +170,8 @@
 
       <!-- ─────────────────────────────────────────
            RIGHT ROWS 2–3: Inventory (tall)
+           Hidden on mobile — the bottom-nav "Items" tab
+           covers this on narrow viewports (see styles.css)
       ───────────────────────────────────────── -->
       <div class="card-base content-box-right">
         <div class="card-glow"></div>
@@ -727,6 +729,39 @@
     </div>
   </div>
 </div>
+
+<!-- ============================================
+     BOTTOM NAV — mobile / mini-app only.
+     Replaces the hamburger below the 768px breakpoint
+     (see styles.css). Ranks / Items / Home / Deposit /
+     Settings. Home is elevated + centered; Items opens
+     the Full Inventory modal directly since the home
+     grid's Inventory card is hidden on mobile.
+     ============================================ -->
+<nav class="bottom-nav" id="bottomNav">
+  <button class="bottom-nav-item" data-page="leaderboard" type="button">
+    <svg class="bn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M17 6h2a2 2 0 0 1 2 2 3 3 0 0 1-3 3M7 6H5a2 2 0 0 0-2 2 3 3 0 0 0 3 3"/></svg>
+    <span class="bn-label" data-i18n="leaderboard">Ranks</span>
+  </button>
+  <button class="bottom-nav-item" data-action="inventory" type="button">
+    <svg class="bn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>
+    <span class="bn-label" data-i18n="inventory">Items</span>
+  </button>
+  <button class="bottom-nav-item bn-home active" data-page="home" type="button">
+    <span class="bn-icon-wrap">
+      <svg class="bn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+    </span>
+    <span class="bn-label" data-i18n="home">Home</span>
+  </button>
+  <button class="bottom-nav-item" data-page="deposit" type="button">
+    <svg class="bn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="17" cy="15" r="1.4" fill="currentColor" stroke="none"/></svg>
+    <span class="bn-label" data-i18n="deposit">Deposit</span>
+  </button>
+  <button class="bottom-nav-item" data-page="settings" type="button">
+    <svg class="bn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+    <span class="bn-label" data-i18n="settings">Settings</span>
+  </button>
+</nav>
 
 </div><!-- end .main-content -->
 
