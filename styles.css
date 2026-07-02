@@ -1564,7 +1564,6 @@ body.no-scroll {
   color: #ffffff;
   text-align: center;
   letter-spacing: -0.025em;
-  text-transform: uppercase;
   line-height: 1.1;
   margin-bottom: 0.5rem;
 }
@@ -2444,7 +2443,7 @@ body.no-scroll {
   background: radial-gradient(circle, rgba(139,92,246,0.22), transparent 70%);
   filter: blur(6px);
   pointer-events: none;
-  opacity: 0.6;
+  opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 0;
 }
@@ -2493,7 +2492,6 @@ body.no-scroll {
   gap: 0.5rem;
   transition: all 0.3s ease;
   --glow: rgba(255,255,255,0.15);
-  --dot: transparent;
 }
 
 .gift-item::before {
@@ -2508,7 +2506,7 @@ body.no-scroll {
   background: radial-gradient(circle, var(--glow), transparent 70%);
   filter: blur(8px);
   pointer-events: none;
-  opacity: 0.6; 
+  opacity: 0;              /* hidden at rest */
   transition: opacity 0.3s ease, transform 0.3s ease;
   z-index: 0;
 }
@@ -2566,7 +2564,6 @@ body.no-scroll {
   border-color: rgba(167,139,250,0.55);
   box-shadow: 0 0 0 1px rgba(167,139,250,0.1) inset;
   --glow: rgba(167,139,250,0.55);
-  --dot: #a78bfa;
 }
 .gift-item.gift-legendary:hover {
   border-color: rgba(167,139,250,0.8);
@@ -2578,7 +2575,6 @@ body.no-scroll {
   background: linear-gradient(150deg, rgba(255,215,0,0.22) 0%, rgba(255,165,0,0.1) 100%);
   border-color: rgba(255,215,0,0.45);
   --glow: rgba(255,215,0,0.5);
-  --dot: #FFD700;
 }
 .gift-item.gift-epic:hover {
   border-color: rgba(255,215,0,0.7);
@@ -2590,7 +2586,6 @@ body.no-scroll {
   background: linear-gradient(150deg, rgba(96,165,250,0.2) 0%, rgba(56,189,248,0.09) 100%);
   border-color: rgba(96,165,250,0.4);
   --glow: rgba(96,165,250,0.45);
-  --dot: #60a5fa;
 }
 .gift-item.gift-rare:hover {
   border-color: rgba(96,165,250,0.65);
@@ -2602,7 +2597,6 @@ body.no-scroll {
   background: linear-gradient(150deg, rgba(244,114,182,0.15) 0%, rgba(251,146,60,0.07) 100%);
   border-color: rgba(244,114,182,0.32);
   --glow: rgba(244,114,182,0.4);
-  --dot: #f472b6;
 }
 .gift-item.gift-uncommon:hover {
   border-color: rgba(244,114,182,0.55);
@@ -2617,7 +2611,6 @@ body.no-scroll {
 .gift-item.gift-common:hover {
   border-color: rgba(255,255,255,0.25);
 }
-.gift-item.gift-common .gift-label::before { display: none; }
 
 /* ============================================
    DEPOSIT PAGE
@@ -3082,6 +3075,112 @@ input:checked + .toggle-slider::before { transform: translateX(22px); }
 }
 
 /* ============================================
+   BOTTOM NAV — mobile / mini-app only
+   Replaces the hamburger + nav-menu below 768px.
+   Ranks / Items / Home (raised) / Deposit / Settings.
+   Uses env(safe-area-inset-bottom) for notch/gesture-bar
+   phones and position:fixed so it tracks the true
+   viewport even when Telegram resizes it.
+   ============================================ */
+
+.bottom-nav {
+  display: none; /* shown only under the 768px breakpoint below */
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.55rem 0.5rem calc(0.55rem + env(safe-area-inset-bottom, 0px));
+  background: rgba(16,20,28,0.92);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.28rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.35rem 0.55rem;
+  border-radius: 12px;
+  transition: background 0.2s ease;
+  position: relative;
+  font-family: 'Manrope', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bottom-nav-item:active { background: rgba(255,255,255,0.05); }
+
+.bn-icon {
+  width: 21px;
+  height: 21px;
+  color: rgba(255,255,255,0.45);
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.bn-label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease;
+}
+
+.bottom-nav-item.active .bn-icon { color: #a78bfa; transform: translateY(-2px); }
+.bottom-nav-item.active .bn-label { color: #a78bfa; }
+
+.bottom-nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: -0.55rem;
+  width: 20px;
+  height: 3px;
+  border-radius: 0 0 4px 4px;
+  background: #a78bfa;
+  box-shadow: 0 0 10px rgba(167,139,250,0.7);
+}
+
+/* Centered, elevated Home button */
+.bn-home {
+  position: relative;
+  margin-top: -28px;
+}
+
+.bn-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(150deg, #a78bfa 0%, #7c5cf0 100%);
+  border: 4px solid #0a0a0c;
+  box-shadow: 0 6px 20px rgba(167,139,250,0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bn-home .bn-icon {
+  width: 22px;
+  height: 22px;
+  color: #0d0d0e;
+}
+
+.bn-home .bn-label { color: rgba(255,255,255,0.4); }
+
+.bn-home.active .bn-icon-wrap {
+  box-shadow: 0 8px 26px rgba(167,139,250,0.65);
+  transform: translateY(-2px);
+}
+.bn-home.active .bn-icon { color: #0d0d0e; transform: none; }
+.bn-home.active .bn-label { color: #a78bfa; }
+.bn-home.active::before { display: none; } /* home uses the raised circle, not the top bar */
+
+/* ============================================
    RESPONSIVE — MOBILE
    ============================================ */
 
@@ -3094,10 +3193,14 @@ input:checked + .toggle-slider::before { transform: translateX(22px); }
   .currency-icon { width: 18px; height: 18px; }
   .currency-amount { font-size: 0.85rem; }
 
-  .hamburger { top: 1.25rem; left: 1.25rem; width: 45px; height: 45px; }
-  .nav-menu { max-width: 85%; }
+  /* Hamburger + side nav are desktop/website-ratio only — bottom nav takes over */
+  .hamburger { display: none !important; }
+  .nav-menu  { display: none !important; }
 
-  .container { padding: 1.5rem; padding-top: 5rem; }
+  .bottom-nav { display: flex; }
+
+  /* Clear the fixed bottom nav so the last card is never hidden behind it */
+  .container { padding: 1.5rem; padding-top: 5rem; padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
 
   .grid-layout { grid-template-columns: 1fr; gap: 1rem; }
 
@@ -3110,6 +3213,10 @@ input:checked + .toggle-slider::before { transform: translateX(22px); }
     grid-column: 1 !important;
     grid-row: auto !important;
   }
+
+  /* Inventory card moves to the bottom-nav "Items" tab on mobile —
+     hidden here so it isn't duplicated on the home grid. */
+  .content-box-right { display: none; }
 
   .content-box-top { min-height: 78px; padding: 0.9rem 1.25rem; }
 
@@ -3141,13 +3248,24 @@ input:checked + .toggle-slider::before { transform: translateX(22px); }
 
   .packages-grid { grid-template-columns: repeat(2, 1fr); }
   .settings-section { padding: 1.25rem; }
+
+  /* Leave room above the fixed bottom nav on the taller pages too */
+  .leaderboard-page,
+  .deposit-page,
+  .settings-page,
+  .daily-spin-container {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Full inventory modal (opened from the Items tab) should also
+     clear the bottom nav so its content/buttons stay reachable */
+  .full-inventory-modal { max-height: calc(90vh - 88px); }
 }
 
 @media (max-width: 480px) {
   .currency-bar { padding: 0.4rem 0.85rem; border-radius: 10px; }
   .currency-icon { width: 16px; height: 16px; }
   .currency-amount { font-size: 0.8rem; }
-  .hamburger { width: 42px; height: 42px; }
 
   .card-inner { padding: 1.25rem; }
   .card-headline { font-size: 1.15rem; }
@@ -3162,4 +3280,14 @@ input:checked + .toggle-slider::before { transform: translateX(22px); }
   .settings-section { padding: 1rem; }
 
   .full-inventory-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+
+  .bn-icon { width: 19px; height: 19px; }
+  .bn-label { font-size: 0.56rem; }
+  .bn-icon-wrap { width: 48px; height: 48px; }
+}
+
+/* Above 768px (desktop / wide website-ratio), make sure bottom nav
+   never renders even if a future edit changes the base .bottom-nav rule */
+@media (min-width: 769px) {
+  .bottom-nav { display: none !important; }
 }
